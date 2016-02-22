@@ -7,7 +7,7 @@ Holds all persisted optimization data.
 ##### Actions:
 - `receiveAllOptimizations`
 - `receiveSingleOptimization`
-- `removeOptimization`
+- `receiveUserOptimizations`
 
 ##### Listeners:
 - `OptimizationsIndex` (passes to `OptimizationIndexItem` via props)

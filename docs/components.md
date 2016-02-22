@@ -2,6 +2,7 @@
 
 * `App`
 * `SearchIndex`
+  * `OptimizationNewButton`
   * `OptimizationIndex`
     * `OptimizationIndexItem`
 * `UserOptimizationOverview`
