@@ -12,15 +12,15 @@ Optimyze is a web application built using Ruby on Rails and React.js. Optimyze a
 - [ ] Log in / Log out
 - [ ] Create, view, edit, and delete optimizations of repetitive tasks
 - [ ] Visualize individual optimizations in their dashboard (includes a graph of time saved over time based on frequency, time invested, and time saved per occurrence data.)
-- [ ] See meta data of potential time saved from all their optimizations
+- [ ] See meta data of theoretical time saved from all their optimizations
 - [ ] Add categories to their optimizations
 - [ ] Browse other users optimizations by category
 
 - **Bonus Functionality** (not part of minimum viable product)
 - [ ] Copy other users optimizations to their dashboard or to their save for later list
-- [ ] Up-vote other users optimizations
-- [ ] Browse other users optimizations by number of up-votes
-- [ ] Choose to track an optimization (tracking an optimization allows the user to input every time they did or didn't complete a task using their optimization). This would allow for calculation of actual time save not just potential time saved.
+- [ ] Up-vote other user's optimizations
+- [ ] Browse other user's optimizations by number of up-votes
+- [ ] Choose to track an optimization (tracking an optimization allows the user to input every time they did or didn't complete a task using their optimization). This would allow for calculation of actual time saved not just theoretical time saved.
 
 In one sentence: Optimyze allows users to organize and find optimizations to repetitive tasks and keep track of the time they saved.
 
@@ -39,8 +39,8 @@ In one sentence: Optimyze allows users to organize and find optimizations to rep
 - [ ] create new project
 - [ ] create `User` model
 - [ ] authentication
-- [ ] user signup/signin pages
-- [ ] blank landing page after signin
+- [ ] user Sign Up/Sign In pages
+- [ ] blank landing page after sign in
 
 ### Phase 2: Optimizations Model, API, and basic APIUtil (1.5 days)
 
@@ -73,12 +73,11 @@ user interface.
 
 ### Phase 4: Start Styling (1 day)
 
-**Objective:** Existing pages (including singup/signin) will look good and `OptimizationDetail` will graph raw information.
+**Objective:** Existing pages look appealing and `OptimizationDetail` will graph raw information.
 
-- [ ] create a basic style guide
 - [ ] position elements on the page
 - [ ] add basic colors & styles
-- [ ] use highcharts to graph optimization details
+- [ ] use highchartsJS to graph optimization details
 
 ### Phase 5: Finish React Components (1 day)
 
@@ -102,7 +101,7 @@ user interface.
 
 **objective:** Allow user to view and search all public optimizations.
 
-- [ ] Make browse view by dynamically un-mounting un-needed components from dashboard view.  
+- [ ] Make browse view by dynamically unmounting non-needed components from dashboard view.  
 
 ### Phase 8: Styling Cleanup and Seeding (1 day)
 
