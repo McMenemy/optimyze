@@ -1,6 +1,8 @@
 # optimyze
 
-[Heroku link][heroku] - Not yet Deployed
+[Heroku link][heroku]
+
+[heroku]: optimyze.herokuapp.com
 
 ## Minimum Viable Product
 
