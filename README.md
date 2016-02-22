@@ -67,7 +67,7 @@ user interface.
   - [ ] `DashboardPanel`
   - [ ] `OptimizationEditForm`
   - [ ] `OptimizationNewForm`
-  - [ ] `OptimizationDetail` - just show raw info no graphing
+  - [ ] `OptimizationDetail` - just show raw info, no graphing
 
 ### Phase 4: Start Styling (1 day)
 
@@ -111,9 +111,3 @@ user interface.
 - [ ] Add modals, transitions, and other styling flourishes.
 
 ### Phase 9: Work on Bonus features.
-
-[phase-one]: ./docs/phases/phase1.md
-[phase-two]: ./docs/phases/phase2.md
-[phase-three]: ./docs/phases/phase3.md
-[phase-four]: ./docs/phases/phase4.md
-[phase-five]: ./docs/phases/phase5.md
