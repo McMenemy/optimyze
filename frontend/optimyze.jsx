@@ -3,6 +3,8 @@ var ReactDOM = require('react-dom');
 var Dispatcher = require('./dispatcher/dispatcher');
 var ApiUtil = require('./util/apiUtil');
 var OptimizationActions = require('./actions/optimizationActions');
+var Router = require('react-router').Router;
+var Route = require('react-router').Route;
 
 // Components
 var App = require('./components/app');
@@ -11,7 +13,13 @@ var App = require('./components/app');
 window.ApiUtil = ApiUtil;
 window.OptimizationActions = OptimizationActions;
 
+var routes = (
+  <Route component={App} path='/'>
+
+  </Route>
+);
+
 document.addEventListener('DOMContentLoaded', function () {
   ReactDOM.render(
-    <App />, document.getElementById('root'));
+    <Router>{routes}</Router>, root);
 });

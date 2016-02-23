@@ -66,8 +66,8 @@ the API.
 **Objective:** Optimizations can be created, read, edited, viewed and destroyed with the
 user interface.
 
-- [ ] setup the flux loop with skeleton files
-- [ ] setup React Router
+- [x] setup the flux loop with skeleton files
+- [x] setup React Router
 - implement the following components
   - [ ] `OptimizationNewButton`
   - [ ] `OptimizationIndex`
