@@ -58,8 +58,8 @@ the API.
 - [x] CRUD API for optimizations (`OptimizationsController`)
 - [x] jBuilder views for optimizations
 - [x] setup Webpack & Flux scaffold
-- [ ] setup `APIUtil` to interact with the API
-- [ ] test out API interaction in the console.
+- [x] setup `APIUtil` and `OptimizationActions` to interact with the API
+- [x] test out API and Action interaction in the console.
 
 ### Phase 3: Flux Architecture and Router (2 days)
 
