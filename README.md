@@ -8,13 +8,13 @@
 
 Optimyze is a web application built using Ruby on Rails and React.js. Optimyze allows users to:
 
-- [ ] Create an account
-- [ ] Log in / Log out
-- [ ] Create, view, edit, and delete optimizations of repetitive tasks
-- [ ] Visualize individual optimizations in their dashboard (includes a graph of time saved over time based on frequency, time invested, and time saved per occurrence data.)
-- [ ] See meta data of theoretical time saved from all their optimizations
-- [ ] Add categories to their optimizations
-- [ ] Browse other users optimizations by category
+- [x] Create an account
+- [x] Log in / Log out
+- [x] Create, view, edit, and delete optimizations of repetitive tasks
+- [x] Visualize individual optimizations in their dashboard (includes a graph of time saved over time based on frequency, time invested, and time saved per occurrence data.)
+- [x] See meta data of theoretical time saved from all their optimizations
+- [x] Add categories to their optimizations
+- [x] Browse other users optimizations by category
 
 - **Bonus Functionality** (not part of minimum viable product)
 - [ ] Copy other users optimizations to their dashboard or to their save for later list
