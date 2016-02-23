@@ -14,6 +14,11 @@
 #
 
 class Optimization < ActiveRecord::Base
-  validates :title, :investment_time, :time_saved_per_occurrence, :frequency, :public, presence: true
+  validates :title, :investment_time, :time_saved_per_occurrence, :frequency, presence: true
+  validates :public, inclusion: [true, false]
+
+  def self.all_public
+    self.where("public = 'true'")
+  end
 
 end

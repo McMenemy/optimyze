@@ -8,13 +8,13 @@
 
 Optimyze is a web application built using Ruby on Rails and React.js. Optimyze allows users to:
 
-- [x] Create an account
-- [x] Log in / Log out
-- [x] Create, view, edit, and delete optimizations of repetitive tasks
-- [x] Visualize individual optimizations in their dashboard (includes a graph of time saved over time based on frequency, time invested, and time saved per occurrence data.)
-- [x] See meta data of theoretical time saved from all their optimizations
-- [x] Add categories to their optimizations
-- [x] Browse other users optimizations by category
+- [ ] Create an account
+- [ ] Log in / Log out
+- [ ] Create, view, edit, and delete optimizations of repetitive tasks
+- [ ] Visualize individual optimizations in their dashboard (includes a graph of time saved over time based on frequency, time invested, and time saved per occurrence data.)
+- [ ] See meta data of theoretical time saved from all their optimizations
+- [ ] Add categories to their optimizations
+- [ ] Browse other users optimizations by category
 
 - **Bonus Functionality** (not part of minimum viable product)
 - [ ] Copy other users optimizations to their dashboard or to their save for later list
@@ -42,21 +42,21 @@ In one sentence: Optimyze allows users to organize and find optimizations to rep
 
 **Objective:** Functioning rails project with Authentication
 
-- [ ] create new project
-- [ ] create `User` model
-- [ ] authentication
-- [ ] user Sign Up/Sign In pages
-- [ ] blank landing page after sign in
+- [x] create new project
+- [x] create `User` model
+- [x] authentication
+- [x] user Sign Up/Sign In pages
+- [x] blank landing page after sign in
 
 ### Phase 2: Optimizations Model, API, and basic APIUtil (1.5 days)
 
 **Objective:** Optimizations can be created, read, edited and destroyed through
 the API.
 
-- [ ] create `Optimization` model
-- [ ] seed the database with a small amount of test data
-- [ ] CRUD API for optimizations (`OptimizationsController`)
-- [ ] jBuilder views for optimizations
+- [x] create `Optimization` model
+- [x] seed the database with a small amount of test data
+- [x] CRUD API for optimizations (`OptimizationsController`)
+- [x] jBuilder views for optimizations
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
