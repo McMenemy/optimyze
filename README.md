@@ -75,7 +75,6 @@ user interface.
 
 **Objective:** Existing pages look appealing and `OptimizationDetail` will graph raw information.
 
-- [ ] position elements on the page
 - [ ] add basic colors & styles
 - [ ] use highchartsJS to graph optimization details
 

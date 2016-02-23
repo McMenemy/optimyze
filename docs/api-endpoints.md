@@ -19,6 +19,7 @@
 ### Optimizations
 - `GET /api/optimizations`
   - returns all optimizations marked public
+  - use jBuilder and has many relationship to retrieve categories with optimizations
 - `POST /api/optimizations`
 - `GET /api/optimizations/:id`
   - only if optimization is public or belongs to current user
