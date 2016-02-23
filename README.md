@@ -57,7 +57,7 @@ the API.
 - [x] seed the database with a small amount of test data
 - [x] CRUD API for optimizations (`OptimizationsController`)
 - [x] jBuilder views for optimizations
-- [ ] setup Webpack & Flux scaffold
+- [x] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
