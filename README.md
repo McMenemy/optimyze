@@ -24,6 +24,12 @@ Optimyze is a web application built using Ruby on Rails and React.js. Optimyze a
 
 In one sentence: Optimyze allows users to organize and find optimizations to repetitive tasks and keep track of the time they saved.
 
+[Views][views]
+[Components][components]
+[Stores][stores]
+[Api-endpoints][api-endpoints]
+[Schema][schema]
+
 [views]: ./docs/views.md
 [components]: ./docs/components.md
 [stores]: ./docs/stores.md
