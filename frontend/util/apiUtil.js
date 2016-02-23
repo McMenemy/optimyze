@@ -8,7 +8,7 @@ var ApiUtil = {
       success:
         function (respData) {
           callback(respData);
-          console.log(respData);
+          console.log('ajax fetch all', respData);
         },
     });
   },
@@ -20,7 +20,7 @@ var ApiUtil = {
       success:
         function (respData) {
           callback(respData);
-          console.log(respData);
+          console.log('ajax fetch one', respData);
         },
     });
   },
