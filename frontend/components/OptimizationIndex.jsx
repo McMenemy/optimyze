@@ -1,6 +1,7 @@
 var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
+var OptimizationIndexItem = require('./optimizationIndexItem');
 
 var OptimizationsIndex = React.createClass({
   getInitialState: function () {
@@ -23,7 +24,7 @@ var OptimizationsIndex = React.createClass({
   createOptimizationList: function () {
     var listOfOptimizations = this.state.optimizations.map(function (el, idx) {
       return (
-        <li key={idx}>{el.title}</li>
+        <OptimizationIndexItem key={idx} optimization={el} />
       );
     });
 

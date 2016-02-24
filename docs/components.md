@@ -1,12 +1,11 @@
 ## Component Hierarchy
 
 * `App`
-* `SearchIndex`
-  * `OptimizationNewButton`
-  * `OptimizationIndex`
-    * `OptimizationIndexItem`
-* `UserOptimizationOverview`
-* `DashboardPanel`
+  * `SearchIndex`
+    * `OptimizationNewButton`
+    * `OptimizationIndex`
+      * `OptimizationIndexItem`
+  * `UserOptimizationOverview`
   * `OptimizationDetail`
   * `OptimizationEditForm`
   * `OptimizationCreateForm`

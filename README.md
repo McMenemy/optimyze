@@ -70,12 +70,11 @@ user interface.
 - [x] setup React Router
 - implement the following components
   - [ ] `OptimizationNewButton`
-  - [ ] `OptimizationIndex`
-  - [ ] `OptimizationIndexItem`
-  - [ ] `DashboardPanel`
+  - [x] `OptimizationIndex`
+  - [x] `OptimizationIndexItem`
   - [ ] `OptimizationEditForm`
   - [ ] `OptimizationNewForm`
-  - [ ] `OptimizationDetail` - just show raw info, no graphing
+  - [x] `OptimizationDetail` - just show raw info, no graphing
 
 ### Phase 4: Start Styling (1 day)
 

@@ -27,3 +27,29 @@
   min-height: 20px;
   border: 1px solid #000;
 }
+
+/*optimizationIndexItem*/
+
+.optimizationIndexItem {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+  width: 350px;
+  min-height: 20px;
+  border: 1px solid #000;
+  background-color: #ccc;
+}
+
+.optimizationIndexItem:hover {
+  background-color: #aaa;
+}
+
+/*optimizationDetail*/
+
+#optimizationDetail {
+  position: relative;
+  margin: 0 auto;
+  width: 400px;
+  min-height: 20px;
+  border: 1px solid #000;
+}

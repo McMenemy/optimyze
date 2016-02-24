@@ -1,6 +1,15 @@
 .left-pane {
   float: left;
-  width: 440px;
+  width: 435px;
+  min-height: 400px;
+  padding: 10px;
+  border: 1px solid #000;
+  top: -20;
+}
+
+.right-pane {
+  float: right;
+  width: 420px;
   min-height: 400px;
   padding: 10px;
   border: 1px solid #000;
