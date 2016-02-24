@@ -13,6 +13,7 @@ var App = require('./components/app');
 var SearchIndex =  require('./components/searchIndex');
 var OptimizationIndex = require('./components/optimizationIndex');
 var OptimizationDetail = require('./components/optimizationDetail');
+var OptimizationNewForm = require('./components/optimizationNewForm');
 
 // for testing
 window.ApiUtil = ApiUtil;
@@ -22,6 +23,7 @@ window.OptimizationStore = OptimizationStore;
 var routes = (
   <Route component={App} path='/'>
     <Route component={OptimizationDetail} path='optimizations/:optimizationId'></Route>
+    <Route component={OptimizationNewForm} path='optimizations/form/new'></Route>
   </Route>
 );
 

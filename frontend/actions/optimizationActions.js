@@ -24,6 +24,12 @@ var OptimizationActions = {
   retrieveOneOptimization: function (optimizationId) {
     ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
   },
+
+  retrieveNewOptimization: function (newOptimization) {
+    var newOptimization = { optimization: newOptimization };
+    ApiUtil.createOptimization(newOptimization, this.receiveOneOptimization);
+  },
+
 };
 
 module.exports = OptimizationActions;

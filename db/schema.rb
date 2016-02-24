@@ -16,6 +16,9 @@ ActiveRecord::Schema.define(version: 20160223014000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  # Create optimization params:
+  # { optimization: {title: 'newTest', description: 'adfafa afas afdaf', investment_time: '12123', time_saved_per_occurrence: '323421124', frequency: '234', public: true} }
+
   create_table "optimizations", force: :cascade do |t|
     t.string   "title",                     null: false
     t.text     "description"

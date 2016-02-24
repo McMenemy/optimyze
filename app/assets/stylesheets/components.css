@@ -28,6 +28,11 @@
   border: 1px solid #000;
 }
 
+#newOptimizationButton {
+  border: 1px solid #0f0;
+  background-color: #00f;
+}
+
 /*optimizationIndexItem*/
 
 .optimizationIndexItem {
@@ -47,6 +52,16 @@
 /*optimizationDetail*/
 
 #optimizationDetail {
+  position: relative;
+  margin: 0 auto;
+  width: 400px;
+  min-height: 20px;
+  border: 1px solid #000;
+}
+
+/*optimizationNewForm*/
+
+#optimizationNewForm {
   position: relative;
   margin: 0 auto;
   width: 400px;

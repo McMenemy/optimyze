@@ -2,8 +2,11 @@ var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
 var OptimizationIndexItem = require('./optimizationIndexItem');
+var History = require('react-router').History;
 
 var OptimizationsIndex = React.createClass({
+  mixins: [History],
+
   getInitialState: function () {
     return { optimizations: OptimizationStore.all() };
   },
@@ -31,9 +34,14 @@ var OptimizationsIndex = React.createClass({
     return listOfOptimizations;
   },
 
+  clickNewOptimization: function () {
+    this.history.push('optimizations/form/new');
+  },
+
   render: function () {
     return (
       <ul id="optimizationsIndex"><p>I'm in OptimizationsIndex</p>
+        <button id="newOptimizationButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
         {this.createOptimizationList()}
       </ul>
     );

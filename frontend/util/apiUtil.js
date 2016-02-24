@@ -24,6 +24,21 @@ var ApiUtil = {
         },
     });
   },
+
+  createOptimization: function (newOptimization, callback) {
+    $.ajax({
+      type: 'POST',
+      url: 'api/optimizations',
+      data: newOptimization,
+      dataType: 'json',
+      success:
+        function (respData) {
+          callback(respData);
+          console.log('ajax create', respData);
+        },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;
