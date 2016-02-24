@@ -6,10 +6,12 @@ var OptimizationActions = require('./actions/optimizationActions');
 var OptimizationStore = require('./stores/optimizations.js');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
+var IndexRoute = require('react-router').IndexRoute;
 
 // Components
 var App = require('./components/app');
 var SearchIndex =  require('./components/searchIndex');
+var OptimizationIndex = require('./components/optimizationIndex');
 
 // for testing
 window.ApiUtil = ApiUtil;
@@ -25,7 +27,8 @@ window.OptimizationStore = OptimizationStore;
 
 var routes = (
   <Route component={App} path='/'>
-    <Route component={SearchIndex} path='search'></Route>
+      <IndexRoute component={SearchIndex}></IndexRoute>
+      <IndexRoute component={OptimizationIndex}></IndexRoute>
   </Route>
 );
 

@@ -52,10 +52,12 @@
 	var OptimizationStore = __webpack_require__(219);
 	var Router = __webpack_require__(167).Router;
 	var Route = __webpack_require__(167).Route;
+	var IndexRoute = __webpack_require__(167).IndexRoute;
 
 	// Components
 	var App = __webpack_require__(159);
 	var SearchIndex = __webpack_require__(218);
+	var OptimizationIndex = __webpack_require__(237);
 
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -72,7 +74,8 @@
 	var routes = React.createElement(
 	  Route,
 	  { component: App, path: '/' },
-	  React.createElement(Route, { component: SearchIndex, path: 'search' })
+	  React.createElement(IndexRoute, { component: SearchIndex }),
+	  React.createElement(IndexRoute, { component: OptimizationIndex })
 	);
 
 	document.addEventListener('DOMContentLoaded', function () {
@@ -19697,7 +19700,21 @@
 	    return React.createElement(
 	      "div",
 	      { id: "app" },
-	      "I'm in app component, using React Routes!"
+	      React.createElement(
+	        "p",
+	        null,
+	        "I'm in app component, using React Routes!"
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "left-pane" },
+	        React.createElement(
+	          "p",
+	          null,
+	          "I'm in left-pane"
+	        ),
+	        this.props.children
+	      )
 	    );
 	  }
 	});
@@ -24876,7 +24893,11 @@
 	    return React.createElement(
 	      "div",
 	      { id: "searchIndex" },
-	      "I'm in the search component"
+	      React.createElement(
+	        "p",
+	        null,
+	        "I'm in the search component"
+	      )
 	    );
 	  }
 	});
@@ -31373,6 +31394,63 @@
 
 	module.exports = FluxMixinLegacy;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var OptimizationStore = __webpack_require__(219);
+	var OptimizationActions = __webpack_require__(161);
+
+	var OptimizationsIndex = React.createClass({
+	  displayName: 'OptimizationsIndex',
+
+	  getInitialState: function () {
+	    return { optimizations: OptimizationStore.all() };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ optimizations: OptimizationStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.optimizationToken = OptimizationStore.addListener(this._onChange);
+	    OptimizationActions.retrieveAllPublicOptimizations();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.optimizationToken.remove();
+	  },
+
+	  createOptimizationList: function () {
+	    var listOfOptimizations = this.state.optimizations.map(function (el, idx) {
+	      return React.createElement(
+	        'li',
+	        { key: idx },
+	        el.title
+	      );
+	    });
+
+	    return listOfOptimizations;
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      { id: 'optimizationsIndex' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'I\'m in OptimizationsIndex'
+	      ),
+	      this.createOptimizationList()
+	    );
+	  }
+
+	});
+
+	module.exports = OptimizationsIndex;
 
 /***/ }
 /******/ ]);
