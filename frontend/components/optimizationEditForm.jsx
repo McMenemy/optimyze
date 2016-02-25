@@ -1,3 +1,4 @@
+// NB refactor by removing defaultValue from form and changing getStateFromStore function to return just params (don't nest)
 var React = require('react');
 var OptimizationActions = require('../actions/optimizationActions');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');

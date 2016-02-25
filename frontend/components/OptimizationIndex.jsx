@@ -40,7 +40,8 @@ var OptimizationsIndex = React.createClass({
 
   render: function () {
     return (
-      <ul id="optimizationsIndex"><p>I'm in OptimizationsIndex</p>
+      <ul id="optimizationsIndex">
+        <h2>your optimizations</h2>
         <button id="newOptimizationButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
         {this.createOptimizationList()}
       </ul>

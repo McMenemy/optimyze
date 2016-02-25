@@ -1,0 +1,66 @@
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  height: 50px;
+  z-index: 1;
+  background-color: #FCFCFC;
+  font-size: 20px;
+  border-bottom: 6px solid #DDD;
+  margin: 0;
+  padding: 0;
+  display: block;
+  line-height: 1;
+}
+
+.header a {
+  display: block;
+  padding: 0px;
+  height: 37px;
+}
+
+.header-nav {
+  margin: 0 auto;
+  width: 900px;
+}
+
+.header-logo {
+  display: inline;
+  margin: 0;
+  float: left;
+  padding-left: 6px;
+  line-height: 50px;
+  color: #3dd0ac;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.header-logo:hover {
+  border-bottom: 2px solid #3dd0ac;
+}
+
+.header-list {
+  margin: 0;
+  padding: 0;
+  float: right;
+  font-size: 100%;
+  vertical-align: baseline;
+  display: block;
+  line-height: 1;
+}
+
+.header-list > li {
+  display: inline;
+  float: left;
+  height: 50px;
+  padding-left: 4px;
+  padding-right: 6px;
+  line-height: 50px;
+  cursor: pointer;
+  margin: 0;
+  color: #737373;
+}
+
+.header-list > li:hover > a{
+  border-bottom: 2px solid #3dd0ac;
+}

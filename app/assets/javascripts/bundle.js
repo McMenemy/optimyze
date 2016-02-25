@@ -56,11 +56,11 @@
 
 	// Components
 	var App = __webpack_require__(235);
-	var SearchIndex = __webpack_require__(239);
+	var SearchIndex = __webpack_require__(236);
 	var OptimizationIndex = __webpack_require__(237);
-	var OptimizationDetail = __webpack_require__(240);
-	var OptimizationNewForm = __webpack_require__(241);
-	var OptimizationEditForm = __webpack_require__(246);
+	var OptimizationDetail = __webpack_require__(239);
+	var OptimizationNewForm = __webpack_require__(240);
+	var OptimizationEditForm = __webpack_require__(245);
 
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -31375,7 +31375,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SearchIndex = __webpack_require__(239);
+	var SearchIndex = __webpack_require__(236);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -31385,28 +31385,13 @@
 	      'div',
 	      { id: 'app' },
 	      React.createElement(
-	        'p',
-	        null,
-	        'I\'m in app component, using React Routes!'
-	      ),
-	      React.createElement(
 	        'div',
 	        { className: 'left-pane' },
-	        React.createElement(
-	          'p',
-	          null,
-	          'I\'m in left-pane'
-	        ),
 	        React.createElement(SearchIndex, null)
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'right-pane' },
-	        React.createElement(
-	          'p',
-	          null,
-	          'I\'m in right-pane'
-	        ),
 	        this.props.children
 	      )
 	    );
@@ -31416,7 +31401,27 @@
 	module.exports = App;
 
 /***/ },
-/* 236 */,
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var OptimizationIndex = __webpack_require__(237);
+
+	var SearchIndex = React.createClass({
+	  displayName: 'SearchIndex',
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { id: 'searchIndex' },
+	      React.createElement(OptimizationIndex, null)
+	    );
+	  }
+	});
+
+	module.exports = SearchIndex;
+
+/***/ },
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31465,9 +31470,9 @@
 	      'ul',
 	      { id: 'optimizationsIndex' },
 	      React.createElement(
-	        'p',
+	        'h2',
 	        null,
-	        'I\'m in OptimizationsIndex'
+	        'your optimizations'
 	      ),
 	      React.createElement(
 	        'button',
@@ -31525,32 +31530,6 @@
 
 /***/ },
 /* 239 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var OptimizationIndex = __webpack_require__(237);
-
-	var SearchIndex = React.createClass({
-	  displayName: 'SearchIndex',
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { id: 'searchIndex' },
-	      React.createElement(
-	        'p',
-	        null,
-	        'I\'m in the search component'
-	      ),
-	      React.createElement(OptimizationIndex, null)
-	    );
-	  }
-	});
-
-	module.exports = SearchIndex;
-
-/***/ },
-/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31617,12 +31596,12 @@
 	module.exports = OptimizationDetail;
 
 /***/ },
-/* 241 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(242);
+	var LinkedStateMixin = __webpack_require__(241);
 	var History = __webpack_require__(184).History;
 
 	var OptimizationNewForm = React.createClass({
@@ -31719,13 +31698,13 @@
 	module.exports = OptimizationNewForm;
 
 /***/ },
-/* 242 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(243);
+	module.exports = __webpack_require__(242);
 
 /***/ },
-/* 243 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31742,8 +31721,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(244);
-	var ReactStateSetters = __webpack_require__(245);
+	var ReactLink = __webpack_require__(243);
+	var ReactStateSetters = __webpack_require__(244);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -31766,7 +31745,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 244 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31840,7 +31819,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 245 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/**
@@ -31949,12 +31928,13 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// NB refactor by removing defaultValue from form and changing getStateFromStore function to return just params (don't nest)
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(242);
+	var LinkedStateMixin = __webpack_require__(241);
 	var History = __webpack_require__(184).History;
 
 	var OptimizationEditForm = React.createClass({

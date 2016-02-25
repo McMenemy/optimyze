@@ -2,16 +2,15 @@
   float: left;
   width: 435px;
   min-height: 400px;
-  padding: 10px;
-  border: 1px solid #000;
+  margin: 20px;
   top: -20;
+  background-color: #3dd0ac;
 }
 
 .right-pane {
   float: right;
-  width: 420px;
+  width: 400px;
   min-height: 400px;
   padding: 10px;
-  border: 1px solid #000;
   top: -20;
 }
