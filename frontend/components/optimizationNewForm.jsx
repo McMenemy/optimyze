@@ -35,32 +35,26 @@ var OptimizationNewForm = React.createClass({
             <label>title</label>
             <input type="text" valueLink={this.linkState('title')} />
           </div>
-          <br />
           <div className="formGroup">
             <label>description</label>
             <input type="text" valueLink={this.linkState('description')} />
           </div>
-          <br />
           <div className="formGroup">
             <label>setup time</label>
             <input type="number" valueLink={this.linkState('investment_time')} />
           </div>
-          <br />
           <div className="formGroup">
             <label>time saved per occurrence</label>
             <input type="number" valueLink={this.linkState('time_saved_per_occurrence')} />
           </div>
-          <br />
           <div className="formGroup">
             <label>frequency</label>
             <input type="number" valueLink={this.linkState('frequency')} />
           </div>
-          <br />
           <div className="formGroup">
             <label>public</label>
             <input type="text" valueLink={this.linkState('public')} />
           </div>
-          <br />
           <input className="whiteButton green-button-overlay" type="submit" value="create optimization"/>
         </form>
         <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>

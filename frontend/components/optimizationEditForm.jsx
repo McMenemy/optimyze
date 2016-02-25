@@ -8,7 +8,6 @@ var OptimizationEditForm = React.createClass({
 
   getStateFromStore: function () {
     return OptimizationStore.find(this.props.params.optimizationId);
-
   },
 
   getInitialState: function () {
@@ -42,33 +41,33 @@ var OptimizationEditForm = React.createClass({
       <div id="optimizationEditForm">
         <h3>Edit an Optimization</h3>
         <form className='optimizationForm' onSubmit={this.handleSubmit}>
-          <label>Title:
-            <input type="text" defaultValue={this.state.title} valueLink={this.linkState('title')} />
-          </label>
-          <br />
-          <label>Description:
-            <input type="text" defaultValue={this.state.description} valueLink={this.linkState('description')} />
-          </label>
-          <br />
-          <label>Investment Time:
-            <input type="text" defaultValue={this.state.investment_time} valueLink={this.linkState('investment_time')} />
-          </label>
-          <br />
-          <label>Time Save per Occurrence:
-            <input type="text" defaultValue={this.state.time_saved_per_occurrence} valueLink={this.linkState('time_saved_per_occurrence')} />
-          </label>
-          <br />
-          <label>Frequency:
-            <input type="text" defaultValue={this.state.frequency} valueLink={this.linkState('frequency')} />
-          </label>
-          <br />
-          <label>Public:
-            <input type="text" defaultValue={this.state.public} valueLink={this.linkState('public')} />
-          </label>
-          <br />
-          <input type="submit" value="update optimization"/>
+          <div className="formGroup">
+            <label>title</label>
+            <input type="text" valueLink={this.linkState('title')} />
+          </div>
+          <div className="formGroup">
+            <label>description</label>
+            <input type="text" valueLink={this.linkState('description')} />
+          </div>
+          <div className="formGroup">
+            <label>setup time</label>
+            <input type="number" valueLink={this.linkState('investment_time')} />
+          </div>
+          <div className="formGroup">
+            <label>time saved per occurrence</label>
+            <input type="number" valueLink={this.linkState('time_saved_per_occurrence')} />
+          </div>
+          <div className="formGroup">
+            <label>frequency</label>
+            <input type="number" valueLink={this.linkState('frequency')} />
+          </div>
+          <div className="formGroup">
+            <label>public</label>
+            <input type="text" valueLink={this.linkState('public')} />
+          </div>
+          <input type="submit" className="whiteButton green-button-overlay" value="update optimization"/>
         </form>
-        <button onClick={this.handleCancel}>Cancel</button>
+        <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>Cancel</button>
       </div>
     );
   },
