@@ -1,8 +1,9 @@
 .left-pane {
   float: left;
-  width: 435px;
+  width: 400px;
   min-height: 400px;
   margin: 20px;
+  padding: 20px;
   top: -20;
   background-color: #3dd0ac;
 }

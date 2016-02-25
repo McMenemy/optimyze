@@ -42,7 +42,7 @@ var OptimizationsIndex = React.createClass({
     return (
       <ul id="optimizationsIndex">
         <h2>your optimizations</h2>
-        <button id="newOptimizationButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
+        <button className="whiteButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
         {this.createOptimizationList()}
       </ul>
     );

@@ -14,7 +14,7 @@ var OptimizationIndexItem = React.createClass({
 
   render: function () {
     return (
-      <li className="optimizationIndexItem">
+      <li className="whiteButton optimizationIndexItem">
         <p onClick={this.clickOptimization}>
           {this.props.optimization.title}
         </p>

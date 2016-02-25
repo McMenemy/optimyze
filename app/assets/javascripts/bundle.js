@@ -31476,7 +31476,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { id: 'newOptimizationButton', onClick: this.clickNewOptimization },
+	        { className: 'whiteButton', onClick: this.clickNewOptimization },
 	        'Create New Optimization'
 	      ),
 	      this.createOptimizationList()
@@ -31510,7 +31510,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'li',
-	      { className: 'optimizationIndexItem' },
+	      { className: 'whiteButton optimizationIndexItem' },
 	      React.createElement(
 	        'p',
 	        { onClick: this.clickOptimization },
