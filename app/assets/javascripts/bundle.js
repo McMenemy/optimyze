@@ -20095,6 +20095,7 @@
 	  },
 
 	  retrieveUpdatedOptimization: function (patchParams) {
+	    debugger;
 	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
 	  }
 
@@ -31955,7 +31956,6 @@
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// NB refactor by removing defaultValue from form and changing getStateFromStore function to return just params (don't nest)
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
 	var LinkedStateMixin = __webpack_require__(241);
@@ -31967,7 +31967,7 @@
 	  mixins: [LinkedStateMixin, History],
 
 	  getStateFromStore: function () {
-	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+	    return OptimizationStore.find(this.props.params.optimizationId);
 	  },
 
 	  getInitialState: function () {
@@ -31980,11 +31980,7 @@
 
 	  handleSubmit: function (event) {
 	    event.preventDefault();
-	    var patchParams = this.state;
-	    patchParams.id = this.state.optimization.id;
-	    delete patchParams.optimization;
-	    patchParams = { optimization: patchParams };
-
+	    var patchParams = { optimization: this.state };
 	    OptimizationActions.retrieveUpdatedOptimization(patchParams);
 	    this.navigateToDashboard();
 	  },
@@ -31999,7 +31995,7 @@
 	  },
 
 	  render: function () {
-	    if (this.state.optimization === undefined) {
+	    if (this.state.id === undefined) {
 	      return React.createElement('div', null);
 	    }
 
@@ -32018,42 +32014,42 @@
 	          'label',
 	          null,
 	          'Title:',
-	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.title, valueLink: this.linkState('title') })
+	          React.createElement('input', { type: 'text', defaultValue: this.state.title, valueLink: this.linkState('title') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'label',
 	          null,
 	          'Description:',
-	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.description, valueLink: this.linkState('description') })
+	          React.createElement('input', { type: 'text', defaultValue: this.state.description, valueLink: this.linkState('description') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'label',
 	          null,
 	          'Investment Time:',
-	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.investment_time, valueLink: this.linkState('investment_time') })
+	          React.createElement('input', { type: 'text', defaultValue: this.state.investment_time, valueLink: this.linkState('investment_time') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'label',
 	          null,
 	          'Time Save per Occurrence:',
-	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.time_saved_per_occurrence, valueLink: this.linkState('time_saved_per_occurrence') })
+	          React.createElement('input', { type: 'text', defaultValue: this.state.time_saved_per_occurrence, valueLink: this.linkState('time_saved_per_occurrence') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'label',
 	          null,
 	          'Frequency:',
-	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.frequency, valueLink: this.linkState('frequency') })
+	          React.createElement('input', { type: 'text', defaultValue: this.state.frequency, valueLink: this.linkState('frequency') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'label',
 	          null,
 	          'Public:',
-	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.public, valueLink: this.linkState('public') })
+	          React.createElement('input', { type: 'text', defaultValue: this.state.public, valueLink: this.linkState('public') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement('input', { type: 'submit', value: 'update optimization' })

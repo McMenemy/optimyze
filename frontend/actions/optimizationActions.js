@@ -30,6 +30,7 @@ var OptimizationActions = {
   },
 
   retrieveUpdatedOptimization: function (patchParams) {
+    debugger;
     ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
   },
 
