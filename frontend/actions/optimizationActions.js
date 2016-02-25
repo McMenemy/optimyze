@@ -25,9 +25,12 @@ var OptimizationActions = {
     ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
   },
 
-  retrieveNewOptimization: function (newOptimization) {
-    var newOptimization = { optimization: newOptimization };
-    ApiUtil.createOptimization(newOptimization, this.receiveOneOptimization);
+  retrieveNewOptimization: function (updateParams) {
+    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+  },
+
+  retrieveUpdatedOptimization: function (patchParams) {
+    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
   },
 
 };

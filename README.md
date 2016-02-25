@@ -69,11 +69,10 @@ user interface.
 - [x] setup the flux loop with skeleton files
 - [x] setup React Router
 - implement the following components
-  - [ ] `OptimizationNewButton`
   - [x] `OptimizationIndex`
   - [x] `OptimizationIndexItem`
-  - [ ] `OptimizationEditForm`
-  - [ ] `OptimizationNewForm`
+  - [x] `OptimizationEditForm`
+  - [x] `OptimizationNewForm`
   - [x] `OptimizationDetail` - just show raw info, no graphing
 
 ### Phase 4: Start Styling (1 day)

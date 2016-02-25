@@ -60,6 +60,7 @@
 	var OptimizationIndex = __webpack_require__(237);
 	var OptimizationDetail = __webpack_require__(240);
 	var OptimizationNewForm = __webpack_require__(241);
+	var OptimizationEditForm = __webpack_require__(246);
 
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -70,7 +71,8 @@
 	  Route,
 	  { component: App, path: '/' },
 	  React.createElement(Route, { component: OptimizationDetail, path: 'optimizations/:optimizationId' }),
-	  React.createElement(Route, { component: OptimizationNewForm, path: 'optimizations/form/new' })
+	  React.createElement(Route, { component: OptimizationNewForm, path: 'optimizations/form/new' }),
+	  React.createElement(Route, { component: OptimizationEditForm, path: 'optimizations/form/edit/:optimizationId' })
 	);
 
 	document.addEventListener('DOMContentLoaded', function () {
@@ -20027,15 +20029,28 @@
 	    });
 	  },
 
-	  createOptimization: function (newOptimization, callback) {
+	  createOptimization: function (updateParams, callback) {
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/optimizations',
-	      data: newOptimization,
+	      data: updateParams,
 	      dataType: 'json',
 	      success: function (respData) {
 	        callback(respData);
 	        console.log('ajax create', respData);
+	      }
+	    });
+	  },
+
+	  updateOptimization: function (patchParams, callback) {
+	    $.ajax({
+	      type: 'PATCH',
+	      url: 'api/optimizations/' + patchParams.optimization.id,
+	      data: patchParams,
+	      dataType: 'json',
+	      success: function (respData) {
+	        callback(respData);
+	        console.log('ajax update', respData);
 	      }
 	    });
 	  }
@@ -20075,9 +20090,12 @@
 	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
 	  },
 
-	  retrieveNewOptimization: function (newOptimization) {
-	    var newOptimization = { optimization: newOptimization };
-	    ApiUtil.createOptimization(newOptimization, this.receiveOneOptimization);
+	  retrieveNewOptimization: function (updateParams) {
+	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+	  },
+
+	  retrieveUpdatedOptimization: function (patchParams) {
+	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
 	  }
 
 	};
@@ -31480,11 +31498,25 @@
 	    this.history.push('optimizations/' + this.props.optimization.id);
 	  },
 
+	  editOptimization: function () {
+	    this.history.push('optimizations/form/edit/' + this.props.optimization.id);
+	  },
+
 	  render: function () {
 	    return React.createElement(
 	      'li',
-	      { className: 'optimizationIndexItem', onClick: this.clickOptimization },
-	      this.props.optimization.title
+	      { className: 'optimizationIndexItem' },
+	      React.createElement(
+	        'p',
+	        { onClick: this.clickOptimization },
+	        this.props.optimization.title
+	      ),
+	      React.createElement('br', null),
+	      React.createElement(
+	        'button',
+	        { onClick: this.editOptimization },
+	        'Edit Optimization'
+	      )
 	    );
 	  }
 	});
@@ -31604,8 +31636,8 @@
 
 	  handleSubmit: function (event) {
 	    event.preventDefault();
-	    var optimization = Object.assign({}, this.state);
-	    OptimizationActions.retrieveNewOptimization(optimization);
+	    var updateParams = { optimization: this.state };
+	    OptimizationActions.retrieveNewOptimization(updateParams);
 	    this.navigateToDashboard();
 	  },
 
@@ -31672,7 +31704,7 @@
 	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
 	        ),
 	        React.createElement('br', null),
-	        React.createElement('input', { type: 'submit', value: 'creat optimization' })
+	        React.createElement('input', { type: 'submit', value: 'create optimization' })
 	      ),
 	      React.createElement(
 	        'button',
@@ -31915,6 +31947,124 @@
 	};
 
 	module.exports = ReactStateSetters;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var OptimizationActions = __webpack_require__(164);
+	var LinkedStateMixin = __webpack_require__(242);
+	var History = __webpack_require__(184).History;
+
+	var OptimizationEditForm = React.createClass({
+	  displayName: 'OptimizationEditForm',
+
+	  mixins: [LinkedStateMixin, History],
+
+	  getStateFromStore: function () {
+	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+	  },
+
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState(this.getStateFromStore());
+	  },
+
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    var patchParams = this.state;
+	    patchParams.id = this.state.optimization.id;
+	    delete patchParams.optimization;
+	    patchParams = { optimization: patchParams };
+
+	    OptimizationActions.retrieveUpdatedOptimization(patchParams);
+	    this.navigateToDashboard();
+	  },
+
+	  navigateToDashboard: function () {
+	    this.history.push('/');
+	  },
+
+	  handleCancel: function (event) {
+	    event.preventDefault();
+	    this.navigateToDashboard();
+	  },
+
+	  render: function () {
+	    if (this.state.optimization === undefined) {
+	      return React.createElement('div', null);
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { id: 'optimizationEditForm' },
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Edit an Optimization'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Title:',
+	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.title, valueLink: this.linkState('title') })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Description:',
+	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.description, valueLink: this.linkState('description') })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Investment Time:',
+	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.investment_time, valueLink: this.linkState('investment_time') })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Time Save per Occurrence:',
+	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.time_saved_per_occurrence, valueLink: this.linkState('time_saved_per_occurrence') })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Frequency:',
+	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.frequency, valueLink: this.linkState('frequency') })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Public:',
+	          React.createElement('input', { type: 'text', defaultValue: this.state.optimization.public, valueLink: this.linkState('public') })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement('input', { type: 'submit', value: 'update optimization' })
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.handleCancel },
+	        'Cancel'
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = OptimizationEditForm;
 
 /***/ }
 /******/ ]);

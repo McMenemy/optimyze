@@ -25,16 +25,30 @@ var ApiUtil = {
     });
   },
 
-  createOptimization: function (newOptimization, callback) {
+  createOptimization: function (updateParams, callback) {
     $.ajax({
       type: 'POST',
       url: 'api/optimizations',
-      data: newOptimization,
+      data: updateParams,
       dataType: 'json',
       success:
         function (respData) {
           callback(respData);
           console.log('ajax create', respData);
+        },
+    });
+  },
+
+  updateOptimization: function (patchParams, callback) {
+    $.ajax({
+      type: 'PATCH',
+      url: 'api/optimizations/' + patchParams.optimization.id,
+      data: patchParams,
+      dataType: 'json',
+      success:
+        function (respData) {
+          callback(respData);
+          console.log('ajax update', respData);
         },
     });
   },

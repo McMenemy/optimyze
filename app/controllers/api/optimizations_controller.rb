@@ -9,6 +9,16 @@ class Api::OptimizationsController < ApplicationController
       end
     end
 
+    def update
+      @optimization = Optimization.find(params[:id])
+
+      if @optimization.update(optimization_params)
+        render :show
+      else
+        render json: @optimization.errors.full_messages, status: 422
+      end
+    end
+
     def destroy
       @optimization = Optimization.find(params[:id])
       @optimization.destroy

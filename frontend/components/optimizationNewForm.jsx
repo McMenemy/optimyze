@@ -12,8 +12,8 @@ var OptimizationNewForm = React.createClass({
 
   handleSubmit: function (event) {
     event.preventDefault();
-    var optimization = Object.assign({}, this.state);
-    OptimizationActions.retrieveNewOptimization(optimization);
+    var updateParams = { optimization: this.state };
+    OptimizationActions.retrieveNewOptimization(updateParams);
     this.navigateToDashboard();
   },
 
@@ -55,7 +55,7 @@ var OptimizationNewForm = React.createClass({
             <input type="text" valueLink={this.linkState('public')} />
           </label>
           <br />
-          <input type="submit" value="creat optimization"/>
+          <input type="submit" value="create optimization"/>
         </form>
         <button onClick={this.handleCancel}>Cancel</button>
       </div>
