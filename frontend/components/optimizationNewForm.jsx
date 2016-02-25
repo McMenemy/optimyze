@@ -28,7 +28,7 @@ var OptimizationNewForm = React.createClass({
 
   render: function () {
     return (
-      <div id="optimizationNewForm">
+      <div id="optimization-form">
         <h2>Create an Optimization</h2>
         <form className='optimizationForm' onSubmit={this.handleSubmit}>
           <div className="formGroup">

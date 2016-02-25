@@ -31513,15 +31513,22 @@
 	      'li',
 	      { className: 'whiteButton optimizationIndexItem' },
 	      React.createElement(
-	        'p',
-	        { onClick: this.clickOptimization },
-	        this.props.optimization.title
+	        'button',
+	        { className: 'optimization-item-title-button', onClick: this.clickOptimization },
+	        React.createElement(
+	          'p',
+	          null,
+	          this.props.optimization.title
+	        )
 	      ),
-	      React.createElement('br', null),
 	      React.createElement(
 	        'button',
-	        { onClick: this.editOptimization },
-	        'Edit Optimization'
+	        { className: 'optimization-item-edit-button', onClick: this.editOptimization },
+	        React.createElement(
+	          'p',
+	          null,
+	          'Edit'
+	        )
 	      )
 	    );
 	  }
@@ -31633,7 +31640,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'optimizationNewForm' },
+	      { id: 'optimization-form' },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -31995,9 +32002,9 @@
 
 	    return React.createElement(
 	      'div',
-	      { id: 'optimizationEditForm' },
+	      { id: 'optimization-form' },
 	      React.createElement(
-	        'h3',
+	        'h2',
 	        null,
 	        'Edit an Optimization'
 	      ),

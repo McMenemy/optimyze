@@ -1,7 +1,5 @@
 /*used in multiple components*/
 .whiteButton {
-  padding: 10px 10px;
-  margin: 15px 15px 0 0;
   background-color: #FFF;
   float: left;
   color: #777;
@@ -75,32 +73,56 @@
 
 #searchIndex {
   position: relative;
-  margin: 0 auto;
-  width: 400px;
+  width: 100%;
   min-height: 20px;
+  margin: 0 auto;
+  padding: 0px;
 }
 
 /*optimizationsIndex*/
 
 #optimizationsIndex {
   position: relative;
+  width: 100%;
   margin: 0 auto;
-  width: 380px;
-  min-height: 20px;
+  text-align: center;
 }
 
 #optimizationsIndex > h2 {
+  padding: 15px;
   text-align: center;
   font-size: 24px;
-  padding: 15px;
   color: #fff;
 }
 
 /*optimizationIndexItem*/
 
 .optimizationIndexItem {
-  width: 350px;
+  width: 80%;
+  height: 40px;
+  margin: 10px 10%;
 }
+
+.optimization-item-title-button {
+  width: 80%;
+  padding: 11px 0px 11px 0px;
+  text-align: left;
+}
+
+.optimization-item-title-button > p {
+  padding-left: 22px;
+}
+
+.optimization-item-edit-button {
+  width: 20%;
+  padding: 11px 0px 11px 0px;
+  text-align: right;
+}
+
+.optimization-item-edit-button > p {
+  padding-right: 22px;
+}
+
 
 /*optimizationDetail*/
 
@@ -112,16 +134,16 @@
   border: 1px solid #000;
 }
 
-/*optimizationNewForm*/
+/*optimizationNewForm and optimizationEditForm*/
 
-#optimizationNewForm {
+#optimizationForm {
   position: relative;
   margin: 0 auto;
   width: 400px;
   min-height: 20px;
 }
 
-#optimizationNewForm > h2 {
+#optimization-form > h2 {
   text-align: center;
   font-size: 24px;
   padding: 15px;

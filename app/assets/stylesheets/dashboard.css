@@ -1,17 +1,16 @@
 .left-pane {
   float: left;
-  width: 400px;
+  width: 38%;
   min-height: 400px;
-  margin: 20px;
-  padding: 20px;
-  top: -20;
+  margin: 3%;
+  padding: 3%;
   background-color: #3dd0ac;
 }
 
 .right-pane {
   float: right;
-  width: 400px;
+  width: 38%;
+  margin: 3%;
+  padding: 3%;
   min-height: 400px;
-  padding: 10px;
-  top: -20;
 }

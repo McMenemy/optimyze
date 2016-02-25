@@ -38,8 +38,8 @@ var OptimizationEditForm = React.createClass({
     if (this.state.id === undefined) { return <div></div>; }
 
     return (
-      <div id="optimizationEditForm">
-        <h3>Edit an Optimization</h3>
+      <div id="optimization-form">
+        <h2>Edit an Optimization</h2>
         <form className='optimizationForm' onSubmit={this.handleSubmit}>
           <div className="formGroup">
             <label>title</label>
