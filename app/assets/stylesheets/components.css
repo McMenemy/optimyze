@@ -2,18 +2,13 @@
 .whiteButton {
   padding: 10px 10px;
   margin: 15px 15px 0 0;
-  background: #FFF;
+  background-color: #FFF;
   float: left;
   color: #777;
   box-shadow: 3px 3px 0 #777;
 }
 
 .whiteButton:hover {
-  padding: 10px 10px;
-  margin: 15px 15px 0 0;
-  background: #FFF;
-  float: left;
-  color: #777;
   box-shadow: 2px 2px 0 #777;
   -webkit-transform: translateX(1px);
   -moz-transform: translateX(1px);
@@ -25,6 +20,40 @@
   -ms-transform: translateY(1px);
   -o-transform: translateY(1px);
   transform: translateY(1px);
+}
+
+.green-button-overlay {
+  background-color: #3dd0ac;
+  color: #fff;
+}
+
+.optimizationForm {
+  text-align: center;
+}
+
+.formGroup {
+  width 100%;
+}
+
+.formGroup > label {
+  display: inline-block;
+  width: 25%;
+  padding: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: #00C58E;
+  color: #FFF;
+  border-top: 4px solid #00C58E;
+}
+
+.formGroup > input {
+  width: 75%;
+  padding: 8px;
+  font-size: 16px;
+  background-color: #3dd0ac;
+  box-sizing: border-box;
+  color: #FFF;
+  border-top: 4px solid #00C58E;
 }
 
 
@@ -89,4 +118,11 @@
   margin: 0 auto;
   width: 400px;
   min-height: 20px;
+}
+
+#optimizationNewForm > h2 {
+  text-align: center;
+  font-size: 24px;
+  padding: 15px;
+  color: #3dd0ac;
 }

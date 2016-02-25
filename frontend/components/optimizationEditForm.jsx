@@ -45,7 +45,7 @@ var OptimizationEditForm = React.createClass({
     return (
       <div id="optimizationEditForm">
         <h3>Edit an Optimization</h3>
-        <form onSubmit={this.handleSubmit}>
+        <form className='optimizationForm' onSubmit={this.handleSubmit}>
           <label>Title:
             <input type="text" defaultValue={this.state.optimization.title} valueLink={this.linkState('title')} />
           </label>

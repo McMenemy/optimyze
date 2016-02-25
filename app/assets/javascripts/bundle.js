@@ -31634,61 +31634,85 @@
 	      'div',
 	      { id: 'optimizationNewForm' },
 	      React.createElement(
-	        'h3',
+	        'h2',
 	        null,
 	        'Create an Optimization'
 	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.handleSubmit },
+	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          'label',
-	          null,
-	          'Title:',
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'title'
+	          ),
 	          React.createElement('input', { type: 'text', valueLink: this.linkState('title') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
-	          'label',
-	          null,
-	          'Description:',
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'description'
+	          ),
 	          React.createElement('input', { type: 'text', valueLink: this.linkState('description') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
-	          'label',
-	          null,
-	          'Investment Time:',
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('investment_time') })
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'setup time'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
-	          'label',
-	          null,
-	          'Time Save per Occurrence:',
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('time_saved_per_occurrence') })
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'time saved per occurrence'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
-	          'label',
-	          null,
-	          'Frequency:',
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('frequency') })
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'frequency'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
-	          'label',
-	          null,
-	          'Public:',
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'public'
+	          ),
 	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
 	        ),
 	        React.createElement('br', null),
-	        React.createElement('input', { type: 'submit', value: 'create optimization' })
+	        React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'create optimization' })
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.handleCancel },
-	        'Cancel'
+	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
+	        'cancel'
 	      )
 	    );
 	  }
@@ -31989,7 +32013,7 @@
 	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.handleSubmit },
+	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'label',
 	          null,

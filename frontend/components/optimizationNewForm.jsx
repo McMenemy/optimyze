@@ -29,35 +29,41 @@ var OptimizationNewForm = React.createClass({
   render: function () {
     return (
       <div id="optimizationNewForm">
-        <h3>Create an Optimization</h3>
-        <form onSubmit={this.handleSubmit}>
-          <label>Title:
+        <h2>Create an Optimization</h2>
+        <form className='optimizationForm' onSubmit={this.handleSubmit}>
+          <div className="formGroup">
+            <label>title</label>
             <input type="text" valueLink={this.linkState('title')} />
-          </label>
+          </div>
           <br />
-          <label>Description:
+          <div className="formGroup">
+            <label>description</label>
             <input type="text" valueLink={this.linkState('description')} />
-          </label>
+          </div>
           <br />
-          <label>Investment Time:
-            <input type="text" valueLink={this.linkState('investment_time')} />
-          </label>
+          <div className="formGroup">
+            <label>setup time</label>
+            <input type="number" valueLink={this.linkState('investment_time')} />
+          </div>
           <br />
-          <label>Time Save per Occurrence:
-            <input type="text" valueLink={this.linkState('time_saved_per_occurrence')} />
-          </label>
+          <div className="formGroup">
+            <label>time saved per occurrence</label>
+            <input type="number" valueLink={this.linkState('time_saved_per_occurrence')} />
+          </div>
           <br />
-          <label>Frequency:
-            <input type="text" valueLink={this.linkState('frequency')} />
-          </label>
+          <div className="formGroup">
+            <label>frequency</label>
+            <input type="number" valueLink={this.linkState('frequency')} />
+          </div>
           <br />
-          <label>Public:
+          <div className="formGroup">
+            <label>public</label>
             <input type="text" valueLink={this.linkState('public')} />
-          </label>
+          </div>
           <br />
-          <input type="submit" value="create optimization"/>
+          <input className="whiteButton green-button-overlay" type="submit" value="create optimization"/>
         </form>
-        <button onClick={this.handleCancel}>Cancel</button>
+        <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>
       </div>
     );
   },
