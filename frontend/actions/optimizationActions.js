@@ -37,11 +37,11 @@ var OptimizationActions = {
     Dispatcher.dispatch({
       actionType: OptimizationConstants.OPTIMIZATION_DELETED,
       optimization: data,
-    })
-  }
+    });
+  },
 
   retrieveDeletedOptimization: function (deleteParams) {
-    ApiUtil.deleteOptimization(deleteParams, this.recieveDeletedOptimization);
+    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
   },
 
 };

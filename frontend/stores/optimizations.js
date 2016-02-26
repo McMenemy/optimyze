@@ -25,6 +25,10 @@ OptimizationStore.__onDispatch = function (payload) {
       _publicOptimizations[payload.optimization.id] = payload.optimization;
       this.__emitChange();
       break;
+    case 'DELETED_OPTIMIZATION':
+      delete _publicOptimizations.payload.optimization.id;
+      this.__emitChange();
+      break;
   }
 };
 

@@ -48,7 +48,7 @@
 	var ReactDOM = __webpack_require__(158);
 	var Dispatcher = __webpack_require__(159);
 	var ApiUtil = __webpack_require__(163);
-	var OptimizationActions = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./actions/optimizationActions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var OptimizationActions = __webpack_require__(164);
 	var OptimizationStore = __webpack_require__(166);
 	var Router = __webpack_require__(184).Router;
 	var Route = __webpack_require__(184).Route;
@@ -20052,6 +20052,19 @@
 	        console.log('ajax update', respData);
 	      }
 	    });
+	  },
+
+	  deleteOptimization: function (deleteParams, callback) {
+	    $.ajax({
+	      type: 'DELETE',
+	      url: 'api/optimizations/' + deleteParams.optimization.id,
+	      data: deleteParams,
+	      dataType: 'json',
+	      success: function (respData) {
+	        callback(respData);
+	        console.log('ajax delete', respData);
+	      }
+	    });
 	  }
 
 	};
@@ -20059,8 +20072,72 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 164 */,
-/* 165 */,
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(159);
+	var OptimizationConstants = __webpack_require__(165);
+	var ApiUtil = __webpack_require__(163);
+
+	var OptimizationActions = {
+	  receiveAllPublicOptimizations: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
+	      publicOptimizations: data
+	    });
+	  },
+
+	  retrieveAllPublicOptimizations: function () {
+	    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
+	  },
+
+	  receiveOneOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
+	      optimization: data
+	    });
+	  },
+
+	  retrieveOneOptimization: function (optimizationId) {
+	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
+	  },
+
+	  retrieveNewOptimization: function (updateParams) {
+	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+	  },
+
+	  retrieveUpdatedOptimization: function (patchParams) {
+	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
+	  },
+
+	  receiveDeletedOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
+	      optimization: data
+	    });
+	  },
+
+	  retrieveDeletedOptimization: function (deleteParams) {
+	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
+	  }
+
+	};
+
+	module.exports = OptimizationActions;
+
+/***/ },
+/* 165 */
+/***/ function(module, exports) {
+
+	var OptimizationConstants = {
+	  PUBLIC_OPTIMIZATIONS_RECEIVED: 'PUBLIC_OPTIMIZATIONS_RECEIVED',
+	  OPTIMIZATION_RECEIVED: 'OPTIMIZATION_RECEIVED',
+	  OPTIMIZATION_DELETED: 'OPTIMIZATION_DELETED'
+	};
+
+	module.exports = OptimizationConstants;
+
+/***/ },
 /* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -20089,6 +20166,10 @@
 	      break;
 	    case 'OPTIMIZATION_RECEIVED':
 	      _publicOptimizations[payload.optimization.id] = payload.optimization;
+	      this.__emitChange();
+	      break;
+	    case 'DELETED_OPTIMIZATION':
+	      delete _publicOptimizations.payload.optimization.id;
 	      this.__emitChange();
 	      break;
 	  }
@@ -31401,7 +31482,7 @@
 
 	var React = __webpack_require__(1);
 	var OptimizationStore = __webpack_require__(166);
-	var OptimizationActions = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../actions/optimizationActions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var OptimizationActions = __webpack_require__(164);
 	var OptimizationIndexItem = __webpack_require__(238);
 	var History = __webpack_require__(184).History;
 
@@ -31467,6 +31548,7 @@
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(184).History;
+	var OptimizationActions = __webpack_require__(251);
 
 	var OptimizationIndexItem = React.createClass({
 	  displayName: 'OptimizationIndexItem',
@@ -31481,14 +31563,9 @@
 	    this.history.push('optimizations/form/edit/' + this.props.optimization.id);
 	  },
 
-	  deleteOptimization: function () {},
-
-	  // handleSubmit: function (event) {
-	  //   event.preventDefault();
-	  //   var patchParams = { optimization: this.state };
-	  //   OptimizationActions.retrieveUpdatedOptimization(patchParams);
-	  //   this.navigateToDashboard();
-	  // },
+	  deleteOptimization: function () {
+	    OptimizationActions.retrieveDeletedOptimization(this.props);
+	  },
 
 	  render: function () {
 	    return React.createElement(
@@ -31533,7 +31610,7 @@
 
 	var React = __webpack_require__(1);
 	var OptimizationStore = __webpack_require__(166);
-	var OptimizationActions = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../actions/optimizationActions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var OptimizationActions = __webpack_require__(164);
 
 	var OptimizationDetail = React.createClass({
 	  displayName: 'OptimizationDetail',
@@ -31599,7 +31676,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var OptimizationActions = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../actions/optimizationActions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var OptimizationActions = __webpack_require__(164);
 	var LinkedStateMixin = __webpack_require__(241);
 	var History = __webpack_require__(184).History;
 
@@ -31949,7 +32026,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var OptimizationActions = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../actions/optimizationActions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var OptimizationActions = __webpack_require__(164);
 	var LinkedStateMixin = __webpack_require__(241);
 	var History = __webpack_require__(184).History;
 
@@ -32458,6 +32535,60 @@
 	    return React.createElement('div', { id: this.props.container });
 	  }
 	});
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(159);
+	var OptimizationConstants = __webpack_require__(165);
+	var ApiUtil = __webpack_require__(163);
+
+	var OptimizationActions = {
+	  receiveAllPublicOptimizations: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
+	      publicOptimizations: data
+	    });
+	  },
+
+	  retrieveAllPublicOptimizations: function () {
+	    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
+	  },
+
+	  receiveOneOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
+	      optimization: data
+	    });
+	  },
+
+	  retrieveOneOptimization: function (optimizationId) {
+	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
+	  },
+
+	  retrieveNewOptimization: function (updateParams) {
+	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+	  },
+
+	  retrieveUpdatedOptimization: function (patchParams) {
+	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
+	  },
+
+	  receiveDeletedOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
+	      optimization: data
+	    });
+	  },
+
+	  retrieveDeletedOptimization: function (deleteParams) {
+	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
+	  }
+
+	};
+
+	module.exports = OptimizationActions;
 
 /***/ }
 /******/ ]);

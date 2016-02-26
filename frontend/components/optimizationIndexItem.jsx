@@ -1,5 +1,6 @@
 var React = require('react');
 var History = require('react-router').History;
+var OptimizationActions = require('../actions/OptimizationActions');
 
 var OptimizationIndexItem = React.createClass({
   mixins: [History],
@@ -13,15 +14,8 @@ var OptimizationIndexItem = React.createClass({
   },
 
   deleteOptimization: function () {
-
+    OptimizationActions.retrieveDeletedOptimization(this.props);
   },
-
-  // handleSubmit: function (event) {
-  //   event.preventDefault();
-  //   var patchParams = { optimization: this.state };
-  //   OptimizationActions.retrieveUpdatedOptimization(patchParams);
-  //   this.navigateToDashboard();
-  // },
 
   render: function () {
     return (

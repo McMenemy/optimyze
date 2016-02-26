@@ -53,6 +53,20 @@ var ApiUtil = {
     });
   },
 
+  deleteOptimization: function (deleteParams, callback) {
+    $.ajax({
+      type: 'DELETE',
+      url: 'api/optimizations/' + deleteParams.optimization.id,
+      data: deleteParams,
+      dataType: 'json',
+      success:
+        function (respData) {
+          callback(respData);
+          console.log('ajax delete', respData);
+        },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;
