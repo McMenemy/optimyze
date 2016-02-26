@@ -17,7 +17,7 @@ var OptimizationsIndex = React.createClass({
 
   componentDidMount: function () {
     this.optimizationToken = OptimizationStore.addListener(this._onChange);
-    OptimizationActions.retrieveAllPublicOptimizations();
+    OptimizationActions.retrieveAllOptimizations();
   },
 
   componentWillUnmount: function () {

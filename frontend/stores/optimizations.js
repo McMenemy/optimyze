@@ -1,45 +1,45 @@
 var Dispatcher = require('../dispatcher/dispatcher');
 var Store = require('flux/utils').Store;
-var optimizationConstants = require('../constants/optimizationConstants');
+var OptimizationConstants = require('../constants/optimizationConstants');
 
-var _publicOptimizations = {};
+var _allOptimizations = {};
 var OptimizationStore = new Store(Dispatcher);
 
 OptimizationStore.resetOptimizations = function (optimizations) {
   _optimizations = {};
   optimizations.forEach(function (optimization) {
-    _publicOptimizations[optimization.id] = optimization;
+    _allOptimizations[optimization.id] = optimization;
   });
 };
 
 OptimizationStore.find = function (id) {
-  return _publicOptimizations[id];
+  return _allOptimizations[id];
 };
 
 OptimizationStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
-    case 'PUBLIC_OPTIMIZATIONS_RECEIVED':
-      this.resetOptimizations(payload.publicOptimizations);
+    case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
+      this.resetOptimizations(payload.allOptimizations);
       this.__emitChange();
       break;
-    case 'OPTIMIZATION_RECEIVED':
-      _publicOptimizations[payload.optimization.id] = payload.optimization;
+    case OptimizationConstants.OPTIMIZATION_RECEIVED:
+      _allOptimizations[payload.optimization.id] = payload.optimization;
       this.__emitChange();
       break;
-    case 'OPTIMIZATION_DELETED':
-      delete _publicOptimizations[payload.optimization.id];
+    case OptimizationConstants.OPTIMIZATION_DELETED:
+      delete _allOptimizations[payload.optimization.id];
       this.__emitChange();
       break;
   }
 };
 
 OptimizationStore.all = function () {
-  var allPublicOptimizations = [];
-  Object.keys(_publicOptimizations).forEach(function (key) {
-    allPublicOptimizations.push(_publicOptimizations[key]);
+  var allOptimizations = [];
+  Object.keys(_allOptimizations).forEach(function (key) {
+    allOptimizations.push(_allOptimizations[key]);
   });
 
-  return allPublicOptimizations;
+  return allOptimizations;
 };
 
 module.exports = OptimizationStore;

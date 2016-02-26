@@ -19,11 +19,6 @@ num_optimizations.times do |i|
   opt_params[:investment_time] = Faker::Number.number(7)
   opt_params[:time_saved_per_occurrence] = Faker::Number.number(3)
   opt_params[:frequency] = rand(10...365)
-  if i < num_optimizations - 2
-    opt_params[:public] = true
-  else
-    opt_params[:public] = false
-  end
 
   Optimization.create!(opt_params)
 end

@@ -61,10 +61,6 @@ var OptimizationEditForm = React.createClass({
             <label>frequency</label>
             <input type="number" valueLink={this.linkState('frequency')} />
           </div>
-          <div className="formGroup">
-            <label>public</label>
-            <input type="text" valueLink={this.linkState('public')} />
-          </div>
           <input type="submit" className="whiteButton green-button-overlay" value="update optimization"/>
         </form>
         <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>

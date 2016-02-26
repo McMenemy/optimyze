@@ -20003,10 +20003,8 @@
 /* 163 */
 /***/ function(module, exports) {
 
-	
-
 	var ApiUtil = {
-	  fetchAllPublicOptimizations: function (callback) {
+	  fetchAllOptimizations: function (callback) {
 	    $.ajax({
 	      url: 'api/optimizations',
 	      dataType: 'json',
@@ -20080,15 +20078,15 @@
 	var ApiUtil = __webpack_require__(163);
 
 	var OptimizationActions = {
-	  receiveAllPublicOptimizations: function (data) {
+	  receiveAllOptimizations: function (data) {
 	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
-	      publicOptimizations: data
+	      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
+	      allOptimizations: data
 	    });
 	  },
 
-	  retrieveAllPublicOptimizations: function () {
-	    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
+	  retrieveAllOptimizations: function () {
+	    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
 	  },
 
 	  receiveOneOptimization: function (data) {
@@ -20130,7 +20128,7 @@
 /***/ function(module, exports) {
 
 	var OptimizationConstants = {
-	  PUBLIC_OPTIMIZATIONS_RECEIVED: 'PUBLIC_OPTIMIZATIONS_RECEIVED',
+	  ALL_OPTIMIZATIONS_RECEIVED: 'ALL_OPTIMIZATIONS_RECEIVED',
 	  OPTIMIZATION_RECEIVED: 'OPTIMIZATION_RECEIVED',
 	  OPTIMIZATION_DELETED: 'OPTIMIZATION_DELETED'
 	};
@@ -20143,46 +20141,46 @@
 
 	var Dispatcher = __webpack_require__(159);
 	var Store = __webpack_require__(167).Store;
-	var optimizationConstants = __webpack_require__(165);
+	var OptimizationConstants = __webpack_require__(165);
 
-	var _publicOptimizations = {};
+	var _allOptimizations = {};
 	var OptimizationStore = new Store(Dispatcher);
 
 	OptimizationStore.resetOptimizations = function (optimizations) {
 	  _optimizations = {};
 	  optimizations.forEach(function (optimization) {
-	    _publicOptimizations[optimization.id] = optimization;
+	    _allOptimizations[optimization.id] = optimization;
 	  });
 	};
 
 	OptimizationStore.find = function (id) {
-	  return _publicOptimizations[id];
+	  return _allOptimizations[id];
 	};
 
 	OptimizationStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
-	    case 'PUBLIC_OPTIMIZATIONS_RECEIVED':
-	      this.resetOptimizations(payload.publicOptimizations);
+	    case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
+	      this.resetOptimizations(payload.allOptimizations);
 	      this.__emitChange();
 	      break;
-	    case 'OPTIMIZATION_RECEIVED':
-	      _publicOptimizations[payload.optimization.id] = payload.optimization;
+	    case OptimizationConstants.OPTIMIZATION_RECEIVED:
+	      _allOptimizations[payload.optimization.id] = payload.optimization;
 	      this.__emitChange();
 	      break;
-	    case 'OPTIMIZATION_DELETED':
-	      delete _publicOptimizations[payload.optimization.id];
+	    case OptimizationConstants.OPTIMIZATION_DELETED:
+	      delete _allOptimizations[payload.optimization.id];
 	      this.__emitChange();
 	      break;
 	  }
 	};
 
 	OptimizationStore.all = function () {
-	  var allPublicOptimizations = [];
-	  Object.keys(_publicOptimizations).forEach(function (key) {
-	    allPublicOptimizations.push(_publicOptimizations[key]);
+	  var allOptimizations = [];
+	  Object.keys(_allOptimizations).forEach(function (key) {
+	    allOptimizations.push(_allOptimizations[key]);
 	  });
 
-	  return allPublicOptimizations;
+	  return allOptimizations;
 	};
 
 	module.exports = OptimizationStore;
@@ -31476,7 +31474,7 @@
 
 	  componentDidMount: function () {
 	    this.optimizationToken = OptimizationStore.addListener(this._onChange);
-	    OptimizationActions.retrieveAllPublicOptimizations();
+	    OptimizationActions.retrieveAllOptimizations();
 	  },
 
 	  componentWillUnmount: function () {
@@ -31588,15 +31586,15 @@
 	var ApiUtil = __webpack_require__(163);
 
 	var OptimizationActions = {
-	  receiveAllPublicOptimizations: function (data) {
+	  receiveAllOptimizations: function (data) {
 	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
-	      publicOptimizations: data
+	      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
+	      allOptimizations: data
 	    });
 	  },
 
-	  retrieveAllPublicOptimizations: function () {
-	    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
+	  retrieveAllOptimizations: function () {
+	    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
 	  },
 
 	  receiveOneOptimization: function (data) {
@@ -31656,9 +31654,9 @@
 	  },
 
 	  //Destroy chart before unmount.
-	  componentWillUnmount: function () {
-	    this.chart.destroy();
-	  },
+	  // componentWillUnmount: function () {
+	  //   this.chart.destroy();
+	  // },
 
 	  //Create the div which the chart will be rendered to.
 	  render: function () {
@@ -32210,16 +32208,6 @@
 	          ),
 	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
 	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'public'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
-	        ),
 	        React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'create optimization' })
 	      ),
 	      React.createElement(
@@ -32571,16 +32559,6 @@
 	            'frequency'
 	          ),
 	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'public'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
 	        ),
 	        React.createElement('input', { type: 'submit', className: 'whiteButton green-button-overlay', value: 'update optimization' })
 	      ),

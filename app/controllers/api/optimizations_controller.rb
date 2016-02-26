@@ -26,7 +26,7 @@ class Api::OptimizationsController < ApplicationController
     end
 
     def index
-      @optimizations = Optimization.all_public
+      @optimizations = Optimization.all
     end
 
     def show

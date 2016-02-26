@@ -51,10 +51,6 @@ var OptimizationNewForm = React.createClass({
             <label>frequency</label>
             <input type="number" valueLink={this.linkState('frequency')} />
           </div>
-          <div className="formGroup">
-            <label>public</label>
-            <input type="text" valueLink={this.linkState('public')} />
-          </div>
           <input className="whiteButton green-button-overlay" type="submit" value="create optimization"/>
         </form>
         <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>

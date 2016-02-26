@@ -18,9 +18,9 @@ module.exports = React.createClass({
   },
 
   //Destroy chart before unmount.
-  componentWillUnmount: function () {
-    this.chart.destroy();
-  },
+  // componentWillUnmount: function () {
+  //   this.chart.destroy();
+  // },
 
   //Create the div which the chart will be rendered to.
   render: function () {

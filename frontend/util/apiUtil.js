@@ -1,7 +1,5 @@
-
-
 var ApiUtil = {
-  fetchAllPublicOptimizations: function (callback) {
+  fetchAllOptimizations: function (callback) {
     $.ajax({
       url: 'api/optimizations',
       dataType: 'json',

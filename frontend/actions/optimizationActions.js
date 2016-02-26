@@ -3,15 +3,15 @@ var OptimizationConstants = require('../constants/optimizationConstants.js');
 var ApiUtil = require('../util/apiUtil.js');
 
 var OptimizationActions = {
-  receiveAllPublicOptimizations: function (data) {
+  receiveAllOptimizations: function (data) {
     Dispatcher.dispatch({
-      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
-      publicOptimizations: data,
+      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
+      allOptimizations: data,
     });
   },
 
-  retrieveAllPublicOptimizations: function () {
-    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
+  retrieveAllOptimizations: function () {
+    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
   },
 
   receiveOneOptimization: function (data) {
