@@ -95,6 +95,12 @@
   color: #fff;
 }
 
+#optimizationsIndex > button {
+  width: 80%;
+  height: 40px;
+  margin: 10px 10%;
+}
+
 /*optimizationIndexItem*/
 
 .optimizationIndexItem {
@@ -104,13 +110,13 @@
 }
 
 .optimization-item-title-button {
-  width: 80%;
+  width: 60%;
   padding: 11px 0px 11px 0px;
   text-align: left;
 }
 
 .optimization-item-title-button > p {
-  padding-left: 22px;
+  padding-left: 11px;
 }
 
 .optimization-item-edit-button {
@@ -120,7 +126,25 @@
 }
 
 .optimization-item-edit-button > p {
-  padding-right: 22px;
+  padding-right: 11px;
+}
+
+.optimization-item-edit-button:hover p {
+  font-weight: 600;
+}
+
+.optimization-item-delete-button {
+  width: 20%;
+  padding: 11px 0px 11px 0px;
+  text-align: right;
+}
+
+.optimization-item-delete-button p {
+  padding-right: 0px;
+}
+
+.optimization-item-delete-button:hover p {
+  font-weight: 600;
 }
 
 
@@ -143,9 +167,16 @@
   min-height: 20px;
 }
 
-#optimization-form > h2 {
+#optimization-form-container > h2 {
   text-align: center;
   font-size: 24px;
   padding: 15px;
   color: #3dd0ac;
+}
+
+  /*submit and input button for optimization forms*/
+#optimization-form-container > button, .optimizationForm > input {
+  margin: 10px;
+  padding: 10px;
+  height: 20px;
 }

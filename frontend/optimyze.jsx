@@ -10,7 +10,6 @@ var IndexRoute = require('react-router').IndexRoute;
 
 // Components
 var App = require('./components/app');
-var SearchIndex =  require('./components/searchIndex');
 var OptimizationIndex = require('./components/optimizationIndex');
 var OptimizationDetail = require('./components/optimizationDetail');
 var OptimizationNewForm = require('./components/optimizationNewForm');

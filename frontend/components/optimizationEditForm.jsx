@@ -38,7 +38,7 @@ var OptimizationEditForm = React.createClass({
     if (this.state.id === undefined) { return <div></div>; }
 
     return (
-      <div id="optimization-form">
+      <div id="optimization-form-container">
         <h2>Edit an Optimization</h2>
         <form className='optimizationForm' onSubmit={this.handleSubmit}>
           <div className="formGroup">
@@ -67,7 +67,7 @@ var OptimizationEditForm = React.createClass({
           </div>
           <input type="submit" className="whiteButton green-button-overlay" value="update optimization"/>
         </form>
-        <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>Cancel</button>
+        <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>
       </div>
     );
   },

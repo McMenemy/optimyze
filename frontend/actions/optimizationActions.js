@@ -30,8 +30,18 @@ var OptimizationActions = {
   },
 
   retrieveUpdatedOptimization: function (patchParams) {
-    debugger;
     ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
+  },
+
+  receiveDeletedOptimization: function (data) {
+    Dispatcher.dispatch({
+      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
+      optimization: data,
+    })
+  }
+
+  retrieveDeletedOptimization: function (deleteParams) {
+    ApiUtil.deleteOptimization(deleteParams, this.recieveDeletedOptimization);
   },
 
 };
