@@ -1,5 +1,6 @@
 var Dispatcher = require('../dispatcher/dispatcher');
 var Store = require('flux/utils').Store;
+var optimizationConstants = require('../constants/optimizationConstants');
 
 var _publicOptimizations = {};
 var OptimizationStore = new Store(Dispatcher);
@@ -25,8 +26,8 @@ OptimizationStore.__onDispatch = function (payload) {
       _publicOptimizations[payload.optimization.id] = payload.optimization;
       this.__emitChange();
       break;
-    case 'DELETED_OPTIMIZATION':
-      delete _publicOptimizations.payload.optimization.id;
+    case 'OPTIMIZATION_DELETED':
+      delete _publicOptimizations[payload.optimization.id];
       this.__emitChange();
       break;
   }

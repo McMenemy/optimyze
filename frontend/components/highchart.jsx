@@ -2,7 +2,6 @@ var React = require('react');
 var Highcharts = require('highcharts');
 
 module.exports = React.createClass({
-  // When the DOM is ready, create the chart.
   componentDidMount: function () {
     // Extend Highcharts with modules
     if (this.props.modules) {

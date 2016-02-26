@@ -57,9 +57,9 @@
 	// Components
 	var App = __webpack_require__(235);
 	var OptimizationIndex = __webpack_require__(237);
-	var OptimizationDetail = __webpack_require__(239);
-	var OptimizationNewForm = __webpack_require__(240);
-	var OptimizationEditForm = __webpack_require__(245);
+	var OptimizationDetail = __webpack_require__(242);
+	var OptimizationNewForm = __webpack_require__(243);
+	var OptimizationEditForm = __webpack_require__(248);
 
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -20143,6 +20143,7 @@
 
 	var Dispatcher = __webpack_require__(159);
 	var Store = __webpack_require__(167).Store;
+	var optimizationConstants = __webpack_require__(165);
 
 	var _publicOptimizations = {};
 	var OptimizationStore = new Store(Dispatcher);
@@ -20168,8 +20169,8 @@
 	      _publicOptimizations[payload.optimization.id] = payload.optimization;
 	      this.__emitChange();
 	      break;
-	    case 'DELETED_OPTIMIZATION':
-	      delete _publicOptimizations.payload.optimization.id;
+	    case 'OPTIMIZATION_DELETED':
+	      delete _publicOptimizations[payload.optimization.id];
 	      this.__emitChange();
 	      break;
 	  }
@@ -31404,36 +31405,11 @@
 
 	var React = __webpack_require__(1);
 	var SearchIndex = __webpack_require__(236);
-	var HighChart = __webpack_require__(250);
-	var options = {
-	  chart: {
-	    type: 'bar'
-	  },
-	  title: {
-	    text: 'Fruit Consumption'
-	  },
-	  xAxis: {
-	    categories: ['Apples', 'Bananas', 'Oranges']
-	  },
-	  yAxis: {
-	    title: {
-	      text: 'Fruit eaten'
-	    }
-	  },
-	  series: [{
-	    name: 'Jane',
-	    data: [1, 0, 4]
-	  }, {
-	    name: 'John',
-	    data: [5, 7, 3]
-	  }]
-	};
 
 	var App = React.createClass({
 	  displayName: 'App',
 
 	  render: function () {
-	    chartElement = React.createElement(HighChart, { container: 'chart', options: options });
 
 	    return React.createElement(
 	      'div',
@@ -31446,8 +31422,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'right-pane' },
-	        this.props.children,
-	        chartElement
+	        this.props.children
 	      )
 	    );
 	  }
@@ -31548,7 +31523,7 @@
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(184).History;
-	var OptimizationActions = __webpack_require__(251);
+	var OptimizationActions = __webpack_require__(239);
 
 	var OptimizationIndexItem = React.createClass({
 	  displayName: 'OptimizationIndexItem',
@@ -31608,554 +31583,91 @@
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var OptimizationStore = __webpack_require__(166);
-	var OptimizationActions = __webpack_require__(164);
+	var Dispatcher = __webpack_require__(159);
+	var OptimizationConstants = __webpack_require__(165);
+	var ApiUtil = __webpack_require__(163);
 
-	var OptimizationDetail = React.createClass({
-	  displayName: 'OptimizationDetail',
-
-	  getStateFromStore: function () {
-	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+	var OptimizationActions = {
+	  receiveAllPublicOptimizations: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
+	      publicOptimizations: data
+	    });
 	  },
 
-	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
+	  retrieveAllPublicOptimizations: function () {
+	    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
 	  },
 
-	  getInitialState: function () {
-	    return this.getStateFromStore();
+	  receiveOneOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
+	      optimization: data
+	    });
 	  },
 
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState(this.getStateFromStore());
+	  retrieveOneOptimization: function (optimizationId) {
+	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
 	  },
 
-	  componentDidMount: function () {
-	    this.optimizationListener = OptimizationStore.addListener(this._onChange);
+	  retrieveNewOptimization: function (updateParams) {
+	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
 	  },
 
-	  componentWillUnmount: function () {
-	    this.optimizationListener.remove();
+	  retrieveUpdatedOptimization: function (patchParams) {
+	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
 	  },
 
-	  render: function () {
-	    if (this.state.optimization === undefined) {
-	      return React.createElement('div', null);
-	    }
+	  receiveDeletedOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
+	      optimization: data
+	    });
+	  },
 
-	    return React.createElement(
-	      'div',
-	      { id: 'optimizationDetail' },
-	      React.createElement(
-	        'div',
-	        null,
-	        'title: ',
-	        this.state.optimization.title,
-	        React.createElement('br', null),
-	        'description: ',
-	        this.state.optimization.description,
-	        React.createElement('br', null),
-	        'frequency: ',
-	        this.state.optimization.frequency,
-	        React.createElement('br', null),
-	        'investment time: ',
-	        this.state.optimization.investment_time,
-	        React.createElement('br', null),
-	        'time saved per occurence: ',
-	        this.state.optimization.time_saved_per_occurrence
-	      )
-	    );
+	  retrieveDeletedOptimization: function (deleteParams) {
+	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
 	  }
-	});
 
-	module.exports = OptimizationDetail;
+	};
+
+	module.exports = OptimizationActions;
 
 /***/ },
 /* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(241);
-	var History = __webpack_require__(184).History;
+	var Highcharts = __webpack_require__(241);
 
-	var OptimizationNewForm = React.createClass({
-	  displayName: 'OptimizationNewForm',
+	module.exports = React.createClass({
+	  displayName: 'exports',
 
-	  mixins: [LinkedStateMixin, History],
+	  componentDidMount: function () {
+	    // Extend Highcharts with modules
+	    if (this.props.modules) {
+	      this.props.modules.forEach(function (module) {
+	        module(Highcharts);
+	      });
+	    }
 
-	  getInitialState: function () {
-	    return {};
+	    // Set container which the chart should render to.
+	    Highcharts[this.props.type || 'chart'](this.props.container, this.props.options);
 	  },
 
-	  handleSubmit: function (event) {
-	    event.preventDefault();
-	    var updateParams = { optimization: this.state };
-	    OptimizationActions.retrieveNewOptimization(updateParams);
-	    this.navigateToDashboard();
+	  //Destroy chart before unmount.
+	  componentWillUnmount: function () {
+	    this.chart.destroy();
 	  },
 
-	  navigateToDashboard: function () {
-	    this.history.push('/');
-	  },
-
-	  handleCancel: function (event) {
-	    event.preventDefault();
-	    this.navigateToDashboard();
-	  },
-
+	  //Create the div which the chart will be rendered to.
 	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { id: 'optimization-form-container' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Create an Optimization'
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'title'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('title') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'description'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('description') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'setup time'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'time saved per occurrence'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'frequency'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'public'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
-	        ),
-	        React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'create optimization' })
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
-	        'cancel'
-	      )
-	    );
+	    return React.createElement('div', { id: this.props.container });
 	  }
-
 	});
-
-	module.exports = OptimizationNewForm;
 
 /***/ },
 /* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(242);
-
-/***/ },
-/* 242 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LinkedStateMixin
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	var ReactLink = __webpack_require__(243);
-	var ReactStateSetters = __webpack_require__(244);
-
-	/**
-	 * A simple mixin around ReactLink.forState().
-	 */
-	var LinkedStateMixin = {
-	  /**
-	   * Create a ReactLink that's linked to part of this component's state. The
-	   * ReactLink will have the current value of this.state[key] and will call
-	   * setState() when a change is requested.
-	   *
-	   * @param {string} key state key to update. Note: you may want to use keyOf()
-	   * if you're using Google Closure Compiler advanced mode.
-	   * @return {ReactLink} ReactLink instance linking to the state.
-	   */
-	  linkState: function (key) {
-	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
-	  }
-	};
-
-	module.exports = LinkedStateMixin;
-
-/***/ },
-/* 243 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLink
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	/**
-	 * ReactLink encapsulates a common pattern in which a component wants to modify
-	 * a prop received from its parent. ReactLink allows the parent to pass down a
-	 * value coupled with a callback that, when invoked, expresses an intent to
-	 * modify that value. For example:
-	 *
-	 * React.createClass({
-	 *   getInitialState: function() {
-	 *     return {value: ''};
-	 *   },
-	 *   render: function() {
-	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
-	 *     return <input valueLink={valueLink} />;
-	 *   },
-	 *   _handleValueChange: function(newValue) {
-	 *     this.setState({value: newValue});
-	 *   }
-	 * });
-	 *
-	 * We have provided some sugary mixins to make the creation and
-	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
-	 */
-
-	var React = __webpack_require__(2);
-
-	/**
-	 * @param {*} value current value of the link
-	 * @param {function} requestChange callback to request a change
-	 */
-	function ReactLink(value, requestChange) {
-	  this.value = value;
-	  this.requestChange = requestChange;
-	}
-
-	/**
-	 * Creates a PropType that enforces the ReactLink API and optionally checks the
-	 * type of the value being passed inside the link. Example:
-	 *
-	 * MyComponent.propTypes = {
-	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
-	 * }
-	 */
-	function createLinkTypeChecker(linkType) {
-	  var shapes = {
-	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
-	    requestChange: React.PropTypes.func.isRequired
-	  };
-	  return React.PropTypes.shape(shapes);
-	}
-
-	ReactLink.PropTypes = {
-	  link: createLinkTypeChecker
-	};
-
-	module.exports = ReactLink;
-
-/***/ },
-/* 244 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactStateSetters
-	 */
-
-	'use strict';
-
-	var ReactStateSetters = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (component, funcReturningState) {
-	    return function (a, b, c, d, e, f) {
-	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
-	      if (partialState) {
-	        component.setState(partialState);
-	      }
-	    };
-	  },
-
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (component, key) {
-	    // Memoize the setters.
-	    var cache = component.__keySetters || (component.__keySetters = {});
-	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
-	  }
-	};
-
-	function createStateKeySetter(component, key) {
-	  // Partial state is allocated outside of the function closure so it can be
-	  // reused with every call, avoiding memory allocation when this function
-	  // is called.
-	  var partialState = {};
-	  return function stateKeySetter(value) {
-	    partialState[key] = value;
-	    component.setState(partialState);
-	  };
-	}
-
-	ReactStateSetters.Mixin = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateSetter(function(xValue) {
-	   *     return {x: xValue};
-	   *   })(1);
-	   *
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (funcReturningState) {
-	    return ReactStateSetters.createStateSetter(this, funcReturningState);
-	  },
-
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateKeySetter('x')(1);
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (key) {
-	    return ReactStateSetters.createStateKeySetter(this, key);
-	  }
-	};
-
-	module.exports = ReactStateSetters;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(241);
-	var History = __webpack_require__(184).History;
-
-	var OptimizationEditForm = React.createClass({
-	  displayName: 'OptimizationEditForm',
-
-	  mixins: [LinkedStateMixin, History],
-
-	  getStateFromStore: function () {
-	    return OptimizationStore.find(this.props.params.optimizationId);
-	  },
-
-	  getInitialState: function () {
-	    return this.getStateFromStore();
-	  },
-
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState(this.getStateFromStore());
-	  },
-
-	  handleSubmit: function (event) {
-	    event.preventDefault();
-	    var patchParams = { optimization: this.state };
-	    OptimizationActions.retrieveUpdatedOptimization(patchParams);
-	    this.navigateToDashboard();
-	  },
-
-	  navigateToDashboard: function () {
-	    this.history.push('/');
-	  },
-
-	  handleCancel: function (event) {
-	    event.preventDefault();
-	    this.navigateToDashboard();
-	  },
-
-	  render: function () {
-	    if (this.state.id === undefined) {
-	      return React.createElement('div', null);
-	    }
-
-	    return React.createElement(
-	      'div',
-	      { id: 'optimization-form-container' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Edit an Optimization'
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'title'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('title') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'description'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('description') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'setup time'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'time saved per occurrence'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'frequency'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'public'
-	          ),
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
-	        ),
-	        React.createElement('input', { type: 'submit', className: 'whiteButton green-button-overlay', value: 'update optimization' })
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
-	        'cancel'
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = OptimizationEditForm;
-
-/***/ },
-/* 246 */,
-/* 247 */
 /***/ function(module, exports) {
 
 	/*
@@ -32501,94 +32013,588 @@
 
 
 /***/ },
-/* 248 */,
-/* 249 */,
-/* 250 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Highcharts = __webpack_require__(247);
+	var OptimizationStore = __webpack_require__(166);
+	var OptimizationActions = __webpack_require__(164);
+	var HighChart = __webpack_require__(240);
+	var options = {
+	  chart: {
+	    type: 'scatter'
+	  },
+	  plotOptions: {
+	    scatter: {
+	      lineWidth: 2
+	    }
+	  },
+	  title: {
+	    text: 'Hardcoded Optimizaiton Data'
+	  },
+	  xAxis: {
+	    type: 'datetime'
+	  },
+	  yAxis: {
+	    title: {
+	      text: 'time saved'
+	    }
+	  },
+	  series: [{
+	    name: 'theoretical',
+	    step: true,
+	    data: [[Date.UTC(2012, 2, 6, 10), 5], [Date.UTC(2012, 2, 7, 10), 6], [Date.UTC(2012, 2, 8, 10), 7], [Date.UTC(2012, 2, 9, 10), 8]]
 
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	  }, {
+	    name: 'actual',
+	    step: true,
+	    data: [[Date.UTC(2012, 2, 6, 10), 5], [Date.UTC(2012, 2, 7, 10), 5], [Date.UTC(2012, 2, 9, 10), 6]]
+	  }]
+	};
 
-	  // When the DOM is ready, create the chart.
+	var OptimizationDetail = React.createClass({
+	  displayName: 'OptimizationDetail',
+
+	  getStateFromStore: function () {
+	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+	  },
+
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
+	  },
+
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState(this.getStateFromStore());
+	  },
+
 	  componentDidMount: function () {
-	    // Extend Highcharts with modules
-	    if (this.props.modules) {
-	      this.props.modules.forEach(function (module) {
-	        module(Highcharts);
-	      });
+	    this.optimizationListener = OptimizationStore.addListener(this._onChange);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.optimizationListener.remove();
+	  },
+
+	  render: function () {
+	    chartElement = React.createElement(HighChart, { container: 'chart', options: options });
+
+	    if (this.state.optimization === undefined) {
+	      return React.createElement('div', null);
 	    }
 
-	    // Set container which the chart should render to.
-	    Highcharts[this.props.type || 'chart'](this.props.container, this.props.options);
-	  },
-
-	  //Destroy chart before unmount.
-	  componentWillUnmount: function () {
-	    this.chart.destroy();
-	  },
-
-	  //Create the div which the chart will be rendered to.
-	  render: function () {
-	    return React.createElement('div', { id: this.props.container });
+	    return React.createElement(
+	      'div',
+	      { id: 'optimizationDetail' },
+	      chartElement,
+	      React.createElement(
+	        'div',
+	        null,
+	        'title: ',
+	        this.state.optimization.title,
+	        React.createElement('br', null),
+	        'description: ',
+	        this.state.optimization.description,
+	        React.createElement('br', null),
+	        'frequency: ',
+	        this.state.optimization.frequency,
+	        React.createElement('br', null),
+	        'investment time: ',
+	        this.state.optimization.investment_time,
+	        React.createElement('br', null),
+	        'time saved per occurence: ',
+	        this.state.optimization.time_saved_per_occurrence
+	      )
+	    );
 	  }
 	});
 
+	module.exports = OptimizationDetail;
+
 /***/ },
-/* 251 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(159);
-	var OptimizationConstants = __webpack_require__(165);
-	var ApiUtil = __webpack_require__(163);
+	var React = __webpack_require__(1);
+	var OptimizationActions = __webpack_require__(164);
+	var LinkedStateMixin = __webpack_require__(244);
+	var History = __webpack_require__(184).History;
 
-	var OptimizationActions = {
-	  receiveAllPublicOptimizations: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.PUBLIC_OPTIMIZATIONS_RECEIVED,
-	      publicOptimizations: data
-	    });
+	var OptimizationNewForm = React.createClass({
+	  displayName: 'OptimizationNewForm',
+
+	  mixins: [LinkedStateMixin, History],
+
+	  getInitialState: function () {
+	    return {};
 	  },
 
-	  retrieveAllPublicOptimizations: function () {
-	    ApiUtil.fetchAllPublicOptimizations(this.receiveAllPublicOptimizations);
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    var updateParams = { optimization: this.state };
+	    OptimizationActions.retrieveNewOptimization(updateParams);
+	    this.navigateToDashboard();
 	  },
 
-	  receiveOneOptimization: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
-	      optimization: data
-	    });
+	  navigateToDashboard: function () {
+	    this.history.push('/');
 	  },
 
-	  retrieveOneOptimization: function (optimizationId) {
-	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
+	  handleCancel: function (event) {
+	    event.preventDefault();
+	    this.navigateToDashboard();
 	  },
 
-	  retrieveNewOptimization: function (updateParams) {
-	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
-	  },
-
-	  retrieveUpdatedOptimization: function (patchParams) {
-	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
-	  },
-
-	  receiveDeletedOptimization: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
-	      optimization: data
-	    });
-	  },
-
-	  retrieveDeletedOptimization: function (deleteParams) {
-	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { id: 'optimization-form-container' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Create an Optimization'
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'title'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('title') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'description'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('description') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'setup time'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'time saved per occurrence'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'frequency'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'public'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
+	        ),
+	        React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'create optimization' })
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
+	        'cancel'
+	      )
+	    );
 	  }
 
+	});
+
+	module.exports = OptimizationNewForm;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(245);
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var ReactLink = __webpack_require__(246);
+	var ReactStateSetters = __webpack_require__(247);
+
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
 	};
 
-	module.exports = OptimizationActions;
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+
+	var React = __webpack_require__(2);
+
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+
+	module.exports = ReactLink;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+
+	'use strict';
+
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+
+	module.exports = ReactStateSetters;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var OptimizationActions = __webpack_require__(164);
+	var LinkedStateMixin = __webpack_require__(244);
+	var History = __webpack_require__(184).History;
+
+	var OptimizationEditForm = React.createClass({
+	  displayName: 'OptimizationEditForm',
+
+	  mixins: [LinkedStateMixin, History],
+
+	  getStateFromStore: function () {
+	    return OptimizationStore.find(this.props.params.optimizationId);
+	  },
+
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState(this.getStateFromStore());
+	  },
+
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    var patchParams = { optimization: this.state };
+	    OptimizationActions.retrieveUpdatedOptimization(patchParams);
+	    this.navigateToDashboard();
+	  },
+
+	  navigateToDashboard: function () {
+	    this.history.push('/');
+	  },
+
+	  handleCancel: function (event) {
+	    event.preventDefault();
+	    this.navigateToDashboard();
+	  },
+
+	  render: function () {
+	    if (this.state.id === undefined) {
+	      return React.createElement('div', null);
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { id: 'optimization-form-container' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Edit an Optimization'
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'title'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('title') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'description'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('description') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'setup time'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'time saved per occurrence'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'frequency'
+	          ),
+	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'formGroup' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'public'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('public') })
+	        ),
+	        React.createElement('input', { type: 'submit', className: 'whiteButton green-button-overlay', value: 'update optimization' })
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
+	        'cancel'
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = OptimizationEditForm;
 
 /***/ }
 /******/ ]);

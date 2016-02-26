@@ -1,6 +1,48 @@
 var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
+var HighChart = require('./highchart');
+var options = {
+  chart: {
+    type: 'scatter',
+  },
+  plotOptions:{
+    scatter:{
+      lineWidth:2,
+    },
+  },
+  title: {
+    text: 'Hardcoded Optimizaiton Data',
+  },
+  xAxis: {
+    type: 'datetime',
+  },
+  yAxis: {
+    title: {
+      text: 'time saved',
+    },
+  },
+  series: [{
+    name: 'theoretical',
+    step: true,
+    data: [
+      [Date.UTC(2012, 2, 6, 10), 5],
+      [Date.UTC(2012, 2, 7, 10), 6],
+      [Date.UTC(2012, 2, 8, 10), 7],
+      [Date.UTC(2012, 2, 9, 10), 8],
+    ],
+
+  }, {
+    name: 'actual',
+    step: true,
+    data: [
+      [Date.UTC(2012, 2, 6, 10), 5],
+      [Date.UTC(2012, 2, 7, 10), 5],
+      [Date.UTC(2012, 2, 9, 10), 6],
+    ],
+  },
+  ],
+};
 
 var OptimizationDetail = React.createClass({
   getStateFromStore: function () {
@@ -28,10 +70,13 @@ var OptimizationDetail = React.createClass({
   },
 
   render: function () {
+    chartElement = React.createElement(HighChart, { container: 'chart', options: options });
+
     if (this.state.optimization === undefined) { return <div></div>; }
 
     return (
       <div id='optimizationDetail'>
+        {chartElement}
         <div>
           title: {this.state.optimization.title}
           <br />

@@ -152,10 +152,11 @@
 
 #optimizationDetail {
   position: relative;
-  margin: 0 auto;
-  width: 400px;
-  min-height: 20px;
-  border: 1px solid #000;
+  width: 100%;
+}
+
+#chart {
+  width: 100%;
 }
 
 /*optimizationNewForm and optimizationEditForm*/
