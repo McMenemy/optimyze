@@ -19,6 +19,8 @@ num_users.times do
   User.create!(user_params)
 end
 
+# Optimization.new(title: 'test', description: 'testing', investment_time: '22', time_saved_per_occurrence: '1', frequency: '22', user_id: '1')
+
 optimizations_per_user = 3
 
 num_users.times do

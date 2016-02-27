@@ -86,8 +86,8 @@ user interface.
 
 **Objective:** Dashboard only shows optimizations belonging to user.
 
-- [ ] user controller has many optimizations
-- [ ] api to select all optimizations for users
+- [x] user controller has many optimizations
+- [x] api to select all optimizations for users
 - [ ] when logged in shows users optimizations
 
 ### Phase 5: Finish React Components (1 day)
