@@ -18,7 +18,7 @@ num_optimizations.times do |i|
   opt_params[:description] = Faker::Hacker.say_something_smart
   opt_params[:investment_time] = Faker::Number.number(7)
   opt_params[:time_saved_per_occurrence] = Faker::Number.number(3)
-  opt_params[:frequency] = rand(10...365)
+  opt_params[:frequency] = rand(10...60)
 
   Optimization.create!(opt_params)
 end

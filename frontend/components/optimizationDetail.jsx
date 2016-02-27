@@ -1,15 +1,11 @@
 var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
-var HighChart = require('./highchart');
-var HighChartMixin = require('../mixins/highchart');
-var ReactDOM = require('react-dom');
+var ReactHighcharts = require('react-highcharts/bundle/ReactHighcharts');
 
 var OptimizationDetail = React.createClass({
-  mixins: [HighChartMixin],
-
   createChartOptions: function () {
-    var options = {
+    var config = {
       chart: {
         type: 'scatter',
       },
@@ -35,36 +31,34 @@ var OptimizationDetail = React.createClass({
       series: [{
         name: 'theoretical',
         step: true,
-        data: [
-          [Date.UTC(2012, 2, 6, 10), 5],
-          [Date.UTC(2012, 2, 7, 10), 6],
-          [Date.UTC(2012, 2, 8, 10), 7],
-          [Date.UTC(2012, 2, 9, 10), 8],
-        ],
+        data: this.createTheoreticalSeriesData(),
 
       },
-
-      // {
-      //   name: 'actual',
-      //   step: true,
-      //   data: [
-      //     [Date.UTC(2012, 2, 6, 10), 5],
-      //     [Date.UTC(2012, 2, 7, 10), 5],
-      //     [Date.UTC(2012, 2, 9, 10), 6],
-      //   ],
-      // },
       ],
     };
 
-    return options;
+    return config;
   },
 
-  createSeriesData: function () {
-    date = new Date
-    for (var i = 0; i < 31; i++) {
-      array[i]
+  createTheoreticalSeriesData: function () {
+    var startDate = new Date;
+    var data = [];
+    var timeInvested = this.state.optimization.investment_time;
+    var frequency = this.state.optimization.frequency;
+    var timeSavedperOccurrence = this.state.optimization.time_saved_per_occurrence;
+
+    data.push[startDate, timeInvested * -1];
+
+    var daysAdded = 0;
+    var timeSaved = 0;
+    while (daysAdded < 365) {
+      daysAdded += frequency;
+      newDate = startDate.setDate(startDate.getDate() + daysAdded);
+      timeSaved += timeSavedperOccurrence;
+      data.push([startDate, timeSaved]);
     }
 
+    return data;
   },
 
   getStateFromStore: function () {
@@ -92,18 +86,12 @@ var OptimizationDetail = React.createClass({
     console.log('unmounted');
   },
 
-  createChart: function () {
-    this.chart = <HighChart id={this.props.params.optimizationId} container="chart" options={this.createChartOptions()}/>;
-
-    return this.chart;
-  },
-
   render: function () {
     if (this.state.optimization === undefined) { return <div></div>; }
 
     return (
       <div id='optimizationDetail'>
-        {this.createChart()}
+        <ReactHighcharts className="chart" config={this.createChartOptions()} />
         <div>
           title: {this.state.optimization.title}
           <br />
