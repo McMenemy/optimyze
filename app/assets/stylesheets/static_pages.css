@@ -3,7 +3,5 @@
 /*uses react-from and react-button classes from components*/
 
 .user-form {
-  width: 400px;
-  heigth: 400px;
   padding: 100px;
 }

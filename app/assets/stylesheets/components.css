@@ -30,7 +30,7 @@
 }
 
 .formGroup {
-  width 100%;
+  width: 100%;
   padding-top: 10px;
 }
 
@@ -76,7 +76,7 @@
   width: 100%;
   min-height: 20px;
   margin: 0 auto;
-  padding: 0px;
+  padding: 0;
 }
 
 /*optimizationsIndex*/
