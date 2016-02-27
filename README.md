@@ -79,8 +79,16 @@ user interface.
 
 **Objective:** Existing pages look appealing and `OptimizationDetail` will graph raw information.
 
-- [ ] add basic colors & styles
-- [ ] use highchartsJS to graph optimization details
+- [x] add basic colors & styles
+- [x] use highchartsJS to graph optimization details
+
+### Phase 4.5: Add in User logic (1 day)
+
+**Objective:** Dashboard only shows optimizations belonging to user.
+
+- [ ] user controller has many optimizations
+- [ ] api to select all optimizations for users
+- [ ] when logged in shows users optimizations
 
 ### Phase 5: Finish React Components (1 day)
 

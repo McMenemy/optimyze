@@ -10,15 +10,27 @@
 
 User.create(username: 'Admin', password: 'password')
 
+num_users = 7
+num_users.times do
+  user_params = {}
+  user_params[:username] = Faker::Name.name
+  user_params[:password] = Faker::Internet.password(6)
 
-num_optimizations = 8
-num_optimizations.times do |i|
-  opt_params = {}
-  opt_params[:title] = Faker::Address.city
-  opt_params[:description] = Faker::Hacker.say_something_smart
-  opt_params[:investment_time] = Faker::Number.number(7)
-  opt_params[:time_saved_per_occurrence] = Faker::Number.number(3)
-  opt_params[:frequency] = rand(10...60)
+  User.create!(user_params)
+end
 
-  Optimization.create!(opt_params)
+optimizations_per_user = 3
+
+num_users.times do
+  optimizations_per_user.times do |i|
+    opt_params = {}
+    opt_params[:title] = Faker::Address.city
+    opt_params[:description] = Faker::Hacker.say_something_smart
+    opt_params[:investment_time] = Faker::Number.number(7)
+    opt_params[:time_saved_per_occurrence] = Faker::Number.number(3)
+    opt_params[:frequency] = rand(10...60)
+    opt_params[:user_id] = i
+
+    Optimization.create!(opt_params)
+  end
 end

@@ -8,9 +8,9 @@
 #  investment_time           :integer          not null
 #  time_saved_per_occurrence :integer          not null
 #  frequency                 :integer          not null
-#  public                    :boolean          not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
+#  user_id                   :integer
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
