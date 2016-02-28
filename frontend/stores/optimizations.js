@@ -2,8 +2,8 @@ var Dispatcher = require('../dispatcher/dispatcher');
 var Store = require('flux/utils').Store;
 var OptimizationConstants = require('../constants/optimizationConstants');
 
-var _allOptimizations = {};
 var OptimizationStore = new Store(Dispatcher);
+var _allOptimizations = {};
 
 OptimizationStore.resetOptimizations = function (optimizations) {
   _optimizations = {};

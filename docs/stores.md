@@ -14,7 +14,7 @@ Holds all persisted optimization data.
 - `OptimizationDetail`
 - `UserOptimizationOverview`
 
-### SearchSuggestionStore
+### SearchParamsStore
 
 Holds typeahead suggestions for search.
 

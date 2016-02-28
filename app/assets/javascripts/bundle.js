@@ -20144,8 +20144,8 @@
 	var Store = __webpack_require__(167).Store;
 	var OptimizationConstants = __webpack_require__(165);
 	
-	var _allOptimizations = {};
 	var OptimizationStore = new Store(Dispatcher);
+	var _allOptimizations = {};
 	
 	OptimizationStore.resetOptimizations = function (optimizations) {
 	  _optimizations = {};

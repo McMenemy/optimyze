@@ -94,10 +94,10 @@ user interface.
 
 **Objective:** User can search optimizations by name and see overall optimization time savings.
 
-- [ ] create `SearchSuggestionStore`
-- [ ] create `SearchIndex`
+- [x] create `SearchParamStore`
+- [ ] create `SearchIndex` flux cycle
 - [ ] create `UserOptimizationOverview`
-- Use CSS to style new views
+- [ ] use CSS to style new views
 
 ### Phase 6: Categories (.5 days)
 
