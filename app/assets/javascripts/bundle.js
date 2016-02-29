@@ -79,6 +79,7 @@
 	);
 	
 	document.addEventListener('DOMContentLoaded', function () {
+	
 	  ReactDOM.render(React.createElement(
 	    Router,
 	    null,
@@ -20162,7 +20163,29 @@
 	  return _allOptimizations[id];
 	};
 	
-	OptimizationStore.__onDispatch = function (payload) {
+	OptimizationStore.all = function () {
+	  var allOptimizations = [];
+	  Object.keys(_allOptimizations).forEach(function (key) {
+	    allOptimizations.push(_allOptimizations[key]);
+	  });
+	
+	  return allOptimizations;
+	};
+	
+	OptimizationStore.allWithSearchParams = function (searchParams) {
+	  var allFilteredOptimizations = [];
+	  console.log('search title: ', searchParams.title);
+	  var titleFilter = new RegExp('^' + searchParams.title.toLowerCase());
+	
+	  Object.keys(_allOptimizations).forEach(function (key) {
+	    var currentTitle = _allOptimizations[key].title.toLowerCase();
+	    if (currentTitle.match(titleFilter)) {
+	      allFilteredOptimizations.push(_allOptimizations[key]);
+	    }
+	  });
+	
+	  return allFilteredOptimizations;
+	}, OptimizationStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
 	      this.resetOptimizations(payload.allOptimizations);
@@ -20177,15 +20200,6 @@
 	      this.__emitChange();
 	      break;
 	  }
-	};
-	
-	OptimizationStore.all = function () {
-	  var allOptimizations = [];
-	  Object.keys(_allOptimizations).forEach(function (key) {
-	    allOptimizations.push(_allOptimizations[key]);
-	  });
-	
-	  return allOptimizations;
 	};
 	
 	module.exports = OptimizationStore;
@@ -31497,27 +31511,36 @@
 
 	var React = __webpack_require__(1);
 	var OptimizationIndex = __webpack_require__(240);
-	var SearchParamActions = __webpack_require__(237);
 	
 	var SearchIndex = React.createClass({
 	  displayName: 'SearchIndex',
 	
 	  getInitialState: function () {
-	    return { searchParams: { title: '' } };
+	    if (window.currentUser === undefined) {
+	      return { optimizations: OptimizationStore.all(),
+	        searchParams: { title: '' } };
+	    } else {
+	      return { optimizations: OptimizationStore.all(),
+	        searchParams: { title: '' } };
+	    }
 	  },
 	
 	  handleInput: function (e) {
 	    e.preventDefault();
 	    this.setState({ searchParams: { title: e.currentTarget.value } });
-	    SearchParamActions.receiveSearchParams(this.state.searchParams);
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { id: 'searchIndex' },
-	      React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.searchParams.title }),
-	      React.createElement(OptimizationIndex, null)
+	      React.createElement(
+	        'h2',
+	        null,
+	        'your optimizations'
+	      ),
+	      React.createElement('input', { type: 'text', className: 'search-input', onChange: this.handleInput, value: this.state.searchParams.title }),
+	      React.createElement(OptimizationIndex, { searchParams: this.state.searchParams })
 	    );
 	  }
 	});
@@ -31544,7 +31567,12 @@
 	  },
 	
 	  _onChange: function () {
-	    this.setState({ optimizations: OptimizationStore.all() });
+	    console.log(this.props.searchParams.title);
+	    this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ optimizations: OptimizationStore.allWithSearchParams(newProps.searchParams) });
 	  },
 	
 	  componentDidMount: function () {
@@ -31572,11 +31600,6 @@
 	    return React.createElement(
 	      'ul',
 	      { id: 'optimizationsIndex' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'your optimizations'
-	      ),
 	      React.createElement(
 	        'button',
 	        { className: 'whiteButton', onClick: this.clickNewOptimization },

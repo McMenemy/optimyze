@@ -1,23 +1,28 @@
 var React = require('react');
 var OptimizationIndex = require('./optimizationIndex');
-var SearchParamActions = require('../actions/searchParamActions');
 
 var SearchIndex = React.createClass({
   getInitialState: function () {
-    return { searchParams: { title: '' } };
+    if (window.currentUser === undefined) {
+      return { optimizations: OptimizationStore.all(),
+               searchParams: { title: '' }, };
+    } else {
+      return { optimizations: OptimizationStore.all(),
+               searchParams: { title: '' }, };
+    }
   },
 
   handleInput: function (e) {
     e.preventDefault();
     this.setState({ searchParams: { title: e.currentTarget.value } });
-    SearchParamActions.receiveSearchParams(this.state.searchParams);
   },
 
   render: function () {
     return (
       <div id="searchIndex">
-        <input type="text" onChange={this.handleInput} value={this.state.searchParams.title} />
-        <OptimizationIndex />
+        <h2>your optimizations</h2>
+        <input type="text" className='search-input' onChange={this.handleInput} value={this.state.searchParams.title} />
+        <OptimizationIndex searchParams={this.state.searchParams}/>
       </div>
     );
   },

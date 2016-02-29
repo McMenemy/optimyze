@@ -16,6 +16,30 @@ OptimizationStore.find = function (id) {
   return _allOptimizations[id];
 };
 
+OptimizationStore.all = function () {
+  var allOptimizations = [];
+  Object.keys(_allOptimizations).forEach(function (key) {
+    allOptimizations.push(_allOptimizations[key]);
+  });
+
+  return allOptimizations;
+};
+
+OptimizationStore.allWithSearchParams = function (searchParams) {
+  var allFilteredOptimizations = [];
+  console.log('search title: ', searchParams.title);
+  var titleFilter = new RegExp('^' + searchParams.title.toLowerCase());
+
+  Object.keys(_allOptimizations).forEach(function (key) {
+    var currentTitle = _allOptimizations[key].title.toLowerCase();
+    if (currentTitle.match(titleFilter)) {
+      allFilteredOptimizations.push(_allOptimizations[key]);
+    }
+  });
+
+  return allFilteredOptimizations;
+},
+
 OptimizationStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
     case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
@@ -31,15 +55,6 @@ OptimizationStore.__onDispatch = function (payload) {
       this.__emitChange();
       break;
   }
-};
-
-OptimizationStore.all = function () {
-  var allOptimizations = [];
-  Object.keys(_allOptimizations).forEach(function (key) {
-    allOptimizations.push(_allOptimizations[key]);
-  });
-
-  return allOptimizations;
 };
 
 module.exports = OptimizationStore;

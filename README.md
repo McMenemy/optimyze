@@ -92,17 +92,28 @@ user interface.
 
 ### Phase 5: Finish React Components (1 day)
 
-**Objective:** User can search optimizations by name and see overall optimization time savings.
+**Objective:** User can search optimizations by name
 
 - [x] create `SearchParamStore`
-- [ ] create `SearchIndex` flux cycle
+- [x] create `SearchIndex` flux cycle
+- [ ] searching updates shown optimizations
+- [ ] integrate user sign-in into react
+- [ ] add browse all button
+- [ ] clean up UI for initial user testing
+        - [ ] graph shows correct units
+        - [ ] new and edit form are intuitive
+        - [ ] right pane remains fixed
+        - [ ] top ui of left pane remains fixed
+        - [ ] edit and delete links are stacked
+        - [ ] graph matches rest of site
+        - [ ] currently selected optimization stays pressed and colored
+
+### Phase 6: Categories and Overview component (1 day)
+
+**Objective:** Optimizations can have multiple categories and are searchable by category and and see overall optimization time savings.
+
 - [ ] create `UserOptimizationOverview`
 - [ ] use CSS to style new views
-
-### Phase 6: Categories (.5 days)
-
-**Objective:** Optimizations can have multiple categories and are searchable by category.
-
 - [ ] create `Category` model
 - [ ] add categories to optimizations api jBuilder
 - [ ] add search by category to `SearchIndex`

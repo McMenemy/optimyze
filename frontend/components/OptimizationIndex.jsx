@@ -12,7 +12,12 @@ var OptimizationsIndex = React.createClass({
   },
 
   _onChange: function () {
-    this.setState({ optimizations: OptimizationStore.all() });
+    console.log(this.props.searchParams.title);
+    this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
+  },
+
+  componentWillReceiveProps: function (newProps) {
+    this.setState({ optimizations: OptimizationStore.allWithSearchParams(newProps.searchParams) });
   },
 
   componentDidMount: function () {
@@ -41,7 +46,6 @@ var OptimizationsIndex = React.createClass({
   render: function () {
     return (
       <ul id="optimizationsIndex">
-        <h2>your optimizations</h2>
         <button className="whiteButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
         {this.createOptimizationList()}
       </ul>
