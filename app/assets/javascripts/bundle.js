@@ -31798,25 +31798,35 @@
 	      chart: {
 	        type: 'scatter'
 	      },
+	
 	      credits: {
 	        enabled: false
 	      },
+	
 	      plotOptions: {
 	        scatter: {
 	          lineWidth: 2
 	        }
 	      },
+	
 	      title: {
 	        text: this.state.optimization.title
 	      },
+	
 	      xAxis: {
-	        type: 'datetime'
+	        type: 'datetime',
+	        dateTimeLabelFormats: {
+	          day: '%e'
+	        }
+	
 	      },
+	
 	      yAxis: {
 	        title: {
-	          text: 'time saved'
+	          text: 'time saved (milliseconds)'
 	        }
 	      },
+	
 	      series: [{
 	        name: 'theoretical',
 	        step: true,
@@ -31837,13 +31847,13 @@
 	
 	    data.push[(startDate, timeInvested * -1)];
 	
-	    var daysAdded = 0;
+	    var msAdded = 0;
 	    var timeSaved = 0;
-	    while (daysAdded < 365) {
-	      daysAdded += frequency;
-	      newDate = startDate.setDate(startDate.getDate() + daysAdded);
+	    while (msAdded < 7.884 * Math.pow(10, 9)) {
+	      msAdded += frequency;
+	      newDate = new Date(startDate.getTime() + msAdded);
 	      timeSaved += timeSavedperOccurrence;
-	      data.push([startDate, timeSaved]);
+	      data.push([newDate.valueOf(), timeSaved]);
 	    }
 	
 	    return data;

@@ -100,7 +100,7 @@ user interface.
 - [x] integrate user sign-in into react
 - [x] add browse all button
 - [ ] clean up UI for initial user testing
-        - [ ] graph shows correct units
+        - [x] graph shows correct units
         - [ ] new and edit form are intuitive
         - [ ] right pane remains fixed
         - [ ] top ui of left pane remains fixed

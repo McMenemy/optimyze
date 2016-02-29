@@ -28,9 +28,9 @@ num_users.times do
     opt_params = {}
     opt_params[:title] = Faker::Address.city
     opt_params[:description] = Faker::Hacker.say_something_smart
-    opt_params[:investment_time] = Faker::Number.number(7)
-    opt_params[:time_saved_per_occurrence] = Faker::Number.number(3)
-    opt_params[:frequency] = rand(10...60)
+    opt_params[:investment_time] = Faker::Number.number(7) # about a few hours
+    opt_params[:time_saved_per_occurrence] = Faker::Number.number(6) # about 10 minutes
+    opt_params[:frequency] = Faker::Number.number(9) # about every several days to week
     opt_params[:user_id] = i
 
     Optimization.create!(opt_params)
