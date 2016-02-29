@@ -88,7 +88,7 @@ user interface.
 
 - [x] user controller has many optimizations
 - [x] api to select all optimizations for users
-- [ ] when logged in shows users optimizations
+- [x] when logged in shows users optimizations
 
 ### Phase 5: Finish React Components (1 day)
 
@@ -96,9 +96,9 @@ user interface.
 
 - [x] create `SearchParamStore`
 - [x] create `SearchIndex` flux cycle
-- [ ] searching updates shown optimizations
-- [ ] integrate user sign-in into react
-- [ ] add browse all button
+- [x] searching updates shown optimizations
+- [x] integrate user sign-in into react
+- [x] add browse all button
 - [ ] clean up UI for initial user testing
         - [ ] graph shows correct units
         - [ ] new and edit form are intuitive

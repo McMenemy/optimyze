@@ -101,6 +101,12 @@
   color: #fff;
 }
 
+#searchIndex > button {
+  width: 80%;
+  height: 40px;
+  margin: 10px 10%;
+}
+
 /*optimizationsIndex*/
 
 #optimizationsIndex {

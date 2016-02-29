@@ -3,25 +3,53 @@ var OptimizationIndex = require('./optimizationIndex');
 
 var SearchIndex = React.createClass({
   getInitialState: function () {
+    var searchParams = {};
+
     if (window.currentUser === undefined) {
-      return { optimizations: OptimizationStore.all(),
-               searchParams: { title: '' }, };
+      searchParams.userOnly = false;
     } else {
-      return { optimizations: OptimizationStore.all(),
-               searchParams: { title: '' }, };
+      searchParams.userOnly = true;
     }
+
+    searchParams.title = '';
+
+    return { optimizations: OptimizationStore.all(),
+             searchParams: searchParams, };
   },
 
   handleInput: function (e) {
     e.preventDefault();
-    this.setState({ searchParams: { title: e.currentTarget.value } });
+    this.state.searchParams.title = e.currentTarget.value;
+    this.setState(this.state.searchParams);
+  },
+
+  clickBrowseAllOptimizations: function () {
+    this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
+    this.setState(this.state.searchParams);
+  },
+
+  setHeadingTitle: function () {
+    if (this.state.userOnly) {
+      return 'your optimizations';
+    } else {
+      return 'all optimizations';
+    }
+  },
+
+  setBrowseButtonTitle: function () {
+    if (this.state.userOnly) {
+      return 'Browse All Optimizations';
+    } else {
+      return 'Browse Your Optimizations';
+    }
   },
 
   render: function () {
     return (
       <div id="searchIndex">
-        <h2>your optimizations</h2>
+        <h2>{this.setHeadingTitle()}</h2>
         <input type="text" className='search-input' onChange={this.handleInput} value={this.state.searchParams.title} />
+        <button className="whiteButton" onClick={this.clickBrowseAllOptimizations}>{this.setBrowseButtonTitle()}</button>
         <OptimizationIndex searchParams={this.state.searchParams}/>
       </div>
     );

@@ -25,15 +25,35 @@ OptimizationStore.all = function () {
   return allOptimizations;
 };
 
+OptimizationStore.allForCurrentUser = function () {
+  var allUserOptimizations = [];
+  Object.keys(_allOptimizations).forEach(function (key) {
+    if (window.currentUser.userId === _allOptimizations[key].user_id) {
+      allUserOptimizations.push(_allOptimizations[key]);
+    }
+  });
+
+  return allUserOptimizations;
+};
+
 OptimizationStore.allWithSearchParams = function (searchParams) {
   var allFilteredOptimizations = [];
-  console.log('search title: ', searchParams.title);
   var titleFilter = new RegExp('^' + searchParams.title.toLowerCase());
 
-  Object.keys(_allOptimizations).forEach(function (key) {
-    var currentTitle = _allOptimizations[key].title.toLowerCase();
-    if (currentTitle.match(titleFilter)) {
-      allFilteredOptimizations.push(_allOptimizations[key]);
+  if (searchParams.userOnly) {
+    allFilteredOptimizations = this.allForCurrentUser();
+  } else {
+    allFilteredOptimizations = this.all();
+  }
+
+  console.log('sp', allFilteredOptimizations);
+
+  allFilteredOptimizations.forEach(function (currentOptimization, i) {
+    var currentTitle = currentOptimization.title.toLowerCase();
+    var currentUser = currentOptimization.user_id;
+
+    if (!currentTitle.match(titleFilter)) {
+      allFilteredOptimizations.splice(i, 1);
     }
   });
 

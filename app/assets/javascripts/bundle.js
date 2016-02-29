@@ -20172,15 +20172,35 @@
 	  return allOptimizations;
 	};
 	
+	OptimizationStore.allForCurrentUser = function () {
+	  var allUserOptimizations = [];
+	  Object.keys(_allOptimizations).forEach(function (key) {
+	    if (window.currentUser.userId === _allOptimizations[key].user_id) {
+	      allUserOptimizations.push(_allOptimizations[key]);
+	    }
+	  });
+	
+	  return allUserOptimizations;
+	};
+	
 	OptimizationStore.allWithSearchParams = function (searchParams) {
 	  var allFilteredOptimizations = [];
-	  console.log('search title: ', searchParams.title);
 	  var titleFilter = new RegExp('^' + searchParams.title.toLowerCase());
 	
-	  Object.keys(_allOptimizations).forEach(function (key) {
-	    var currentTitle = _allOptimizations[key].title.toLowerCase();
-	    if (currentTitle.match(titleFilter)) {
-	      allFilteredOptimizations.push(_allOptimizations[key]);
+	  if (searchParams.userOnly) {
+	    allFilteredOptimizations = this.allForCurrentUser();
+	  } else {
+	    allFilteredOptimizations = this.all();
+	  }
+	
+	  console.log('sp', allFilteredOptimizations);
+	
+	  allFilteredOptimizations.forEach(function (currentOptimization, i) {
+	    var currentTitle = currentOptimization.title.toLowerCase();
+	    var currentUser = currentOptimization.user_id;
+	
+	    if (!currentTitle.match(titleFilter)) {
+	      allFilteredOptimizations.splice(i, 1);
 	    }
 	  });
 	
@@ -31516,18 +31536,45 @@
 	  displayName: 'SearchIndex',
 	
 	  getInitialState: function () {
+	    var searchParams = {};
+	
 	    if (window.currentUser === undefined) {
-	      return { optimizations: OptimizationStore.all(),
-	        searchParams: { title: '' } };
+	      searchParams.userOnly = false;
 	    } else {
-	      return { optimizations: OptimizationStore.all(),
-	        searchParams: { title: '' } };
+	      searchParams.userOnly = true;
 	    }
+	
+	    searchParams.title = '';
+	
+	    return { optimizations: OptimizationStore.all(),
+	      searchParams: searchParams };
 	  },
 	
 	  handleInput: function (e) {
 	    e.preventDefault();
-	    this.setState({ searchParams: { title: e.currentTarget.value } });
+	    this.state.searchParams.title = e.currentTarget.value;
+	    this.setState(this.state.searchParams);
+	  },
+	
+	  clickBrowseAllOptimizations: function () {
+	    this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
+	    this.setState(this.state.searchParams);
+	  },
+	
+	  setHeadingTitle: function () {
+	    if (this.state.userOnly) {
+	      return 'your optimizations';
+	    } else {
+	      return 'all optimizations';
+	    }
+	  },
+	
+	  setBrowseButtonTitle: function () {
+	    if (this.state.userOnly) {
+	      return 'Browse All Optimizations';
+	    } else {
+	      return 'Browse Your Optimizations';
+	    }
 	  },
 	
 	  render: function () {
@@ -31537,9 +31584,14 @@
 	      React.createElement(
 	        'h2',
 	        null,
-	        'your optimizations'
+	        this.setHeadingTitle()
 	      ),
 	      React.createElement('input', { type: 'text', className: 'search-input', onChange: this.handleInput, value: this.state.searchParams.title }),
+	      React.createElement(
+	        'button',
+	        { className: 'whiteButton', onClick: this.clickBrowseAllOptimizations },
+	        this.setBrowseButtonTitle()
+	      ),
 	      React.createElement(OptimizationIndex, { searchParams: this.state.searchParams })
 	    );
 	  }
