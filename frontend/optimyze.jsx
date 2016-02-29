@@ -7,6 +7,8 @@ var OptimizationStore = require('./stores/optimizations.js');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
+var SearchParamStore = require('./stores/searchParamStore');
+var SearchParamActions = require('./actions/searchParamActions');
 
 // Components
 var App = require('./components/app');
@@ -19,6 +21,8 @@ var OptimizationEditForm = require('./components/optimizationEditForm');
 window.ApiUtil = ApiUtil;
 window.OptimizationActions = OptimizationActions;
 window.OptimizationStore = OptimizationStore;
+window.SearchParamStore = SearchParamStore;
+window.SearchParamActions = SearchParamActions;
 
 var routes = (
   <Route component={App} path='/'>

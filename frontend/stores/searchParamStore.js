@@ -2,7 +2,7 @@ var Dispatcher = require('../dispatcher/dispatcher');
 var Store = require('flux/utils').Store;
 var SearchParamConstants = require('../constants/searchParamConstants');
 
-var searchParamStore = new Store(Dispatcher);
+var SearchParamStore = new Store(Dispatcher);
 var _searchParams = {};
 
 SearchParamStore.resetSearchParams = function (searchParams) {
@@ -22,4 +22,4 @@ SearchParamStore.__onDispatch = function (payload) {
   }
 };
 
-module.exports = searchParamStore;
+module.exports = SearchParamStore;
