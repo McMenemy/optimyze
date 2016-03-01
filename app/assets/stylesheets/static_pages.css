@@ -2,6 +2,11 @@
 /*uses app component container*/
 /*uses react-from and react-button classes from components*/
 
+.splash-img-container {
+  width: 100vh;
+  z-index: 2;
+}
+
 .user-form {
   padding: 100px;
 }

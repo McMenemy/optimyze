@@ -31961,6 +31961,7 @@
 	  handleSubmit: function (event) {
 	    event.preventDefault();
 	    var updateParams = { optimization: this.state };
+	    debugger;
 	    OptimizationActions.retrieveNewOptimization(updateParams);
 	    this.navigateToDashboard();
 	  },
@@ -32014,7 +32015,31 @@
 	            null,
 	            'setup time'
 	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
+	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
+	          React.createElement(
+	            'select',
+	            { valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
+	            React.createElement(
+	              'option',
+	              { value: 'milliseconds' },
+	              'milliseconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'seconds' },
+	              'seconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'minutes' },
+	              'minutes'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'hours' },
+	              'hours'
+	            )
+	          )
 	        ),
 	        React.createElement(
 	          'div',
@@ -32027,7 +32052,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
 	          React.createElement(
 	            'select',
-	            { name: 'time-unit' },
+	            { valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32058,17 +32083,36 @@
 	            null,
 	            'frequency'
 	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'formGroup' },
+	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
 	          React.createElement(
-	            'label',
-	            null,
-	            'user id'
-	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('user_id') })
+	            'select',
+	            { valueLink: this.linkState('frequency_unit'), name: 'time-unit' },
+	            React.createElement(
+	              'option',
+	              { value: 'hour' },
+	              'hour'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'day' },
+	              'day'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'week' },
+	              'week'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'month' },
+	              'month'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'year' },
+	              'year'
+	            )
+	          )
 	        ),
 	        React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'create optimization' })
 	      ),
