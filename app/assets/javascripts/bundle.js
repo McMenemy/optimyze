@@ -20192,13 +20192,10 @@
 	    allFilteredOptimizations = this.all();
 	  }
 	
-	  allFilteredOptimizations.forEach(function (currentOptimization, i) {
+	  allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
 	    var currentTitle = currentOptimization.title.toLowerCase();
-	    var currentUser = currentOptimization.user_id;
 	
-	    if (!currentTitle.match(titleFilter)) {
-	      allFilteredOptimizations.splice(i, 1);
-	    }
+	    return currentTitle.match(titleFilter);
 	  });
 	
 	  return allFilteredOptimizations;
@@ -31613,11 +31610,14 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    return { optimizations: OptimizationStore.all() };
+	    if (window.currentUser) {
+	      return { optimizations: OptimizationStore.allForCurrentUser() };
+	    } else {
+	      return { optimizations: OptimizationStore.all() };
+	    }
 	  },
 	
 	  _onChange: function () {
-	    console.log(this.props.searchParams.title);
 	    this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
 	  },
 	

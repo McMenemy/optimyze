@@ -46,13 +46,10 @@ OptimizationStore.allWithSearchParams = function (searchParams) {
     allFilteredOptimizations = this.all();
   }
 
-  allFilteredOptimizations.forEach(function (currentOptimization, i) {
+  allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
     var currentTitle = currentOptimization.title.toLowerCase();
-    var currentUser = currentOptimization.user_id;
 
-    if (!currentTitle.match(titleFilter)) {
-      allFilteredOptimizations.splice(i, 1);
-    }
+    return currentTitle.match(titleFilter);
   });
 
   return allFilteredOptimizations;

@@ -8,11 +8,14 @@ var OptimizationsIndex = React.createClass({
   mixins: [History],
 
   getInitialState: function () {
-    return { optimizations: OptimizationStore.all() };
+    if (window.currentUser) {
+      return { optimizations: OptimizationStore.allForCurrentUser() };
+    } else {
+      return { optimizations: OptimizationStore.all() };
+    }
   },
 
   _onChange: function () {
-    console.log(this.props.searchParams.title);
     this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
   },
 
