@@ -45,7 +45,13 @@ var OptimizationNewForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>time saved per occurrence</label>
-            <input type="number" valueLink={this.linkState('time_saved_per_occurrence')} />
+            <input type="number" className="has-time-selector" valueLink={this.linkState('time_saved_per_occurrence')} />
+            <select name="time-unit">
+              <option value="milliseconds">milliseconds</option>
+              <option value="seconds">seconds</option>
+              <option value="minutes">minutes</option>
+              <option value="hours">hours</option>
+            </select>
           </div>
           <div className="formGroup">
             <label>frequency</label>

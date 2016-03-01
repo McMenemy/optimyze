@@ -31803,6 +31803,8 @@
 	
 	      tooltip: {
 	        backgroundColor: '#3DD0AC',
+	        borderRadius: 0,
+	        shadow: false,
 	        style: {
 	          color: '#fff'
 	        }
@@ -32022,7 +32024,31 @@
 	            null,
 	            'time saved per occurrence'
 	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
+	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
+	          React.createElement(
+	            'select',
+	            { name: 'time-unit' },
+	            React.createElement(
+	              'option',
+	              { value: 'milliseconds' },
+	              'milliseconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'seconds' },
+	              'seconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'minutes' },
+	              'minutes'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'hours' },
+	              'hours'
+	            )
+	          )
 	        ),
 	        React.createElement(
 	          'div',

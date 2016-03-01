@@ -55,6 +55,22 @@
   border-top: 4px solid #00C58E;
 }
 
+.has-time-selector {
+  width: 40% !important;
+}
+
+.formGroup > select {
+  width: 35%;
+  /*-webkit-appearance: none;*/
+  -webkit-border-radius: 0px;
+  border-radius: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: #3DD0AC;
+  color: #FFF;
+  border-top: 4px solid #00C58E;
+}
+
 
 /* App */
 
@@ -63,6 +79,7 @@
   margin: 53px auto;
   width: 900px;
   height: 100%;
+  padding-bottom: 50px;
   border-bottom: 6px solid #DDD;
   border-left: 6px solid #DDD;
   border-right: 6px solid #DDD;

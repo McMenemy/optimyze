@@ -15,6 +15,8 @@ var OptimizationDetail = React.createClass({
 
       tooltip: {
         backgroundColor: '#3DD0AC',
+        borderRadius: 0,
+        shadow: false,
         style: {
           color: '#fff',
         },

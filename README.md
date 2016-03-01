@@ -122,7 +122,7 @@ user interface.
 
 **objective:** Allow user to view and search all public optimizations.
 
-- [ ] Make browse view by dynamically unmounting non-needed components from dashboard view.  
+- [x] Make browse view by dynamically unmounting non-needed components from dashboard view.  
 
 ### Phase 8: Styling Cleanup and Seeding (1 day)
 
