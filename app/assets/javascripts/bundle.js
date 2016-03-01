@@ -20193,8 +20193,6 @@
 	    allFilteredOptimizations = this.all();
 	  }
 	
-	  console.log('sp', allFilteredOptimizations);
-	
 	  allFilteredOptimizations.forEach(function (currentOptimization, i) {
 	    var currentTitle = currentOptimization.title.toLowerCase();
 	    var currentUser = currentOptimization.user_id;
@@ -31537,17 +31535,17 @@
 	
 	  getInitialState: function () {
 	    var searchParams = {};
-	
-	    if (window.currentUser === undefined) {
-	      searchParams.userOnly = false;
-	    } else {
-	      searchParams.userOnly = true;
-	    }
-	
 	    searchParams.title = '';
 	
-	    return { optimizations: OptimizationStore.all(),
-	      searchParams: searchParams };
+	    if (window.currentUser) {
+	      searchParams.userOnly = true;
+	      return { optimizations: OptimizationStore.allForCurrentUser(),
+	        searchParams: searchParams };
+	    } else {
+	      searchParams.userOnly = false;
+	      return { optimizations: OptimizationStore.all(),
+	        searchParams: searchParams };
+	    }
 	  },
 	
 	  handleInput: function (e) {
@@ -31557,12 +31555,13 @@
 	  },
 	
 	  clickBrowseAllOptimizations: function () {
+	    console.log(this.state.searchParams.userOnly);
 	    this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
 	    this.setState(this.state.searchParams);
 	  },
 	
 	  setHeadingTitle: function () {
-	    if (this.state.userOnly) {
+	    if (this.state.searchParams.userOnly) {
 	      return 'your optimizations';
 	    } else {
 	      return 'all optimizations';
@@ -31570,7 +31569,7 @@
 	  },
 	
 	  setBrowseButtonTitle: function () {
-	    if (this.state.userOnly) {
+	    if (this.state.searchParams.userOnly) {
 	      return 'Browse All Optimizations';
 	    } else {
 	      return 'Browse Your Optimizations';
@@ -31705,20 +31704,20 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'optimization-item-delete-button', onClick: this.deleteOptimization },
-	        React.createElement(
-	          'p',
-	          null,
-	          'Delete'
-	        )
-	      ),
-	      React.createElement(
-	        'button',
 	        { className: 'optimization-item-edit-button', onClick: this.editOptimization },
 	        React.createElement(
 	          'p',
 	          null,
 	          'Edit'
+	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'optimization-item-delete-button', onClick: this.deleteOptimization },
+	        React.createElement(
+	          'p',
+	          null,
+	          'Delete'
 	        )
 	      )
 	    );
@@ -31796,7 +31795,17 @@
 	  createChartOptions: function () {
 	    var config = {
 	      chart: {
-	        type: 'scatter'
+	        type: 'scatter',
+	        style: {
+	          fontFamily: 'sans-serif'
+	        }
+	      },
+	
+	      tooltip: {
+	        backgroundColor: '#3DD0AC',
+	        style: {
+	          color: '#fff'
+	        }
 	      },
 	
 	      credits: {
@@ -31830,6 +31839,7 @@
 	      series: [{
 	        name: 'theoretical',
 	        step: true,
+	        color: '#3DD0AC',
 	        data: this.createTheoreticalSeriesData()
 	
 	      }]

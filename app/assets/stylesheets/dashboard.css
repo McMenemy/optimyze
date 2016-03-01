@@ -1,15 +1,19 @@
 .left-pane {
+  position: relative;
   float: left;
+  height: 100%;
   width: 38%;
   margin: 3%;
   padding: 3%;
   background-color: #3dd0ac;
+  overflow: visible;
 }
 
 .right-pane {
-  float: right;
-  width: 38%;
-  margin: 3%;
-  padding: 3%;
-  min-height: 400px;
+  position: fixed;
+  width: 400px;
+  height: 90vh;
+  left: 50%;
+  top: 77px;
+  overflow: scroll;
 }

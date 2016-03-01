@@ -46,8 +46,6 @@ OptimizationStore.allWithSearchParams = function (searchParams) {
     allFilteredOptimizations = this.all();
   }
 
-  console.log('sp', allFilteredOptimizations);
-
   allFilteredOptimizations.forEach(function (currentOptimization, i) {
     var currentTitle = currentOptimization.title.toLowerCase();
     var currentUser = currentOptimization.user_id;

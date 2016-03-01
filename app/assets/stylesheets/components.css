@@ -127,14 +127,17 @@
 
 .optimizationIndexItem {
   width: 80%;
-  height: 40px;
+  height: 60px;
   margin: 10px 10%;
 }
 
 .optimization-item-title-button {
-  width: 60%;
-  padding: 11px 0px 11px 0px;
+  float: left;
+  width: calc(80% - 10px);
+  padding: 21px 0px 21px 0px;
   text-align: left;
+  margin: 0px;
+  font-size: 18px;
 }
 
 .optimization-item-title-button > p {
@@ -142,13 +145,15 @@
 }
 
 .optimization-item-edit-button {
-  width: 20%;
-  padding: 11px 0px 11px 0px;
+  float: left;
+  width: calc(20% - 5px);
+  height: 20px;
+  padding-top: 5px;
   text-align: right;
+  margin: 0;
 }
 
 .optimization-item-edit-button > p {
-  padding-right: 11px;
 }
 
 .optimization-item-edit-button:hover p {
@@ -156,13 +161,15 @@
 }
 
 .optimization-item-delete-button {
-  width: 20%;
-  padding: 11px 0px 11px 0px;
+  float: left;
+  width: calc(20% - 5px);
+  height: 20px;
+  padding-top: 5px;
   text-align: right;
+  margin: 0;
 }
 
 .optimization-item-delete-button p {
-  padding-right: 0px;
 }
 
 .optimization-item-delete-button:hover p {

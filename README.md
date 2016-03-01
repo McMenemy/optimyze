@@ -102,11 +102,10 @@ user interface.
 - [ ] clean up UI for initial user testing
         - [x] graph shows correct units
         - [ ] new and edit form are intuitive
-        - [ ] right pane remains fixed
+        - [x] right pane remains fixed
         - [ ] top ui of left pane remains fixed
-        - [ ] edit and delete links are stacked
-        - [ ] graph matches rest of site
-        - [ ] currently selected optimization stays pressed and colored
+        - [x] edit and delete links are stacked
+        - [x] graph matches rest of site
 
 ### Phase 6: Categories and Overview component (1 day)
 

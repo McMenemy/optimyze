@@ -8,6 +8,16 @@ var OptimizationDetail = React.createClass({
     var config = {
       chart: {
         type: 'scatter',
+        style: {
+          fontFamily: 'sans-serif',
+        },
+      },
+
+      tooltip: {
+        backgroundColor: '#3DD0AC',
+        style: {
+          color: '#fff',
+        },
       },
 
       credits: {
@@ -41,6 +51,7 @@ var OptimizationDetail = React.createClass({
       series: [{
         name: 'theoretical',
         step: true,
+        color: '#3DD0AC',
         data: this.createTheoreticalSeriesData(),
 
       },

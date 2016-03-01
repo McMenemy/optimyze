@@ -4,17 +4,18 @@ var OptimizationIndex = require('./optimizationIndex');
 var SearchIndex = React.createClass({
   getInitialState: function () {
     var searchParams = {};
-
-    if (window.currentUser === undefined) {
-      searchParams.userOnly = false;
-    } else {
-      searchParams.userOnly = true;
-    }
-
     searchParams.title = '';
 
-    return { optimizations: OptimizationStore.all(),
-             searchParams: searchParams, };
+    if (window.currentUser) {
+      searchParams.userOnly = true;
+      return { optimizations: OptimizationStore.allForCurrentUser(),
+               searchParams: searchParams, };
+    } else {
+      searchParams.userOnly = false;
+      return { optimizations: OptimizationStore.all(),
+               searchParams: searchParams, };
+    }
+
   },
 
   handleInput: function (e) {
@@ -24,12 +25,13 @@ var SearchIndex = React.createClass({
   },
 
   clickBrowseAllOptimizations: function () {
+    console.log(this.state.searchParams.userOnly);
     this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
     this.setState(this.state.searchParams);
   },
 
   setHeadingTitle: function () {
-    if (this.state.userOnly) {
+    if (this.state.searchParams.userOnly) {
       return 'your optimizations';
     } else {
       return 'all optimizations';
@@ -37,7 +39,7 @@ var SearchIndex = React.createClass({
   },
 
   setBrowseButtonTitle: function () {
-    if (this.state.userOnly) {
+    if (this.state.searchParams.userOnly) {
       return 'Browse All Optimizations';
     } else {
       return 'Browse Your Optimizations';

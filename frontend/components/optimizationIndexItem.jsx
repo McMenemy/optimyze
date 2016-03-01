@@ -21,8 +21,8 @@ var OptimizationIndexItem = React.createClass({
     return (
       <li className="whiteButton optimizationIndexItem">
         <button className="optimization-item-title-button" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
-        <button className="optimization-item-delete-button" onClick={this.deleteOptimization}><p>Delete</p></button>
         <button className="optimization-item-edit-button" onClick={this.editOptimization}><p>Edit</p></button>
+        <button className="optimization-item-delete-button" onClick={this.deleteOptimization}><p>Delete</p></button>
       </li>
     );
   },
