@@ -31635,7 +31635,7 @@
 	  },
 	
 	  createOptimizationList: function () {
-	    var listOfOptimizations = this.state.optimizations.map(function (el, idx) {
+	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
 	      return React.createElement(OptimizationIndexItem, { key: idx, optimization: el });
 	    });
 	
