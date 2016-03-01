@@ -20032,7 +20032,6 @@
 	  },
 	
 	  createOptimization: function (updateParams, callback) {
-	    debugger;
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/optimizations',
@@ -31958,11 +31957,88 @@
 	    return {};
 	  },
 	
+	  // optimization: Object
+	  //   description: "afadf"
+	  //   frequency: "33"
+	  //   frequency_unit: "day", could be blank default = "week"
+	  //   investment_time: "33"
+	  //   investment_time_unit: "seconds", could be blank default = "minutes"
+	  //   time_saved_per_occurrence: "33"
+	  //   time_saved_per_occurrence_unit: "seconds", could be blank default = "minutes"
+	  //   title: "asdf"
+	
+	  // converts time to milliseconds
+	  timeConvert: function (time, unit) {
+	    if (unit === 'milliseconds') {
+	      return time;
+	    } else if (unit === 'seconds') {
+	      return time * 1000;
+	    } else if (unit === 'minutes') {
+	      return time * 1000 * 60;
+	    } else if (unit === 'hours') {
+	      return time * 1000 * 60 * 60;
+	    } else {
+	      debugger;
+	      return 'form error';
+	    }
+	  },
+	
+	  // converts to every blank millisconds
+	  frequencyConvert: function (frequency, unit) {
+	    if (unit === 'per hour') {
+	      return Math.round(60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per day') {
+	      return Math.round(24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per week') {
+	      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per month') {
+	      return Math.round(30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per year') {
+	      return Math.round(365 * 30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
+	    } else {
+	      debugger;
+	      return 'form errror';
+	    }
+	  },
+	
+	  proccessParams: function (params) {
+	    var updateParams = { optimization: {} };
+	
+	    var frequencyUnit = params.optimization.frequency_unit;
+	    if (typeof frequencyUnit === 'undefined') {
+	      frequencyUnit = 'per week';
+	    }
+	
+	    var investmentTimeUnit = params.optimization.investment_time_unit;
+	    if (typeof investmentTimeUnit === 'undefined') {
+	      investmentTimeUnit = 'minutes';
+	    }
+	
+	    var timeSavedPerOccurrenceUnit = params.optimization.time_saved_per_occurrence_unit;
+	    if (typeof timeSavedPerOccurrenceUnit === 'undefined') {
+	      timeSavedPerOccurrenceUnit = 'minutes';
+	    }
+	
+	    updateParams.optimization.title = params.optimization.title;
+	    updateParams.optimization.description = params.optimization.description;
+	
+	    var frequency = params.optimization.frequency;
+	    updateParams.optimization.frequency = this.frequencyConvert(frequency, frequencyUnit);
+	
+	    var investmentTime = params.optimization.investment_time;
+	    updateParams.optimization.investment_time = this.timeConvert(investmentTime, investmentTimeUnit);
+	
+	    var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
+	    updateParams.optimization.time_saved_per_occurrence = this.timeConvert(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
+	
+	    updateParams.optimization.user_id = window.currentUser.userId;
+	    return updateParams;
+	  },
+	
 	  handleSubmit: function (event) {
 	    event.preventDefault();
 	    var updateParams = { optimization: this.state };
-	    debugger;
-	    OptimizationActions.retrieveNewOptimization(updateParams);
+	    OptimizationActions.retrieveNewOptimization(this.proccessParams(updateParams));
 	    this.navigateToDashboard();
 	  },
 	
@@ -31976,6 +32052,8 @@
 	  },
 	
 	  render: function () {
+	    // <option value="per month">times per month</option>
+	    // <option value="per year">times per year</option>
 	    return React.createElement(
 	      'div',
 	      { id: 'optimization-form-container' },
@@ -32018,7 +32096,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
 	          React.createElement(
 	            'select',
-	            { valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
+	            { defaultValue: 'minutes', valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32052,7 +32130,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
 	          React.createElement(
 	            'select',
-	            { valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
+	            { defaultValue: 'minutes', valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32086,31 +32164,21 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
 	          React.createElement(
 	            'select',
-	            { valueLink: this.linkState('frequency_unit'), name: 'time-unit' },
+	            { defaultValue: 'per week', valueLink: this.linkState('frequency_unit'), name: 'time-unit' },
 	            React.createElement(
 	              'option',
-	              { value: 'hour' },
-	              'hour'
+	              { value: 'per hour' },
+	              'times per hour'
 	            ),
 	            React.createElement(
 	              'option',
-	              { value: 'day' },
-	              'day'
+	              { value: 'per day' },
+	              'times per day'
 	            ),
 	            React.createElement(
 	              'option',
-	              { value: 'week' },
-	              'week'
-	            ),
-	            React.createElement(
-	              'option',
-	              { value: 'month' },
-	              'month'
-	            ),
-	            React.createElement(
-	              'option',
-	              { value: 'year' },
-	              'year'
+	              { value: 'per week' },
+	              'times per week'
 	            )
 	          )
 	        ),

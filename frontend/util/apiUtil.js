@@ -24,7 +24,6 @@ var ApiUtil = {
   },
 
   createOptimization: function (updateParams, callback) {
-    debugger;
     $.ajax({
       type: 'POST',
       url: 'api/optimizations',

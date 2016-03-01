@@ -38,6 +38,7 @@
 .formGroup > label {
   display: inline-block;
   width: 25%;
+  min-height: 43px;
   padding: 8px;
   box-sizing: border-box;
   font-size: 16px;
@@ -48,6 +49,7 @@
 
 .formGroup > input {
   position: relative;
+  min-height: 43px;
   width: 75%;
   padding: 8px;
   font-size: 16px;
@@ -58,7 +60,8 @@
 }
 
 .has-time-selector {
-  width: calc(40% - 30px) !important;
+  width: calc(34% - 30px) !important;
+  height: 43px;
   margin-left: 15px;
   margin-right: 15px;
   margin-top: auto;
@@ -67,7 +70,7 @@
 }
 
 .formGroup > select {
-  width: 35%;
+  width: 41%;
   height: 43px;
   /*-webkit-appearance: none;*/
   -webkit-border-radius: 0px;
@@ -76,7 +79,6 @@
   font-size: 16px;
   background-color: #3DD0AC;
   color: #FFF;
-  border-top: 4px solid #00C58E;
 }
 
 
