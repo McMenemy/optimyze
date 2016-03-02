@@ -31852,11 +31852,12 @@
 	  createTheoreticalSeriesData: function () {
 	    var startDate = new Date();
 	    var data = [];
-	    var timeInvested = this.state.optimization.investment_time;
-	    var frequency = this.state.optimization.frequency;
-	    var timeSavedperOccurrence = this.state.optimization.time_saved_per_occurrence;
+	    var timeInvested = Math.round(this.state.optimization.investment_time);
+	    var frequency = Math.round(this.state.optimization.frequency);
+	    var timeSavedperOccurrence = Math.round(this.state.optimization.time_saved_per_occurrence);
 	
-	    data.push[(startDate, timeInvested * -1)];
+	    startDate = new Date(startDate.getTime());
+	    data.push([Date.now(), timeInvested * -1]);
 	
 	    var msAdded = 0;
 	    var timeSaved = 0;
@@ -31973,16 +31974,6 @@
 	    return {};
 	  },
 	
-	  // optimization: Object
-	  //   description: "afadf"
-	  //   frequency: "33"
-	  //   frequency_unit: "day", could be blank default = "week"
-	  //   investment_time: "33"
-	  //   investment_time_unit: "seconds", could be blank default = "minutes"
-	  //   time_saved_per_occurrence: "33"
-	  //   time_saved_per_occurrence_unit: "seconds", could be blank default = "minutes"
-	  //   title: "asdf"
-	
 	  // converts time to milliseconds
 	  timeConvert: function (time, unit) {
 	    if (unit === 'milliseconds') {
@@ -31990,9 +31981,9 @@
 	    } else if (unit === 'seconds') {
 	      return time * 1000;
 	    } else if (unit === 'minutes') {
-	      return time * 1000 * 60;
+	      return time * 60 * 1000;
 	    } else if (unit === 'hours') {
-	      return time * 1000 * 60 * 60;
+	      return time * 60 * 60 * 1000;
 	    }
 	  },
 	
@@ -32005,9 +31996,9 @@
 	    } else if (unit === 'per week') {
 	      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
 	    } else if (unit === 'per month') {
-	      return Math.round(30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
+	      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
 	    } else if (unit === 'per year') {
-	      return Math.round(365 * 30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
+	      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
 	    }
 	  },
 	
@@ -32464,33 +32455,33 @@
 	      time = milliseconds;
 	      return [time, 'milliseconds'];
 	    } else if (milliseconds < 1000 * 60) {
-	      time = milliseconds * 1000;
+	      time = Math.round(milliseconds / 1000);
 	      return [time, 'seconds'];
 	    } else if (milliseconds < 1000 * 60 * 60) {
-	      time = milliseconds * 1000 * 60;
+	      time = Math.round(milliseconds / 1000 / 60);
 	      return [time, 'minutes'];
 	    } else {
-	      time = milliseconds * 1000 * 60 * 60;
+	      time = Math.round(milliseconds / 1000 / 60 / 60);
 	      return [time, 'hours'];
 	    }
 	  },
 	
 	  formatFrequency: function (milliseconds) {
 	    var frequency;
-	    if (milliseconds <= 1000 * 60 * 60) {
-	      frequency = 1000 * 60 * 60 / milliseconds;
+	    if (milliseconds <= 60 * 60 * 1000) {
+	      frequency = Math.round(60 * 60 * 1000 / milliseconds);
 	      return [frequency, 'per hour'];
-	    } else if (milliseconds <= 1000 * 60 * 60 * 24) {
-	      frequency = 1000 * 60 * 60 * 24 / milliseconds;
+	    } else if (milliseconds <= 24 * 60 * 60 * 1000) {
+	      frequency = Math.round(24 * 60 * 60 * 1000 / milliseconds);
 	      return [frequency, 'per day'];
-	    } else if (milliseconds <= 10000 * 60 * 60 * 24 * 7) {
-	      frequency = 1000 * 60 * 60 * 24 * 7 / milliseconds;
+	    } else if (milliseconds <= 7 * 24 * 60 * 60 * 1000) {
+	      frequency = Math.round(7 * 24 * 60 * 60 * 1000 / milliseconds);
 	      return [frequency, 'per week'];
-	    } else if (milliseconds <= 10000 * 60 * 60 * 24 * 7 * 30.4167) {
-	      frequency = 10000 * 60 * 60 * 24 * 7 * 30.4167 / milliseconds;
+	    } else if (milliseconds <= 30.4167 * 24 * 60 * 60 * 1000) {
+	      frequency = Math.round(30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
 	      return [frequency, 'per month'];
 	    } else {
-	      frequency = 10000 * 60 * 60 * 24 * 7 * 30.4167 * 365;
+	      frequency = Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
 	      return [frequency, 'per year'];
 	    }
 	  },
@@ -32512,12 +32503,12 @@
 	  },
 	
 	  getStateFromStore: function () {
-	    return OptimizationStore.find(this.formatOptimization(this.props.params.optimizationId));
+	    return this.formatOptimization(OptimizationStore.find(this.props.params.optimizationId));
 	  },
 	
-	  getInitialState: function () {
-	    return this.getStateFromStore();
-	  },
+	  // getInitialState: function () {
+	  //   return this.getStateFromStore();
+	  // },
 	
 	  componentWillReceiveProps: function (newProps) {
 	    this.setState(this.getStateFromStore());
@@ -32540,10 +32531,6 @@
 	  },
 	
 	  render: function () {
-	    if (this.state.id === undefined) {
-	      return React.createElement('div', null);
-	    }
-	
 	    return React.createElement(
 	      'div',
 	      { id: 'optimization-form-container' },

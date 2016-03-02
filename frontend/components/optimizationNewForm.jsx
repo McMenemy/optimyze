@@ -10,16 +10,6 @@ var OptimizationNewForm = React.createClass({
     return { };
   },
 
-  // optimization: Object
-  //   description: "afadf"
-  //   frequency: "33"
-  //   frequency_unit: "day", could be blank default = "week"
-  //   investment_time: "33"
-  //   investment_time_unit: "seconds", could be blank default = "minutes"
-  //   time_saved_per_occurrence: "33"
-  //   time_saved_per_occurrence_unit: "seconds", could be blank default = "minutes"
-  //   title: "asdf"
-
   // converts time to milliseconds
   timeConvert: function (time, unit) {
     if (unit === 'milliseconds') {
@@ -27,9 +17,9 @@ var OptimizationNewForm = React.createClass({
     } else if (unit === 'seconds') {
       return time * 1000;
     } else if (unit === 'minutes') {
-      return time * 1000 * 60;
+      return time * 60 * 1000;
     } else if (unit === 'hours') {
-      return time * 1000 * 60 * 60;
+      return time * 60 * 60 * 1000;
     }
   },
 
@@ -42,9 +32,9 @@ var OptimizationNewForm = React.createClass({
     } else if (unit === 'per week') {
       return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
     } else if (unit === 'per month') {
-      return Math.round(30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
+      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
     } else if (unit === 'per year') {
-      return Math.round(365 * 30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
+      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
     }
   },
 

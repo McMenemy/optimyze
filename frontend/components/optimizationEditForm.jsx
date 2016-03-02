@@ -12,33 +12,33 @@ var OptimizationEditForm = React.createClass({
       time = milliseconds;
       return [time, 'milliseconds'];
     } else if (milliseconds < 1000 * 60) {
-      time = milliseconds * 1000;
+      time = Math.round(milliseconds / 1000);
       return [time, 'seconds'];
     } else if (milliseconds < 1000 * 60 * 60) {
-      time = milliseconds * 1000 * 60;
+      time = Math.round(milliseconds / 1000 / 60);
       return [time, 'minutes'];
     } else {
-      time = milliseconds * 1000 * 60 * 60;
+      time = Math.round(milliseconds / 1000 / 60 / 60);
       return [time, 'hours'];
     }
   },
 
   formatFrequency: function (milliseconds) {
     var frequency;
-    if (milliseconds <= 1000 * 60 * 60) {
-      frequency = 1000 * 60 * 60 / milliseconds;
+    if (milliseconds <= 60 * 60 * 1000) {
+      frequency = Math.round(60 * 60 * 1000 / milliseconds);
       return [frequency, 'per hour'];
-    } else if (milliseconds <= 1000 * 60 * 60 * 24) {
-      frequency = 1000 * 60 * 60 * 24 / milliseconds;
+    } else if (milliseconds <= 24 * 60 * 60 * 1000) {
+      frequency = Math.round(24 * 60 * 60 * 1000 / milliseconds);
       return [frequency, 'per day'];
-    } else if (milliseconds <= 10000 * 60 * 60 * 24 * 7) {
-      frequency = 1000 * 60 * 60 * 24 * 7 / milliseconds;
+    } else if (milliseconds <= 7 * 24 * 60 * 60 * 1000) {
+      frequency = Math.round(7 * 24 * 60 * 60 * 1000 / milliseconds);
       return [frequency, 'per week'];
-    } else if (milliseconds <= 10000 * 60 * 60 * 24 * 7 * 30.4167) {
-      frequency = 10000 * 60 * 60 * 24 * 7 * 30.4167 / milliseconds;
+    } else if (milliseconds <= 30.4167 * 24 * 60 * 60 * 1000) {
+      frequency = Math.round(30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
       return [frequency, 'per month'];
     } else {
-      frequency = 10000 * 60 * 60 * 24 * 7 * 30.4167 * 365;
+      frequency = Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
       return [frequency, 'per year'];
     }
   },
@@ -60,12 +60,12 @@ var OptimizationEditForm = React.createClass({
   },
 
   getStateFromStore: function () {
-    return OptimizationStore.find(this.formatOptimization(this.props.params.optimizationId));
+    return this.formatOptimization(OptimizationStore.find(this.props.params.optimizationId));
   },
 
-  getInitialState: function () {
-    return this.getStateFromStore();
-  },
+  // getInitialState: function () {
+  //   return this.getStateFromStore();
+  // },
 
   componentWillReceiveProps: function (newProps) {
     this.setState(this.getStateFromStore());
@@ -88,8 +88,6 @@ var OptimizationEditForm = React.createClass({
   },
 
   render: function () {
-    if (this.state.id === undefined) { return <div></div>; }
-
     return (
       <div id="optimization-form-container">
         <h2>Edit an Optimization</h2>

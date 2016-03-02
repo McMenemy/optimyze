@@ -66,11 +66,12 @@ var OptimizationDetail = React.createClass({
   createTheoreticalSeriesData: function () {
     var startDate = new Date;
     var data = [];
-    var timeInvested = this.state.optimization.investment_time;
-    var frequency = this.state.optimization.frequency;
-    var timeSavedperOccurrence = this.state.optimization.time_saved_per_occurrence;
+    var timeInvested = Math.round(this.state.optimization.investment_time);
+    var frequency = Math.round(this.state.optimization.frequency);
+    var timeSavedperOccurrence = Math.round(this.state.optimization.time_saved_per_occurrence);
 
-    data.push[startDate, timeInvested * -1];
+    startDate = new Date(startDate.getTime());
+    data.push([Date.now(), timeInvested * -1]);
 
     var msAdded = 0;
     var timeSaved = 0;
