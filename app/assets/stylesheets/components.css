@@ -214,6 +214,15 @@
   width: 100%;
 }
 
+.optimization-info {
+
+}
+
+.optimization-info > p {
+  width: 100%;
+  color: #777777;
+  padding: 5px;
+}
 /*optimizationNewForm and optimizationEditForm*/
 
 #optimizationForm {

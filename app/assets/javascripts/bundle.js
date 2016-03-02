@@ -31906,21 +31906,37 @@
 	      React.createElement(ReactHighcharts, { className: 'chart', config: this.createChartOptions() }),
 	      React.createElement(
 	        'div',
-	        null,
-	        'title: ',
-	        this.state.optimization.title,
-	        React.createElement('br', null),
-	        'description: ',
-	        this.state.optimization.description,
-	        React.createElement('br', null),
-	        'frequency: ',
-	        this.state.optimization.frequency,
-	        React.createElement('br', null),
-	        'investment time: ',
-	        this.state.optimization.investment_time,
-	        React.createElement('br', null),
-	        'time saved per occurence: ',
-	        this.state.optimization.time_saved_per_occurrence
+	        { className: 'optimization-info' },
+	        React.createElement(
+	          'p',
+	          null,
+	          'title: ',
+	          this.state.optimization.title
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'description: ',
+	          this.state.optimization.description
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'frequency: ',
+	          this.state.optimization.frequency
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'investment time: ',
+	          this.state.optimization.investment_time
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'time saved per occurence: ',
+	          this.state.optimization.time_saved_per_occurrence
+	        )
 	      )
 	    );
 	  }
@@ -31977,9 +31993,6 @@
 	      return time * 1000 * 60;
 	    } else if (unit === 'hours') {
 	      return time * 1000 * 60 * 60;
-	    } else {
-	      debugger;
-	      return 'form error';
 	    }
 	  },
 	
@@ -31995,9 +32008,6 @@
 	      return Math.round(30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
 	    } else if (unit === 'per year') {
 	      return Math.round(365 * 30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
-	    } else {
-	      debugger;
-	      return 'form errror';
 	    }
 	  },
 	
@@ -32052,8 +32062,6 @@
 	  },
 	
 	  render: function () {
-	    // <option value="per month">times per month</option>
-	    // <option value="per year">times per year</option>
 	    return React.createElement(
 	      'div',
 	      { id: 'optimization-form-container' },
@@ -32179,6 +32187,16 @@
 	              'option',
 	              { value: 'per week' },
 	              'times per week'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'per month' },
+	              'times per month'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'per year' },
+	              'times per year'
 	            )
 	          )
 	        ),
@@ -32440,8 +32458,61 @@
 	
 	  mixins: [LinkedStateMixin, History],
 	
+	  formatTime: function (milliseconds) {
+	    var time;
+	    if (milliseconds < 1000) {
+	      time = milliseconds;
+	      return [time, 'milliseconds'];
+	    } else if (milliseconds < 1000 * 60) {
+	      time = milliseconds * 1000;
+	      return [time, 'seconds'];
+	    } else if (milliseconds < 1000 * 60 * 60) {
+	      time = milliseconds * 1000 * 60;
+	      return [time, 'minutes'];
+	    } else {
+	      time = milliseconds * 1000 * 60 * 60;
+	      return [time, 'hours'];
+	    }
+	  },
+	
+	  formatFrequency: function (milliseconds) {
+	    var frequency;
+	    if (milliseconds <= 1000 * 60 * 60) {
+	      frequency = 1000 * 60 * 60 / milliseconds;
+	      return [frequency, 'per hour'];
+	    } else if (milliseconds <= 1000 * 60 * 60 * 24) {
+	      frequency = 1000 * 60 * 60 * 24 / milliseconds;
+	      return [frequency, 'per day'];
+	    } else if (milliseconds <= 10000 * 60 * 60 * 24 * 7) {
+	      frequency = 1000 * 60 * 60 * 24 * 7 / milliseconds;
+	      return [frequency, 'per week'];
+	    } else if (milliseconds <= 10000 * 60 * 60 * 24 * 7 * 30.4167) {
+	      frequency = 10000 * 60 * 60 * 24 * 7 * 30.4167 / milliseconds;
+	      return [frequency, 'per month'];
+	    } else {
+	      frequency = 10000 * 60 * 60 * 24 * 7 * 30.4167 * 365;
+	      return [frequency, 'per year'];
+	    }
+	  },
+	
+	  formatOptimization: function (optimization) {
+	    frequencyFormatted = this.formatFrequency(optimization.frequency);
+	    investmentTimeFormatted = this.formatTime(optimization.investment_time);
+	    timeSavedPerOccurrenceFormatted = this.formatTime(optimization.time_saved_per_occurrence);
+	
+	    optimization.frequency = frequencyFormatted[0];
+	    optimization.frequency_unit = frequencyFormatted[1];
+	    optimization.investment_time = investmentTimeFormatted[0];
+	    optimization.investmet_time_unit = investmentTimeFormatted[1];
+	    optimization.time_saved_per_occurrence = timeSavedPerOccurrenceFormatted[0];
+	    optimization.time_saved_per_occurrence_unit = timeSavedPerOccurrenceFormatted[1];
+	
+	    debugger;
+	    return optimization;
+	  },
+	
 	  getStateFromStore: function () {
-	    return OptimizationStore.find(this.props.params.optimizationId);
+	    return OptimizationStore.find(this.formatOptimization(this.props.params.optimizationId));
 	  },
 	
 	  getInitialState: function () {
@@ -32512,7 +32583,31 @@
 	            null,
 	            'setup time'
 	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('investment_time') })
+	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
+	          React.createElement(
+	            'select',
+	            { defaultValue: 'minutes', valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
+	            React.createElement(
+	              'option',
+	              { value: 'milliseconds' },
+	              'milliseconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'seconds' },
+	              'seconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'minutes' },
+	              'minutes'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'hours' },
+	              'hours'
+	            )
+	          )
 	        ),
 	        React.createElement(
 	          'div',
@@ -32522,7 +32617,31 @@
 	            null,
 	            'time saved per occurrence'
 	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('time_saved_per_occurrence') })
+	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
+	          React.createElement(
+	            'select',
+	            { defaultValue: 'minutes', valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
+	            React.createElement(
+	              'option',
+	              { value: 'milliseconds' },
+	              'milliseconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'seconds' },
+	              'seconds'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'minutes' },
+	              'minutes'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'hours' },
+	              'hours'
+	            )
+	          )
 	        ),
 	        React.createElement(
 	          'div',
@@ -32532,7 +32651,36 @@
 	            null,
 	            'frequency'
 	          ),
-	          React.createElement('input', { type: 'number', valueLink: this.linkState('frequency') })
+	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
+	          React.createElement(
+	            'select',
+	            { defaultValue: 'per week', valueLink: this.linkState('frequency_unit'), name: 'time-unit' },
+	            React.createElement(
+	              'option',
+	              { value: 'per hour' },
+	              'times per hour'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'per day' },
+	              'times per day'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'per week' },
+	              'times per week'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'per month' },
+	              'times per month'
+	            ),
+	            React.createElement(
+	              'option',
+	              { value: 'per year' },
+	              'times per year'
+	            )
+	          )
 	        ),
 	        React.createElement('input', { type: 'submit', className: 'whiteButton green-button-overlay', value: 'update optimization' })
 	      ),

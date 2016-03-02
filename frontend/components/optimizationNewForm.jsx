@@ -30,9 +30,6 @@ var OptimizationNewForm = React.createClass({
       return time * 1000 * 60;
     } else if (unit === 'hours') {
       return time * 1000 * 60 * 60;
-    } else {
-      debugger;
-      return 'form error';
     }
   },
 
@@ -48,9 +45,6 @@ var OptimizationNewForm = React.createClass({
       return Math.round(30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
     } else if (unit === 'per year') {
       return Math.round(365 * 30.4167 * 7 * 24 * 60 * 60 * 1000 / frequency);
-    } else {
-      debugger;
-      return 'form errror';
     }
   },
 
@@ -105,8 +99,6 @@ var OptimizationNewForm = React.createClass({
   },
 
   render: function () {
-    // <option value="per month">times per month</option>
-    // <option value="per year">times per year</option>
     return (
       <div id="optimization-form-container">
         <h2>Create an Optimization</h2>
@@ -146,6 +138,8 @@ var OptimizationNewForm = React.createClass({
               <option value="per hour">times per hour</option>
               <option value="per day">times per day</option>
               <option value="per week">times per week</option>
+              <option value="per month">times per month</option>
+              <option value="per year">times per year</option>
             </select>
           </div>
           <input className="whiteButton green-button-overlay" type="submit" value="create optimization"/>

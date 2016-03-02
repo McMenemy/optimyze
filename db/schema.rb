@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227025547) do
+ActiveRecord::Schema.define(version: 20160223014000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,12 +19,12 @@ ActiveRecord::Schema.define(version: 20160227025547) do
   create_table "optimizations", force: :cascade do |t|
     t.string   "title",                     null: false
     t.text     "description"
-    t.integer  "investment_time",           null: false
-    t.integer  "time_saved_per_occurrence", null: false
-    t.integer  "frequency",                 null: false
+    t.decimal  "investment_time",           null: false
+    t.decimal  "time_saved_per_occurrence", null: false
+    t.decimal  "frequency",                 null: false
+    t.integer  "user_id",                   null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.integer  "user_id",                   null: false
   end
 
   add_index "optimizations", ["user_id"], name: "index_optimizations_on_user_id", using: :btree

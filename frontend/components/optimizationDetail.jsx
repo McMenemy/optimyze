@@ -115,16 +115,12 @@ var OptimizationDetail = React.createClass({
     return (
       <div id='optimizationDetail'>
         <ReactHighcharts className="chart" config={this.createChartOptions()} />
-        <div>
-          title: {this.state.optimization.title}
-          <br />
-          description: {this.state.optimization.description}
-          <br />
-          frequency: {this.state.optimization.frequency}
-          <br />
-          investment time: {this.state.optimization.investment_time}
-          <br />
-          time saved per occurence: {this.state.optimization.time_saved_per_occurrence}
+        <div className='optimization-info'>
+          <p>title: {this.state.optimization.title}</p>
+          <p>description: {this.state.optimization.description}</p>
+          <p>frequency: {this.state.optimization.frequency}</p>
+          <p>investment time: {this.state.optimization.investment_time}</p>
+          <p>time saved per occurence: {this.state.optimization.time_saved_per_occurrence}</p>
         </div>
       </div>
     );
