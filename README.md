@@ -99,11 +99,11 @@ user interface.
 - [x] searching updates shown optimizations
 - [x] integrate user sign-in into react
 - [x] add browse all button
-- [ ] clean up UI for initial user testing
+- [x] clean up UI for initial user testing
         - [x] graph shows correct units
-        - [ ] new and edit form are intuitive
+        - [x] new and edit form are intuitive
         - [x] right pane remains fixed
-        - [ ] top ui of left pane remains fixed
+        - [x] top ui of left pane remains fixed
         - [x] edit and delete links are stacked
         - [x] graph matches rest of site
 

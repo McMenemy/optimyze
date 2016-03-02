@@ -31502,7 +31502,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      { id: 'app' },
+	      { className: 'app' },
 	      React.createElement(
 	        'div',
 	        { className: 'left-pane' },
@@ -31575,19 +31575,27 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'searchIndex' },
+	      null,
 	      React.createElement(
-	        'h2',
-	        null,
-	        this.setHeadingTitle()
+	        'div',
+	        { className: 'search-index-fixed' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          this.setHeadingTitle()
+	        ),
+	        React.createElement('input', { type: 'text', className: 'search-input', onChange: this.handleInput, value: this.state.searchParams.title }),
+	        React.createElement(
+	          'button',
+	          { className: 'whiteButton', onClick: this.clickBrowseAllOptimizations },
+	          this.setBrowseButtonTitle()
+	        )
 	      ),
-	      React.createElement('input', { type: 'text', className: 'search-input', onChange: this.handleInput, value: this.state.searchParams.title }),
 	      React.createElement(
-	        'button',
-	        { className: 'whiteButton', onClick: this.clickBrowseAllOptimizations },
-	        this.setBrowseButtonTitle()
-	      ),
-	      React.createElement(OptimizationIndex, { searchParams: this.state.searchParams })
+	        'div',
+	        { className: 'search-index' },
+	        React.createElement(OptimizationIndex, { searchParams: this.state.searchParams })
+	      )
 	    );
 	  }
 	});
@@ -31649,7 +31657,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'ul',
-	      { id: 'optimizationsIndex' },
+	      { className: 'optimizations-index group' },
 	      React.createElement(
 	        'button',
 	        { className: 'whiteButton', onClick: this.clickNewOptimization },

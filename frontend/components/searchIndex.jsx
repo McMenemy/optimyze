@@ -48,12 +48,16 @@ var SearchIndex = React.createClass({
 
   render: function () {
     return (
-      <div id="searchIndex">
-        <h2>{this.setHeadingTitle()}</h2>
-        <input type="text" className='search-input' onChange={this.handleInput} value={this.state.searchParams.title} />
-        <button className="whiteButton" onClick={this.clickBrowseAllOptimizations}>{this.setBrowseButtonTitle()}</button>
-        <OptimizationIndex searchParams={this.state.searchParams}/>
-      </div>
+      <div>
+        <div className="search-index-fixed">
+          <h2>{this.setHeadingTitle()}</h2>
+          <input type="text" className='search-input' onChange={this.handleInput} value={this.state.searchParams.title} />
+          <button className="whiteButton" onClick={this.clickBrowseAllOptimizations}>{this.setBrowseButtonTitle()}</button>
+        </div>
+        <div className="search-index">
+            <OptimizationIndex searchParams={this.state.searchParams}/>
+        </div>
+    </div>
     );
   },
 });
