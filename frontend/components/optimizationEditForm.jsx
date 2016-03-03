@@ -51,24 +51,24 @@ var OptimizationEditForm = React.createClass({
     optimization.frequency = frequencyFormatted[0];
     optimization.frequency_unit = frequencyFormatted[1];
     optimization.investment_time = investmentTimeFormatted[0];
-    optimization.investmet_time_unit = investmentTimeFormatted[1];
+    optimization.investment_time_unit = investmentTimeFormatted[1];
     optimization.time_saved_per_occurrence = timeSavedPerOccurrenceFormatted[0];
     optimization.time_saved_per_occurrence_unit = timeSavedPerOccurrenceFormatted[1];
-
-    debugger;
     return optimization;
   },
 
-  getStateFromStore: function () {
-    return this.formatOptimization(OptimizationStore.find(this.props.params.optimizationId));
+  getStateFromStore: function (id) {
+    // make a clone so that original object is not modified
+    var optimization = JSON.parse(JSON.stringify(OptimizationStore.find(id)));
+    return this.formatOptimization(optimization);
   },
 
-  // getInitialState: function () {
-  //   return this.getStateFromStore();
-  // },
+  getInitialState: function () {
+    return this.getStateFromStore(this.props.params.optimizationId);
+  },
 
   componentWillReceiveProps: function (newProps) {
-    this.setState(this.getStateFromStore());
+    this.setState(this.getStateFromStore(newProps.params.optimizationId));
   },
 
   handleSubmit: function (event) {
@@ -103,7 +103,7 @@ var OptimizationEditForm = React.createClass({
           <div className="formGroup">
             <label>setup time</label>
             <input type="number" className="has-time-selector" valueLink={this.linkState('investment_time')} />
-            <select defaultValue="minutes" valueLink={this.linkState('investment_time_unit')} name="time-unit">
+            <select defaultValue={this.state.investment_time_unit} name="time-unit">
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -113,7 +113,7 @@ var OptimizationEditForm = React.createClass({
           <div className="formGroup">
             <label>time saved per occurrence</label>
             <input type="number" className="has-time-selector" valueLink={this.linkState('time_saved_per_occurrence')} />
-            <select defaultValue="minutes" valueLink={this.linkState('time_saved_per_occurrence_unit')} name="time-unit">
+            <select defaultValue={this.state.time_saved_per_occurrence_unit} name="time-unit">
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -123,7 +123,7 @@ var OptimizationEditForm = React.createClass({
           <div className="formGroup">
             <label>frequency</label>
             <input type="number" className="has-time-selector" valueLink={this.linkState('frequency')} />
-            <select defaultValue="per week" valueLink={this.linkState('frequency_unit')} name="time-unit">
+            <select defaultValue={this.state.frequency_unit}>
               <option value="per hour">times per hour</option>
               <option value="per day">times per day</option>
               <option value="per week">times per week</option>

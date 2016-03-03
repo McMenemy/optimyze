@@ -32527,24 +32527,24 @@
 	    optimization.frequency = frequencyFormatted[0];
 	    optimization.frequency_unit = frequencyFormatted[1];
 	    optimization.investment_time = investmentTimeFormatted[0];
-	    optimization.investmet_time_unit = investmentTimeFormatted[1];
+	    optimization.investment_time_unit = investmentTimeFormatted[1];
 	    optimization.time_saved_per_occurrence = timeSavedPerOccurrenceFormatted[0];
 	    optimization.time_saved_per_occurrence_unit = timeSavedPerOccurrenceFormatted[1];
-	
-	    debugger;
 	    return optimization;
 	  },
 	
-	  getStateFromStore: function () {
-	    return this.formatOptimization(OptimizationStore.find(this.props.params.optimizationId));
+	  getStateFromStore: function (id) {
+	    // make a clone so that original object is not modified
+	    var optimization = JSON.parse(JSON.stringify(OptimizationStore.find(id)));
+	    return this.formatOptimization(optimization);
 	  },
 	
-	  // getInitialState: function () {
-	  //   return this.getStateFromStore();
-	  // },
+	  getInitialState: function () {
+	    return this.getStateFromStore(this.props.params.optimizationId);
+	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    this.setState(this.getStateFromStore());
+	    this.setState(this.getStateFromStore(newProps.params.optimizationId));
 	  },
 	
 	  handleSubmit: function (event) {
@@ -32606,7 +32606,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: 'minutes', valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
+	            { defaultValue: this.state.investment_time_unit, name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32640,7 +32640,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: 'minutes', valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
+	            { defaultValue: this.state.time_saved_per_occurrence_unit, name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32674,7 +32674,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: 'per week', valueLink: this.linkState('frequency_unit'), name: 'time-unit' },
+	            { defaultValue: this.state.frequency_unit },
 	            React.createElement(
 	              'option',
 	              { value: 'per hour' },
