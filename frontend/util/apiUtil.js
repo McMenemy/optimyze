@@ -23,15 +23,16 @@ var ApiUtil = {
     });
   },
 
-  createOptimization: function (updateParams, callback, errorCallback) {
+  createOptimization: function (postParams, callback, errorCallback, successCallback) {
     $.ajax({
       type: 'POST',
       url: 'api/optimizations',
-      data: updateParams,
+      data: postParams,
       dataType: 'json',
       success:
         function (respData) {
           callback(respData);
+          successCallback(respData);
           console.log('ajax create', respData);
         },
 

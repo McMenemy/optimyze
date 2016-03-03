@@ -39,11 +39,12 @@ var OptimizationNewForm = React.createClass({
   },
 
   proccessParams: function (params) {
-    if (params.optimization.frequency || params.optimization.time_saved_per_occurrence || params.optimization.investment_time_unit) {
+    if (typeof params.optimization.frequency === 'undefined' || typeof params.optimization.time_saved_per_occurrence === 'undefined' || typeof params.optimization.investment_time === 'undefined') {
+      params.optimization.makeSureNotEmpty = '';
       return params;
     }
 
-    var updateParams = { optimization: {} };
+    var postParams = { optimization: {status: 'not good'} };
 
 
     var frequencyUnit = params.optimization.frequency_unit;
@@ -61,33 +62,35 @@ var OptimizationNewForm = React.createClass({
       timeSavedPerOccurrenceUnit = 'minutes';
     }
 
-    updateParams.optimization.title = params.optimization.title;
-    updateParams.optimization.description = params.optimization.description;
+    postParams.optimization.title = params.optimization.title;
+    postParams.optimization.description = params.optimization.description;
 
     var frequency = params.optimization.frequency;
-    updateParams.optimization.frequency = this.frequencyConvert(frequency, frequencyUnit);
+    postParams.optimization.frequency = this.frequencyConvert(frequency, frequencyUnit);
 
     var investmentTime = params.optimization.investment_time;
-    updateParams.optimization.investment_time = this.timeConvert(investmentTime, investmentTimeUnit);
+    postParams.optimization.investment_time = this.timeConvert(investmentTime, investmentTimeUnit);
 
     var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
-    updateParams.optimization.time_saved_per_occurrence = this.timeConvert(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
+    postParams.optimization.time_saved_per_occurrence = this.timeConvert(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
 
-    updateParams.optimization.user_id = window.currentUser.userId;
-    return updateParams;
+    postParams.optimization.user_id = window.currentUser.userId;
+    return postParams;
+  },
+
+  successCallback: function (newOptimization) {
+    this.history.push('/optimizations/' + newOptimization.id);
   },
 
   errorCallback: function (errorArray) {
     this.state.errors = JSON.parse(errorArray);
-    console.log('errorCallback', errorArray);
     this.setState(this.state);
   },
 
   handleSubmit: function (event) {
     event.preventDefault();
-    var updateParams = { optimization: this.state };
-    debugger;
-    OptimizationActions.retrieveNewOptimization(this.proccessParams(updateParams), this.errorCallback);
+    var postParams = { optimization: this.state };
+    OptimizationActions.retrieveNewOptimization(this.proccessParams(postParams), this.errorCallback, this.successCallback);
   },
 
   navigateToDashboard: function () {
