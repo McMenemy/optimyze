@@ -1,6 +1,6 @@
 var Dispatcher = require('../dispatcher/dispatcher');
-var OptimizationConstants = require('../constants/optimizationConstants.js');
-var ApiUtil = require('../util/apiUtil.js');
+var OptimizationConstants = require('../constants/optimizationConstants');
+var ApiUtil = require('../util/apiUtil');
 
 var OptimizationActions = {
   receiveAllOptimizations: function (data) {

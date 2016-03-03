@@ -7,5 +7,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     resources :optimizations, only: [:create, :destroy, :index, :show, :update]
     resources :users, only: [:show]
+    # front end auth
+    post 'auth/signin', to: 'auth#signin'
+    post 'auth/signup', to: 'auth#signup'
   end
+
 end

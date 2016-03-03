@@ -245,6 +245,7 @@
   color: #777777;
   padding: 5px;
 }
+
 /*optimizationNewForm and optimizationEditForm*/
 
 #optimizationForm {
@@ -261,9 +262,61 @@
   color: #3dd0ac;
 }
 
-  /*submit and input button for optimization forms*/
+/*submit and input button for optimization forms*/
 #optimization-form-container > button, .optimizationForm > input {
   margin: 10px;
   padding: 10px;
   height: 20px;
+}
+
+/*signInUp*/
+
+.user-form-container {
+  position: relative;
+  border: solid 3px #00C58E;
+}
+
+.user-form {
+  padding: 50px 0px 100px 0px;
+  width: inherit;
+}
+
+.user-form-group {
+  width: 80%;
+  margin: auto;
+  padding-top: 10px;
+  vertical-align: middle;
+}
+
+.user-form-group > label {
+  display: inline-block;
+  width: 40%;
+  min-height: 43px;
+  padding: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: #00C58E;
+  color: #FFF;
+  border-top: 4px solid #00C58E;
+}
+
+.user-form-group > input {
+  position: relative;
+  min-height: 43px;
+  width: 60%;
+  padding: 8px;
+  font-size: 16px;
+  background-color: #FFF;
+  box-sizing: border-box;
+  color: #00C58E;
+  border-top: 4px solid #00C58E;
+}
+
+.user-form-button {
+  margin: 10px;
+  padding: 10px;
+}
+
+.user-form > input:first-of-type {
+  margin-left: 30%;
 }

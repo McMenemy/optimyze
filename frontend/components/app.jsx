@@ -12,6 +12,7 @@ var App = React.createClass({
         <div className="right-pane">
           {this.props.children}
         </div>
+        <input className="whiteButton green-button-overlay" type="submit" value="sign in" />
       </div>
     );
   },

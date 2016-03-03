@@ -50,11 +50,10 @@
 	var ApiUtil = __webpack_require__(163);
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationStore = __webpack_require__(166);
+	var AuthStore = __webpack_require__(166);
 	var Router = __webpack_require__(184).Router;
 	var Route = __webpack_require__(184).Route;
 	var IndexRoute = __webpack_require__(184).IndexRoute;
-	var SearchParamStore = __webpack_require__(235);
-	var SearchParamActions = __webpack_require__(237);
 	
 	// Components
 	var App = __webpack_require__(238);
@@ -62,17 +61,18 @@
 	var OptimizationDetail = __webpack_require__(243);
 	var OptimizationNewForm = __webpack_require__(245);
 	var OptimizationEditForm = __webpack_require__(250);
+	var Auth = __webpack_require__(252);
 	
 	// for testing
 	window.ApiUtil = ApiUtil;
 	window.OptimizationActions = OptimizationActions;
 	window.OptimizationStore = OptimizationStore;
-	window.SearchParamStore = SearchParamStore;
-	window.SearchParamActions = SearchParamActions;
+	window.AuthStore = AuthStore;
 	
 	var routes = React.createElement(
 	  Route,
 	  { component: App, path: '/' },
+	  React.createElement(Route, { component: Auth, path: 'auth' }),
 	  React.createElement(Route, { component: OptimizationDetail, path: 'optimizations/:optimizationId' }),
 	  React.createElement(Route, { component: OptimizationNewForm, path: 'optimizations/form/new' }),
 	  React.createElement(Route, { component: OptimizationEditForm, path: 'optimizations/form/edit/:optimizationId' })
@@ -20074,6 +20074,46 @@
 	        console.log('ajax delete', respData);
 	      }
 	    });
+	  },
+	
+	  // auth
+	
+	  signIn: function (signInParams, actionCallback, successCallback, errorCallback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/auth/signin',
+	      data: signInParams,
+	      dataType: 'json',
+	      success: function (respData) {
+	        actionCallback(respData);
+	        successCallback(respData);
+	        console.log('ajax signIn', respData);
+	      },
+	
+	      error: function (respData) {
+	        errorCallback(respData);
+	        console.log('ajax signIn error', respData);
+	      }
+	    });
+	  },
+	
+	  signUp: function (signUpParams, actionCallback, successCallback, errorCallback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/auth/signup',
+	      data: signUpParams,
+	      dataType: 'json',
+	      success: function (respData) {
+	        actionCallback(respData);
+	        successCallback(respData);
+	        console.log('ajax signUp', respData);
+	      },
+	
+	      error: function (respData) {
+	        errorCallback(respData);
+	        console.log('ajax singUp error', respData);
+	      }
+	    });
 	  }
 	
 	};
@@ -31437,64 +31477,9 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 235 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(159);
-	var Store = __webpack_require__(167).Store;
-	var SearchParamConstants = __webpack_require__(236);
-	
-	var SearchParamStore = new Store(Dispatcher);
-	var _searchParams = {};
-	
-	SearchParamStore.resetSearchParams = function (searchParams) {
-	  _searchParams = searchParams;
-	};
-	
-	SearchParamStore.title = function () {
-	  return _searchParams.title;
-	};
-	
-	SearchParamStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case SearchParamConstants.SEARCH_PARAMS_RECEIVED:
-	      this.resetSearchParams(payload.searchParams);
-	      this.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = SearchParamStore;
-
-/***/ },
-/* 236 */
-/***/ function(module, exports) {
-
-	var SearchParamConstants = {
-	  SEARCH_PARAMS_RECEIVED: 'SEARCH_PARAMS_RECEIVED'
-	};
-	
-	module.exports = SearchParamConstants;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(159);
-	var SearchParamConstants = __webpack_require__(236);
-	
-	var SearchParamActions = {
-	  receiveSearchParams: function (searchParams) {
-	    Dispatcher.dispatch({
-	      actionType: SearchParamConstants.SEARCH_PARAMS_RECEIVED,
-	      searchParams: searchParams
-	    });
-	  }
-	};
-	
-	module.exports = SearchParamActions;
-
-/***/ },
+/* 235 */,
+/* 236 */,
+/* 237 */,
 /* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31518,7 +31503,8 @@
 	        'div',
 	        { className: 'right-pane' },
 	        this.props.children
-	      )
+	      ),
+	      React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'sign in' })
 	    );
 	  }
 	});
@@ -32606,7 +32592,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: this.state.investment_time_unit, name: 'time-unit' },
+	            { defaultValue: this.state.investment_time_unit, valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32640,7 +32626,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: this.state.time_saved_per_occurrence_unit, name: 'time-unit' },
+	            { defaultValue: this.state.time_saved_per_occurrence_unit, valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32674,7 +32660,7 @@
 	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: this.state.frequency_unit },
+	            { defaultValue: this.state.frequency_unit, valueLink: this.linkState('frequency_unit') },
 	            React.createElement(
 	              'option',
 	              { value: 'per hour' },
@@ -32715,6 +32701,161 @@
 	});
 	
 	module.exports = OptimizationEditForm;
+
+/***/ },
+/* 251 */,
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var SignInUpForm = __webpack_require__(253);
+	
+	var Auth = React.createClass({
+	  displayName: 'Auth',
+	
+	
+	  renderAuthOptions: function () {
+	    return React.createElement(SignInUpForm, null);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'auth-container' },
+	      this.renderAuthOptions()
+	    );
+	  }
+	
+	});
+	
+	module.exports = Auth;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(246);
+	var AuthActions = __webpack_require__(256);
+	var History = __webpack_require__(184).History;
+	
+	var SignInUpForm = React.createClass({
+	  displayName: 'SignInUpForm',
+	
+	  mixins: [History, LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return { username: '', password: '', buttonClicked: '' };
+	  },
+	
+	  signIn: function () {
+	    this.state.buttonClicked = 'signin';
+	  },
+	
+	  signUp: function () {
+	    this.state.buttonClicked = 'signup';
+	  },
+	
+	  successCallback: function (user) {
+	    this.history.push('/');
+	  },
+	
+	  errorCallback: function (errorArray) {
+	    this.state.errors = JSON.parse(errorArray);
+	    this.setState(this.state);
+	  },
+	
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    if (this.state.buttonClicked === 'signin') {
+	      delete this.state.buttonClicked;
+	      delete this.state.errors;
+	      var signInParams = { user: this.state };
+	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
+	    } else if (this.state.buttonClicked === 'signup') {
+	      delete this.state.buttonClicked;
+	      delete this.state.errors;
+	      var signUpParams = { user: this.state };
+	      AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'user-form-container' },
+	      React.createElement(
+	        'form',
+	        { className: 'user-form', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'div',
+	          { className: 'user-form-group' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'username'
+	          ),
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('username') })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'user-form-group' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'password'
+	          ),
+	          React.createElement('input', { type: 'password', valueLink: this.linkState('password') })
+	        ),
+	        React.createElement('input', { onClick: this.signIn, className: 'whiteButton green-button-overlay user-form-button', name: 'signin', type: 'submit', value: 'sign in' }),
+	        React.createElement('input', { onClick: this.signUp, className: 'whiteButton green-button-overlay user-form-button', name: 'signup', type: 'submit', value: 'sign up' })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = SignInUpForm;
+
+/***/ },
+/* 254 */,
+/* 255 */
+/***/ function(module, exports) {
+
+	var AuthConstants = {
+	  SIGN_INUP_RECEIVED: 'SIGN_INUP_RECEIVED'
+	};
+	
+	module.exports = AuthConstants;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(159);
+	var AuthConstants = __webpack_require__(255);
+	var ApiUtil = __webpack_require__(163);
+	
+	var AuthActions = {
+	
+	  receiveSignInUp: function (userData) {
+	    debugger;
+	    Dispatcher.dispatch({
+	      actionType: AuthConstants.SIGN_INUP_RECEIVED,
+	      user: userData
+	    });
+	  },
+	
+	  signIn: function (signInParams, successCallback, errorCallback) {
+	    ApiUtil.signIn(signInParams, this.receiveSignInUp, successCallback, errorCallback);
+	  },
+	
+	  signUp: function (signUpParams, successCallback, errorCallback) {
+	    ApiUtil.signUp(signUpParams, this.receiveSignInUp, successCallback, errorCallback);
+	  }
+	};
+	
+	module.exports = AuthActions;
 
 /***/ }
 /******/ ]);

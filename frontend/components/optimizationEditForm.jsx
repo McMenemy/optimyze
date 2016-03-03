@@ -103,7 +103,7 @@ var OptimizationEditForm = React.createClass({
           <div className="formGroup">
             <label>setup time</label>
             <input type="number" className="has-time-selector" valueLink={this.linkState('investment_time')} />
-            <select defaultValue={this.state.investment_time_unit} name="time-unit">
+            <select defaultValue={this.state.investment_time_unit} valueLink={this.linkState('investment_time_unit')} name="time-unit">
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -113,7 +113,7 @@ var OptimizationEditForm = React.createClass({
           <div className="formGroup">
             <label>time saved per occurrence</label>
             <input type="number" className="has-time-selector" valueLink={this.linkState('time_saved_per_occurrence')} />
-            <select defaultValue={this.state.time_saved_per_occurrence_unit} name="time-unit">
+            <select defaultValue={this.state.time_saved_per_occurrence_unit} valueLink={this.linkState('time_saved_per_occurrence_unit')} name="time-unit">
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -123,7 +123,7 @@ var OptimizationEditForm = React.createClass({
           <div className="formGroup">
             <label>frequency</label>
             <input type="number" className="has-time-selector" valueLink={this.linkState('frequency')} />
-            <select defaultValue={this.state.frequency_unit}>
+            <select defaultValue={this.state.frequency_unit} valueLink={this.linkState('frequency_unit')}>
               <option value="per hour">times per hour</option>
               <option value="per day">times per day</option>
               <option value="per week">times per week</option>

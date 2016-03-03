@@ -72,6 +72,50 @@ var ApiUtil = {
     });
   },
 
+  // auth
+
+  signIn: function (signInParams, actionCallback, successCallback, errorCallback) {
+    $.ajax({
+      type: 'POST',
+      url: 'api/auth/signin',
+      data: signInParams,
+      dataType: 'json',
+      success:
+        function (respData) {
+          actionCallback(respData);
+          successCallback(respData);
+          console.log('ajax signIn', respData);
+        },
+
+      error:
+        function (respData) {
+          errorCallback(respData);
+          console.log('ajax signIn error', respData);
+        },
+    });
+  },
+
+  signUp: function (signUpParams, actionCallback, successCallback, errorCallback) {
+    $.ajax({
+      type: 'POST',
+      url: 'api/auth/signup',
+      data: signUpParams,
+      dataType: 'json',
+      success:
+        function (respData) {
+          actionCallback(respData);
+          successCallback(respData);
+          console.log('ajax signUp', respData);
+        },
+
+      error:
+        function (respData) {
+          errorCallback(respData);
+          console.log('ajax singUp error', respData);
+        },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;
