@@ -124,12 +124,10 @@ user interface.
 
 - [x] Make browse view by dynamically unmounting non-needed components from dashboard view.  
 
-### Phase 8: Styling Cleanup and Seeding (1 day)
+### Phase 8: Styling Cleanup and Bug Fixing (1 day)
 
 **objective:** Make the site feel more cohesive, intuitive, and appealing to the eye.
 
-- [ ] Get feedback on my UI from others
-- [ ] Refactor HTML classes & CSS rules
-- [ ] Add modals, transitions, and other styling flourishes.
+- [ ] 
 
 ### Phase 9: Work on Bonus features.

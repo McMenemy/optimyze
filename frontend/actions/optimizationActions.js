@@ -25,8 +25,8 @@ var OptimizationActions = {
     ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
   },
 
-  retrieveNewOptimization: function (updateParams) {
-    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+  retrieveNewOptimization: function (updateParams, errorCallback) {
+    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization, errorCallback);
   },
 
   retrieveUpdatedOptimization: function (patchParams) {

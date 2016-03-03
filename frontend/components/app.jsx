@@ -5,7 +5,7 @@ var App = React.createClass({
   render: function () {
 
     return (
-      <div className="app">
+      <div className="app group">
         <div className="left-pane">
           <SearchIndex />
         </div>

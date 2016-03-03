@@ -7,7 +7,7 @@ var OptimizationNewForm = React.createClass({
   mixins: [LinkedStateMixin, History],
 
   getInitialState: function () {
-    return { };
+    return { errors: []};
   },
 
   // converts time to milliseconds
@@ -39,7 +39,12 @@ var OptimizationNewForm = React.createClass({
   },
 
   proccessParams: function (params) {
+    if (params.optimization.frequency || params.optimization.time_saved_per_occurrence || params.optimization.investment_time_unit) {
+      return params;
+    }
+
     var updateParams = { optimization: {} };
+
 
     var frequencyUnit = params.optimization.frequency_unit;
     if (typeof frequencyUnit === 'undefined') {
@@ -72,11 +77,17 @@ var OptimizationNewForm = React.createClass({
     return updateParams;
   },
 
+  errorCallback: function (errorArray) {
+    this.state.errors = JSON.parse(errorArray);
+    console.log('errorCallback', errorArray);
+    this.setState(this.state);
+  },
+
   handleSubmit: function (event) {
     event.preventDefault();
     var updateParams = { optimization: this.state };
-    OptimizationActions.retrieveNewOptimization(this.proccessParams(updateParams));
-    this.navigateToDashboard();
+    debugger;
+    OptimizationActions.retrieveNewOptimization(this.proccessParams(updateParams), this.errorCallback);
   },
 
   navigateToDashboard: function () {
@@ -92,6 +103,7 @@ var OptimizationNewForm = React.createClass({
     return (
       <div id="optimization-form-container">
         <h2>Create an Optimization</h2>
+        <h1>{this.state.errors.toString()}</h1>
         <form className='optimizationForm' onSubmit={this.handleSubmit}>
           <div className="formGroup">
             <label>title</label>

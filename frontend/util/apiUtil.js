@@ -23,7 +23,7 @@ var ApiUtil = {
     });
   },
 
-  createOptimization: function (updateParams, callback) {
+  createOptimization: function (updateParams, callback, errorCallback) {
     $.ajax({
       type: 'POST',
       url: 'api/optimizations',
@@ -33,6 +33,12 @@ var ApiUtil = {
         function (respData) {
           callback(respData);
           console.log('ajax create', respData);
+        },
+
+      error:
+        function (respError) {
+          console.log('ajax create error', respError.responseText);
+          errorCallback(respError.responseText);
         },
     });
   },

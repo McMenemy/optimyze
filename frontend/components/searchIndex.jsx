@@ -1,7 +1,10 @@
 var React = require('react');
 var OptimizationIndex = require('./optimizationIndex');
+var History = require('react-router').History;
 
 var SearchIndex = React.createClass({
+  mixins: [History],
+
   getInitialState: function () {
     var searchParams = {};
     searchParams.title = '';
@@ -46,6 +49,10 @@ var SearchIndex = React.createClass({
     }
   },
 
+  clickNewOptimization: function () {
+    this.history.push('optimizations/form/new');
+  },
+
   render: function () {
     return (
       <div>
@@ -53,6 +60,7 @@ var SearchIndex = React.createClass({
           <h2>{this.setHeadingTitle()}</h2>
           <input type="text" className='search-input' onChange={this.handleInput} value={this.state.searchParams.title} />
           <button className="whiteButton" onClick={this.clickBrowseAllOptimizations}>{this.setBrowseButtonTitle()}</button>
+          <button className="whiteButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
         </div>
         <div className="search-index">
             <OptimizationIndex searchParams={this.state.searchParams}/>

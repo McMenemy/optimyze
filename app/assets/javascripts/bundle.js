@@ -20031,7 +20031,7 @@
 	    });
 	  },
 	
-	  createOptimization: function (updateParams, callback) {
+	  createOptimization: function (updateParams, callback, errorCallback) {
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/optimizations',
@@ -20040,6 +20040,11 @@
 	      success: function (respData) {
 	        callback(respData);
 	        console.log('ajax create', respData);
+	      },
+	
+	      error: function (respError) {
+	        console.log('ajax create error', respError.responseText);
+	        errorCallback(respError.responseText);
 	      }
 	    });
 	  },
@@ -20105,8 +20110,8 @@
 	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
 	  },
 	
-	  retrieveNewOptimization: function (updateParams) {
-	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+	  retrieveNewOptimization: function (updateParams, errorCallback) {
+	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization, errorCallback);
 	  },
 	
 	  retrieveUpdatedOptimization: function (patchParams) {
@@ -31502,7 +31507,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'app' },
+	      { className: 'app group' },
 	      React.createElement(
 	        'div',
 	        { className: 'left-pane' },
@@ -31525,9 +31530,12 @@
 
 	var React = __webpack_require__(1);
 	var OptimizationIndex = __webpack_require__(240);
+	var History = __webpack_require__(184).History;
 	
 	var SearchIndex = React.createClass({
 	  displayName: 'SearchIndex',
+	
+	  mixins: [History],
 	
 	  getInitialState: function () {
 	    var searchParams = {};
@@ -31572,6 +31580,10 @@
 	    }
 	  },
 	
+	  clickNewOptimization: function () {
+	    this.history.push('optimizations/form/new');
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -31589,6 +31601,11 @@
 	          'button',
 	          { className: 'whiteButton', onClick: this.clickBrowseAllOptimizations },
 	          this.setBrowseButtonTitle()
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'whiteButton', onClick: this.clickNewOptimization },
+	          'Create New Optimization'
 	        )
 	      ),
 	      React.createElement(
@@ -31610,12 +31627,10 @@
 	var OptimizationStore = __webpack_require__(166);
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationIndexItem = __webpack_require__(241);
-	var History = __webpack_require__(184).History;
 	
 	var OptimizationsIndex = React.createClass({
 	  displayName: 'OptimizationsIndex',
 	
-	  mixins: [History],
 	
 	  getInitialState: function () {
 	    if (window.currentUser) {
@@ -31650,19 +31665,10 @@
 	    return listOfOptimizations;
 	  },
 	
-	  clickNewOptimization: function () {
-	    this.history.push('optimizations/form/new');
-	  },
-	
 	  render: function () {
 	    return React.createElement(
 	      'ul',
 	      { className: 'optimizations-index group' },
-	      React.createElement(
-	        'button',
-	        { className: 'whiteButton', onClick: this.clickNewOptimization },
-	        'Create New Optimization'
-	      ),
 	      this.createOptimizationList()
 	    );
 	  }
@@ -31764,8 +31770,8 @@
 	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
 	  },
 	
-	  retrieveNewOptimization: function (updateParams) {
-	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization);
+	  retrieveNewOptimization: function (updateParams, errorCallback) {
+	    ApiUtil.createOptimization(updateParams, this.receiveOneOptimization, errorCallback);
 	  },
 	
 	  retrieveUpdatedOptimization: function (patchParams) {
@@ -31979,7 +31985,7 @@
 	  mixins: [LinkedStateMixin, History],
 	
 	  getInitialState: function () {
-	    return {};
+	    return { errors: [] };
 	  },
 	
 	  // converts time to milliseconds
@@ -32011,6 +32017,10 @@
 	  },
 	
 	  proccessParams: function (params) {
+	    if (params.optimization.frequency || params.optimization.time_saved_per_occurrence || params.optimization.investment_time_unit) {
+	      return params;
+	    }
+	
 	    var updateParams = { optimization: {} };
 	
 	    var frequencyUnit = params.optimization.frequency_unit;
@@ -32044,11 +32054,17 @@
 	    return updateParams;
 	  },
 	
+	  errorCallback: function (errorArray) {
+	    this.state.errors = JSON.parse(errorArray);
+	    console.log('errorCallback', errorArray);
+	    this.setState(this.state);
+	  },
+	
 	  handleSubmit: function (event) {
 	    event.preventDefault();
 	    var updateParams = { optimization: this.state };
-	    OptimizationActions.retrieveNewOptimization(this.proccessParams(updateParams));
-	    this.navigateToDashboard();
+	    debugger;
+	    OptimizationActions.retrieveNewOptimization(this.proccessParams(updateParams), this.errorCallback);
 	  },
 	
 	  navigateToDashboard: function () {
@@ -32068,6 +32084,11 @@
 	        'h2',
 	        null,
 	        'Create an Optimization'
+	      ),
+	      React.createElement(
+	        'h1',
+	        null,
+	        this.state.errors.toString()
 	      ),
 	      React.createElement(
 	        'form',

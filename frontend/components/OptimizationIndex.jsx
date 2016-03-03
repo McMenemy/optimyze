@@ -2,10 +2,8 @@ var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
 var OptimizationIndexItem = require('./optimizationIndexItem');
-var History = require('react-router').History;
 
 var OptimizationsIndex = React.createClass({
-  mixins: [History],
 
   getInitialState: function () {
     if (window.currentUser) {
@@ -42,14 +40,9 @@ var OptimizationsIndex = React.createClass({
     return listOfOptimizations;
   },
 
-  clickNewOptimization: function () {
-    this.history.push('optimizations/form/new');
-  },
-
   render: function () {
     return (
       <ul className="optimizations-index group">
-        <button className="whiteButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
         {this.createOptimizationList()}
       </ul>
     );
