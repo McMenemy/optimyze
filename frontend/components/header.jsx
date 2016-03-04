@@ -1,33 +1,59 @@
 var React = require('react');
 var AuthStore = require('../stores/authStore');
+var AuthActions = require('../actions/authActions');
 var History = require('react-router').History;
 
 var Header = React.createClass({
   mixins: [History],
 
+  _onChange: function () {
+    this.forceUpdate();
+  },
+
+  componentDidMount: function () {
+    this.authToken = AuthStore.addListener(this._onChange);
+  },
+
+  componentWillUnmount: function () {
+    this.authToken.remove();
+  },
+
+  signOut: function () {
+    AuthActions.signOut();
+  },
+
+  signInUp: function () {
+    this.history.push('auth');
+  },
+
+  navigateToRoot: function () {
+    this.history.push('/');
+  },
+
+  makeHeaderList: function () {
+    if (AuthStore.isSignedIn()) {
+      return (
+        <ul className="header-list group">
+          <li>{AuthStore.currentUser().username}</li>
+          <li><button onClick={this.signOut}>Sign Out</button></li>
+        </ul>
+    );
+    } else {
+      return (
+          <ul className="header-list-group">
+            <li><button onClick={this.signInUp}>Sign In</button></li>
+            <li><button onClick={this.signInUp}>Sign Up</button></li>
+          </ul>
+        );
+    }
+  },
+
   render: function () {
     return (
-      <header class="header">
-        <nav class="header-nav">
-
-          <h1 class="header-logo" onClick={this.navigateToRoot}>Optimyze</h1>
-
-          <ul class="header-list group">
-            <% if signed_in? %>
-              <li><%= current_user.username %><li>
-              <li><%= button_to "Sign Out", session_url, :method => :delete %>
-                <script type="text/javascript">
-                  var currentUser = {};
-                  currentUser.userId = <%= current_user[:id] %>;
-                  currentUser.username = "<%= current_user[:username] %>";
-                  window.currentUser = currentUser;
-                </script>
-            <% else %>
-              <li><%= link_to "Sign In", new_session_url %></li>
-              <li><%= link_to "Sign Up", new_user_url %></li>
-            <% end %>
-          </ul>
-
+      <header className="header">
+        <nav className="header-nav">
+          <h1 className="header-logo" onClick={this.navigateToRoot}>Optimyze</h1>
+          {this.makeHeaderList()}
         </nav>
       </header>
     );

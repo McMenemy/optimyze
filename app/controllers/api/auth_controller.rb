@@ -11,9 +11,6 @@ class Api::AuthController < ApplicationController
   end
 
   def signin
-    p '------------'
-    p user_params
-    p user_params['password']
     @user = User.find_by_credentials(
       user_params['username'],
       user_params['password']
@@ -25,6 +22,12 @@ class Api::AuthController < ApplicationController
     else
       render :json => {error: ['Invalid username or password']}
     end
+  end
+
+  def signout
+    user = current_user
+    sign_out
+    render :json => {id: user.id, username: user.username, token: user.session_token}
   end
 
   private

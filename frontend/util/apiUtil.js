@@ -116,6 +116,18 @@ var ApiUtil = {
     });
   },
 
+  signOut: function (actionCallback) {
+    $.ajax({
+      type: 'DELETE',
+      url: 'api/auth/signout',
+      success:
+        function (respData) {
+          actionCallback(respData);
+          console.log('ajax signOut', respData);
+        },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

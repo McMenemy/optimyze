@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     # front end auth
     post 'auth/signin', to: 'auth#signin'
     post 'auth/signup', to: 'auth#signup'
+    delete 'auth/signout', to: 'auth#signout'
   end
 
 end

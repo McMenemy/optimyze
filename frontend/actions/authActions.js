@@ -5,11 +5,21 @@ var ApiUtil = require('../util/apiUtil');
 var AuthActions = {
 
   receiveSignInUp: function (userData) {
-    debugger;
     Dispatcher.dispatch({
       actionType: AuthConstants.SIGN_INUP_RECEIVED,
       user: userData,
     });
+  },
+
+  receiveSignOut: function (userData) {
+    Dispatcher.dispatch({
+      actionType: AuthConstants.SIGN_OUT_RECEIVED,
+      user: userData,
+    });
+  },
+
+  signOut: function () {
+    ApiUtil.signOut(this.receiveSignOut);
   },
 
   signIn: function (signInParams, successCallback, errorCallback) {

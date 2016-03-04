@@ -50,7 +50,7 @@
 	var ApiUtil = __webpack_require__(163);
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationStore = __webpack_require__(166);
-	var AuthStore = __webpack_require__(166);
+	var AuthStore = __webpack_require__(254);
 	var Router = __webpack_require__(184).Router;
 	var Route = __webpack_require__(184).Route;
 	var IndexRoute = __webpack_require__(184).IndexRoute;
@@ -62,6 +62,8 @@
 	var OptimizationNewForm = __webpack_require__(245);
 	var OptimizationEditForm = __webpack_require__(250);
 	var Auth = __webpack_require__(252);
+	var Splash = __webpack_require__(257);
+	var Header = __webpack_require__(258);
 	
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -72,6 +74,7 @@
 	var routes = React.createElement(
 	  Route,
 	  { component: App, path: '/' },
+	  React.createElement(IndexRoute, { component: Splash }),
 	  React.createElement(Route, { component: Auth, path: 'auth' }),
 	  React.createElement(Route, { component: OptimizationDetail, path: 'optimizations/:optimizationId' }),
 	  React.createElement(Route, { component: OptimizationNewForm, path: 'optimizations/form/new' }),
@@ -20114,6 +20117,17 @@
 	        console.log('ajax singUp error', respData);
 	      }
 	    });
+	  },
+	
+	  signOut: function (actionCallback) {
+	    $.ajax({
+	      type: 'DELETE',
+	      url: 'api/auth/signout',
+	      success: function (respData) {
+	        actionCallback(respData);
+	        console.log('ajax signOut', respData);
+	      }
+	    });
 	  }
 	
 	};
@@ -31485,6 +31499,7 @@
 
 	var React = __webpack_require__(1);
 	var SearchIndex = __webpack_require__(239);
+	var Header = __webpack_require__(258);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -31493,18 +31508,22 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'app group' },
+	      null,
+	      React.createElement(Header, null),
 	      React.createElement(
 	        'div',
-	        { className: 'left-pane' },
-	        React.createElement(SearchIndex, null)
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'right-pane' },
-	        this.props.children
-	      ),
-	      React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'sign in' })
+	        { className: 'app group' },
+	        React.createElement(
+	          'div',
+	          { className: 'left-pane' },
+	          React.createElement(SearchIndex, null)
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'right-pane' },
+	          this.props.children
+	        )
+	      )
 	    );
 	  }
 	});
@@ -31670,7 +31689,7 @@
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(184).History;
-	var OptimizationActions = __webpack_require__(242);
+	var OptimizationActions = __webpack_require__(164);
 	
 	var OptimizationIndexItem = React.createClass({
 	  displayName: 'OptimizationIndexItem',
@@ -31727,60 +31746,7 @@
 	module.exports = OptimizationIndexItem;
 
 /***/ },
-/* 242 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(159);
-	var OptimizationConstants = __webpack_require__(165);
-	var ApiUtil = __webpack_require__(163);
-	
-	var OptimizationActions = {
-	  receiveAllOptimizations: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
-	      allOptimizations: data
-	    });
-	  },
-	
-	  retrieveAllOptimizations: function () {
-	    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
-	  },
-	
-	  receiveOneOptimization: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
-	      optimization: data
-	    });
-	  },
-	
-	  retrieveOneOptimization: function (optimizationId) {
-	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
-	  },
-	
-	  retrieveNewOptimization: function (postParams, errorCallback, successCallback) {
-	    ApiUtil.createOptimization(postParams, this.receiveOneOptimization, errorCallback, successCallback);
-	  },
-	
-	  retrieveUpdatedOptimization: function (patchParams) {
-	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
-	  },
-	
-	  receiveDeletedOptimization: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
-	      optimization: data
-	    });
-	  },
-	
-	  retrieveDeletedOptimization: function (deleteParams) {
-	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
-	  }
-	
-	};
-	
-	module.exports = OptimizationActions;
-
-/***/ },
+/* 242 */,
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32818,12 +32784,52 @@
 	module.exports = SignInUpForm;
 
 /***/ },
-/* 254 */,
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(159);
+	var Store = __webpack_require__(167).Store;
+	var AuthConstants = __webpack_require__(255);
+	
+	var AuthStore = new Store(Dispatcher);
+	var _currentUser = {};
+	
+	AuthStore.resetAuthStore = function (user) {
+	  localStorage.token = user.token;
+	  _currentUser = user;
+	}, AuthStore.signOut = function () {
+	  localStorage.clear();
+	  _currentUser = {};
+	}, AuthStore.isSignedIn = function () {
+	  if (typeof _currentUser.id === 'undefined') {
+	    return false;
+	  } else {
+	    return true;
+	  }
+	}, AuthStore.currentUser = function (user) {
+	  return _currentUser;
+	}, AuthStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case AuthConstants.SIGN_INUP_RECEIVED:
+	      this.resetAuthStore(payload.user);
+	      this.__emitChange();
+	      break;
+	    case AuthConstants.SIGN_OUT_RECEIVED:
+	      this.signOut();
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = AuthStore;
+
+/***/ },
 /* 255 */
 /***/ function(module, exports) {
 
 	var AuthConstants = {
-	  SIGN_INUP_RECEIVED: 'SIGN_INUP_RECEIVED'
+	  SIGN_INUP_RECEIVED: 'SIGN_INUP_RECEIVED',
+	  SIGN_OUT_RECEIVED: 'SIGN_OUT_RECEIVED'
 	};
 	
 	module.exports = AuthConstants;
@@ -32839,11 +32845,21 @@
 	var AuthActions = {
 	
 	  receiveSignInUp: function (userData) {
-	    debugger;
 	    Dispatcher.dispatch({
 	      actionType: AuthConstants.SIGN_INUP_RECEIVED,
 	      user: userData
 	    });
+	  },
+	
+	  receiveSignOut: function (userData) {
+	    Dispatcher.dispatch({
+	      actionType: AuthConstants.SIGN_OUT_RECEIVED,
+	      user: userData
+	    });
+	  },
+	
+	  signOut: function () {
+	    ApiUtil.signOut(this.receiveSignOut);
 	  },
 	
 	  signIn: function (signInParams, successCallback, errorCallback) {
@@ -32856,6 +32872,172 @@
 	};
 	
 	module.exports = AuthActions;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Splash = React.createClass({
+	  displayName: 'Splash',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Optimyze'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Save time by finding quicker ways to do repitive tasks'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Visualize time saved'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Keep track of optimizations you want to use'
+	      ),
+	      React.createElement(
+	        'h2',
+	        null,
+	        'FAQ'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'What is an Optimization?'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Why Optimize?'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Future Features?'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Splash;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var AuthStore = __webpack_require__(254);
+	var AuthActions = __webpack_require__(256);
+	var History = __webpack_require__(184).History;
+	
+	var Header = React.createClass({
+	  displayName: 'Header',
+	
+	  mixins: [History],
+	
+	  _onChange: function () {
+	    this.forceUpdate();
+	  },
+	
+	  componentDidMount: function () {
+	    this.authToken = AuthStore.addListener(this._onChange);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.authToken.remove();
+	  },
+	
+	  signOut: function () {
+	    AuthActions.signOut();
+	  },
+	
+	  signInUp: function () {
+	    this.history.push('auth');
+	  },
+	
+	  navigateToRoot: function () {
+	    this.history.push('/');
+	  },
+	
+	  makeHeaderList: function () {
+	    if (AuthStore.isSignedIn()) {
+	      return React.createElement(
+	        'ul',
+	        { className: 'header-list group' },
+	        React.createElement(
+	          'li',
+	          null,
+	          AuthStore.currentUser().username
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this.signOut },
+	            'Sign Out'
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'ul',
+	        { className: 'header-list-group' },
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this.signInUp },
+	            'Sign In'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this.signInUp },
+	            'Sign Up'
+	          )
+	        )
+	      );
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'header',
+	      { className: 'header' },
+	      React.createElement(
+	        'nav',
+	        { className: 'header-nav' },
+	        React.createElement(
+	          'h1',
+	          { className: 'header-logo', onClick: this.navigateToRoot },
+	          'Optimyze'
+	        ),
+	        this.makeHeaderList()
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Header;
 
 /***/ }
 /******/ ]);

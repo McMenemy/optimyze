@@ -4,7 +4,7 @@ var Dispatcher = require('./dispatcher/dispatcher');
 var ApiUtil = require('./util/apiUtil');
 var OptimizationActions = require('./actions/optimizationActions');
 var OptimizationStore = require('./stores/optimizations');
-var AuthStore = require('./stores/optimizations');
+var AuthStore = require('./stores/authStore');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
@@ -16,6 +16,8 @@ var OptimizationDetail = require('./components/optimizationDetail');
 var OptimizationNewForm = require('./components/optimizationNewForm');
 var OptimizationEditForm = require('./components/optimizationEditForm');
 var Auth = require('./components/auth');
+var Splash = require('./components/splash');
+var Header = require('./components/header');
 
 // for testing
 window.ApiUtil = ApiUtil;
@@ -25,6 +27,7 @@ window.AuthStore = AuthStore;
 
 var routes = (
   <Route component={App} path='/'>
+    <IndexRoute component={Splash}></IndexRoute>
     <Route component={Auth} path='auth'></Route>
     <Route component={OptimizationDetail} path='optimizations/:optimizationId'></Route>
     <Route component={OptimizationNewForm} path='optimizations/form/new'></Route>

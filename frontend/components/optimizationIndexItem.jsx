@@ -1,6 +1,6 @@
 var React = require('react');
 var History = require('react-router').History;
-var OptimizationActions = require('../actions/OptimizationActions');
+var OptimizationActions = require('../actions/optimizationActions');
 
 var OptimizationIndexItem = React.createClass({
   mixins: [History],
