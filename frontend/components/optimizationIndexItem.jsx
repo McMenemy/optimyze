@@ -17,13 +17,30 @@ var OptimizationIndexItem = React.createClass({
     OptimizationActions.retrieveDeletedOptimization(this.props);
   },
 
+  populateItem: function () {
+    if (this.props.isUserOnly) {
+      return (
+        <li className="optimization-index-item">
+          <button className="optimization-item-title-button" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
+          <button className="optimization-item-edit-button" onClick={this.editOptimization}><p>Edit</p></button>
+          <button className="optimization-item-delete-button" onClick={this.deleteOptimization}><p>Delete</p></button>
+        </li>
+      );
+    } else {
+      return (
+        <li className="optimization-index-item">
+          <button className="optimization-item-title-button" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
+        </li>
+      );
+    }
+  },
+
   render: function () {
+    console.log(this.props.isUserOnly);
     return (
-      <li className="whiteButton optimizationIndexItem">
-        <button className="optimization-item-title-button" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
-        <button className="optimization-item-edit-button" onClick={this.editOptimization}><p>Edit</p></button>
-        <button className="optimization-item-delete-button" onClick={this.deleteOptimization}><p>Delete</p></button>
-      </li>
+      <div>
+        {this.populateItem()}
+      </div>
     );
   },
 });

@@ -29,7 +29,7 @@ OptimizationStore.all = function () {
 OptimizationStore.allForCurrentUser = function () {
   var allUserOptimizations = [];
   Object.keys(_allOptimizations).forEach(function (key) {
-    if (AuthStore.currentUser.id === _allOptimizations[key].user_id) {
+    if (AuthStore.currentUser().id === _allOptimizations[key].user_id) {
       allUserOptimizations.push(_allOptimizations[key]);
     }
   });
@@ -39,7 +39,7 @@ OptimizationStore.allForCurrentUser = function () {
 
 OptimizationStore.allWithSearchParams = function (searchParams) {
   var allFilteredOptimizations = [];
-  var titleFilter = new RegExp('^' + searchParams.title.toLowerCase());
+  var titleFilter = new RegExp('' + searchParams.title.toLowerCase());
 
   if (searchParams.userOnly) {
     allFilteredOptimizations = this.allForCurrentUser();

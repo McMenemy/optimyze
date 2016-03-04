@@ -27,7 +27,7 @@ var SearchIndex = React.createClass({
     this.setState(this.state.searchParams);
   },
 
-  clickBrowseAllOptimizations: function () {
+  clickToggleOptimizations: function () {
     console.log(this.state.searchParams.userOnly);
     this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
     this.setState(this.state.searchParams);
@@ -43,9 +43,9 @@ var SearchIndex = React.createClass({
 
   setBrowseButtonTitle: function () {
     if (this.state.searchParams.userOnly) {
-      return 'Browse All Optimizations';
+      return 'All Optimizations';
     } else {
-      return 'Browse Your Optimizations';
+      return 'Your Optimizations';
     }
   },
 
@@ -58,9 +58,10 @@ var SearchIndex = React.createClass({
       <div>
         <div className="search-index-fixed">
           <h2>{this.setHeadingTitle()}</h2>
-          <input type="text" className='search-input' onChange={this.handleInput} value={this.state.searchParams.title} />
-          <button className="whiteButton" onClick={this.clickBrowseAllOptimizations}>{this.setBrowseButtonTitle()}</button>
-          <button className="whiteButton" onClick={this.clickNewOptimization}>Create New Optimization</button>
+          <input type="text" className='search-input' placeholder='search by title' onChange={this.handleInput} value={this.state.searchParams.title} />
+          <button className="whiteButton" onClick={this.clickToggleOptimizations}>{this.setBrowseButtonTitle()}</button>
+          <button className="whiteButton" onClick={this.clickNewOptimization}>New Optimization</button>
+          <button className="whiteButton" onClick={this.clickNewOptimization}>Category</button>
         </div>
         <div className="search-index">
             <OptimizationIndex searchParams={this.state.searchParams}/>

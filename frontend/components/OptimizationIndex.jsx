@@ -32,9 +32,10 @@ var OptimizationsIndex = React.createClass({
   },
 
   createOptimizationList: function () {
+    var _this = this;
     var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
       return (
-        <OptimizationIndexItem key={idx} optimization={el} />
+        <OptimizationIndexItem isUserOnly={_this.props.searchParams.userOnly} key={idx} optimization={el} />
       );
     });
 

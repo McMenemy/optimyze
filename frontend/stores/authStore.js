@@ -7,6 +7,7 @@ var _currentUser = {};
 
 AuthStore.resetAuthStore = function (user) {
   localStorage.token = user.token;
+  // to make this persist do an ajax call and session lock in
   _currentUser = user;
 },
 

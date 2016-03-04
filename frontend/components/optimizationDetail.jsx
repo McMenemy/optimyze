@@ -74,7 +74,7 @@ var OptimizationDetail = React.createClass({
     data.push([Date.now(), timeInvested * -1]);
 
     var msAdded = 0;
-    var timeSaved = 0;
+    var timeSaved = timeInvested * -1;
     while (msAdded < 7.884 * Math.pow(10, 9)) {
       msAdded += frequency;
       newDate = new Date(startDate.getTime() + msAdded);

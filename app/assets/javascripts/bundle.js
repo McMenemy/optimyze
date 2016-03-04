@@ -20235,7 +20235,7 @@
 	OptimizationStore.allForCurrentUser = function () {
 	  var allUserOptimizations = [];
 	  Object.keys(_allOptimizations).forEach(function (key) {
-	    if (AuthStore.currentUser.id === _allOptimizations[key].user_id) {
+	    if (AuthStore.currentUser().id === _allOptimizations[key].user_id) {
 	      allUserOptimizations.push(_allOptimizations[key]);
 	    }
 	  });
@@ -20245,7 +20245,7 @@
 	
 	OptimizationStore.allWithSearchParams = function (searchParams) {
 	  var allFilteredOptimizations = [];
-	  var titleFilter = new RegExp('^' + searchParams.title.toLowerCase());
+	  var titleFilter = new RegExp('' + searchParams.title.toLowerCase());
 	
 	  if (searchParams.userOnly) {
 	    allFilteredOptimizations = this.allForCurrentUser();
@@ -26738,6 +26738,7 @@
 	
 	AuthStore.resetAuthStore = function (user) {
 	  localStorage.token = user.token;
+	  // to make this persist do an ajax call and session lock in
 	  _currentUser = user;
 	}, AuthStore.signOut = function () {
 	  localStorage.clear();
@@ -31613,7 +31614,7 @@
 	    this.setState(this.state.searchParams);
 	  },
 	
-	  clickBrowseAllOptimizations: function () {
+	  clickToggleOptimizations: function () {
 	    console.log(this.state.searchParams.userOnly);
 	    this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
 	    this.setState(this.state.searchParams);
@@ -31629,9 +31630,9 @@
 	
 	  setBrowseButtonTitle: function () {
 	    if (this.state.searchParams.userOnly) {
-	      return 'Browse All Optimizations';
+	      return 'All Optimizations';
 	    } else {
-	      return 'Browse Your Optimizations';
+	      return 'Your Optimizations';
 	    }
 	  },
 	
@@ -31651,16 +31652,21 @@
 	          null,
 	          this.setHeadingTitle()
 	        ),
-	        React.createElement('input', { type: 'text', className: 'search-input', onChange: this.handleInput, value: this.state.searchParams.title }),
+	        React.createElement('input', { type: 'text', className: 'search-input', placeholder: 'search by title', onChange: this.handleInput, value: this.state.searchParams.title }),
 	        React.createElement(
 	          'button',
-	          { className: 'whiteButton', onClick: this.clickBrowseAllOptimizations },
+	          { className: 'whiteButton', onClick: this.clickToggleOptimizations },
 	          this.setBrowseButtonTitle()
 	        ),
 	        React.createElement(
 	          'button',
 	          { className: 'whiteButton', onClick: this.clickNewOptimization },
-	          'Create New Optimization'
+	          'New Optimization'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'whiteButton', onClick: this.clickNewOptimization },
+	          'Category'
 	        )
 	      ),
 	      React.createElement(
@@ -31714,8 +31720,9 @@
 	  },
 	
 	  createOptimizationList: function () {
+	    var _this = this;
 	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
-	      return React.createElement(OptimizationIndexItem, { key: idx, optimization: el });
+	      return React.createElement(OptimizationIndexItem, { isUserOnly: _this.props.searchParams.userOnly, key: idx, optimization: el });
 	    });
 	
 	    return listOfOptimizations;
@@ -31758,37 +31765,62 @@
 	    OptimizationActions.retrieveDeletedOptimization(this.props);
 	  },
 	
+	  populateItem: function () {
+	    if (this.props.isUserOnly) {
+	      return React.createElement(
+	        'li',
+	        { className: 'optimization-index-item' },
+	        React.createElement(
+	          'button',
+	          { className: 'optimization-item-title-button', onClick: this.clickOptimization },
+	          React.createElement(
+	            'p',
+	            null,
+	            this.props.optimization.title
+	          )
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'optimization-item-edit-button', onClick: this.editOptimization },
+	          React.createElement(
+	            'p',
+	            null,
+	            'Edit'
+	          )
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'optimization-item-delete-button', onClick: this.deleteOptimization },
+	          React.createElement(
+	            'p',
+	            null,
+	            'Delete'
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'li',
+	        { className: 'optimization-index-item' },
+	        React.createElement(
+	          'button',
+	          { className: 'optimization-item-title-button', onClick: this.clickOptimization },
+	          React.createElement(
+	            'p',
+	            null,
+	            this.props.optimization.title
+	          )
+	        )
+	      );
+	    }
+	  },
+	
 	  render: function () {
+	    console.log(this.props.isUserOnly);
 	    return React.createElement(
-	      'li',
-	      { className: 'whiteButton optimizationIndexItem' },
-	      React.createElement(
-	        'button',
-	        { className: 'optimization-item-title-button', onClick: this.clickOptimization },
-	        React.createElement(
-	          'p',
-	          null,
-	          this.props.optimization.title
-	        )
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'optimization-item-edit-button', onClick: this.editOptimization },
-	        React.createElement(
-	          'p',
-	          null,
-	          'Edit'
-	        )
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'optimization-item-delete-button', onClick: this.deleteOptimization },
-	        React.createElement(
-	          'p',
-	          null,
-	          'Delete'
-	        )
-	      )
+	      'div',
+	      null,
+	      this.populateItem()
 	    );
 	  }
 	});
@@ -32011,7 +32043,7 @@
 	    data.push([Date.now(), timeInvested * -1]);
 	
 	    var msAdded = 0;
-	    var timeSaved = 0;
+	    var timeSaved = timeInvested * -1;
 	    while (msAdded < 7.884 * Math.pow(10, 9)) {
 	      msAdded += frequency;
 	      newDate = new Date(startDate.getTime() + msAdded);
