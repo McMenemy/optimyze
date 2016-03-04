@@ -1,5 +1,6 @@
 var React = require('react');
 var OptimizationIndex = require('./optimizationIndex');
+var AuthStore = require('../stores/authStore');
 var History = require('react-router').History;
 
 var SearchIndex = React.createClass({
@@ -28,9 +29,12 @@ var SearchIndex = React.createClass({
   },
 
   clickToggleOptimizations: function () {
-    console.log(this.state.searchParams.userOnly);
-    this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
-    this.setState(this.state.searchParams);
+    if (AuthStore.isSignedIn()) {
+      this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
+      this.setState(this.state.searchParams);
+    } else {
+      this.history.push('auth');
+    }
   },
 
   setHeadingTitle: function () {
@@ -50,7 +54,11 @@ var SearchIndex = React.createClass({
   },
 
   clickNewOptimization: function () {
-    this.history.push('optimizations/form/new');
+    if (AuthStore.isSignedIn()) {
+      this.history.push('optimizations/form/new');
+    } else {
+      this.history.push('auth');
+    }
   },
 
   render: function () {

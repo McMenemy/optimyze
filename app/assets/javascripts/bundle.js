@@ -31586,6 +31586,7 @@
 
 	var React = __webpack_require__(1);
 	var OptimizationIndex = __webpack_require__(239);
+	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
 	
 	var SearchIndex = React.createClass({
@@ -31615,9 +31616,12 @@
 	  },
 	
 	  clickToggleOptimizations: function () {
-	    console.log(this.state.searchParams.userOnly);
-	    this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
-	    this.setState(this.state.searchParams);
+	    if (AuthStore.isSignedIn()) {
+	      this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
+	      this.setState(this.state.searchParams);
+	    } else {
+	      this.history.push('auth');
+	    }
 	  },
 	
 	  setHeadingTitle: function () {
@@ -31637,7 +31641,11 @@
 	  },
 	
 	  clickNewOptimization: function () {
-	    this.history.push('optimizations/form/new');
+	    if (AuthStore.isSignedIn()) {
+	      this.history.push('optimizations/form/new');
+	    } else {
+	      this.history.push('auth');
+	    }
 	  },
 	
 	  render: function () {
