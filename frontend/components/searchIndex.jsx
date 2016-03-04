@@ -69,7 +69,7 @@ var SearchIndex = React.createClass({
           <input type="text" className='search-input' placeholder='search by title' onChange={this.handleInput} value={this.state.searchParams.title} />
           <button className="whiteButton" onClick={this.clickToggleOptimizations}>{this.setBrowseButtonTitle()}</button>
           <button className="whiteButton" onClick={this.clickNewOptimization}>New Optimization</button>
-          <button className="whiteButton" onClick={this.clickNewOptimization}>Category</button>
+          <button className="whiteButton" onClick={this.clickNewOptimization}>Category (not implemented)</button>
         </div>
         <div className="search-index">
             <OptimizationIndex searchParams={this.state.searchParams}/>

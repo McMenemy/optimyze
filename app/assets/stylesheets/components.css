@@ -181,7 +181,8 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
-  padding-top: 227px;
+  padding-top: 236px;
+  padding-bottom: 15px;
   text-align: center;
   background-color: #00C58E;
 }
@@ -352,4 +353,58 @@
 
 .user-form > input:first-of-type {
   margin-left: 30%;
+}
+
+/*splash*/
+
+.splash-container {
+
+}
+
+.splash-picture-div {
+  background: url(man_on_mountain.jpg);
+  width: 400px;
+  min-height: 475px;
+  background-size: 100% 100%;
+  background-position: center;
+  transition: all .5s ease-in-out;
+}
+
+.splash-picture-div:hover {
+  background-size: 120% 120%;
+}
+
+.splash-picture-div > h1 {
+  margin: auto auto;
+}
+
+.splash-text-container {
+  position: relative;
+  top: 165px;
+}
+
+.splash-text-container > h1 {
+  font-size: 30px;
+  color: #c1f0e4;
+  font-weight: bold;
+  padding-left: 54px;
+}
+
+.splash-text-container > p {
+  font-size: 18px;
+  color: white;
+  padding-left: 70px;
+  padding-right: 50px;
+}
+
+.splash-text-container > h2 {
+  font-size: 22px;
+  color: white;
+  padding-left: 70px;
+  padding-top: 15px;
+}
+
+.splash-text-container:hover > h2 {
+  color: #c1f0e4;
+  font-weight: bold;
 }

@@ -46,6 +46,7 @@ var SignInUpForm = React.createClass({
     return (
       <div className="user-form-container">
         <h1>{this.state.errors.toString()}</h1>
+        <h1>Demo Account: username: Admin password: password</h1>
         <form className="user-form" onSubmit={this.handleSubmit}>
           <div className="user-form-group">
             <label>username</label>

@@ -31674,7 +31674,7 @@
 	        React.createElement(
 	          'button',
 	          { className: 'whiteButton', onClick: this.clickNewOptimization },
-	          'Category'
+	          'Category (not implemented)'
 	        )
 	      ),
 	      React.createElement(
@@ -32980,6 +32980,11 @@
 	        this.state.errors.toString()
 	      ),
 	      React.createElement(
+	        'h1',
+	        null,
+	        'Demo Account: username: Admin password: password'
+	      ),
+	      React.createElement(
 	        'form',
 	        { className: 'user-form', onSubmit: this.handleSubmit },
 	        React.createElement(
@@ -33021,50 +33026,55 @@
 	var Splash = React.createClass({
 	  displayName: 'Splash',
 	
+	  //
+	  // <p>Save time by finding quicker ways to do repitive tasks</p>
+	  //
+	  // <p>Keep track of optimizations you want to use</p>
+	  // <h2>FAQ</h2>
+	  // <p>What is an Optimization?</p>
+	  // <p>Why Optimize?</p>
+	  // <p>Future Features?</p>
+	
+	  getInitialState: function () {
+	    return { more: '' };
+	  },
+	
+	  clickFindOutMore: function () {
+	    this.state.more = 'Sorry this has not been completed yet =(';
+	    this.setState(this.state);
+	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'splash-container' },
 	      React.createElement(
-	        'h1',
-	        null,
-	        'Optimyze'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'Save time by finding quicker ways to do repitive tasks'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'Visualize time saved'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'Keep track of optimizations you want to use'
-	      ),
-	      React.createElement(
-	        'h2',
-	        null,
-	        'FAQ'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'What is an Optimization?'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'Why Optimize?'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'Future Features?'
+	        'div',
+	        { className: 'splash-picture-div' },
+	        React.createElement(
+	          'div',
+	          { className: 'splash-text-container' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            'Optimyze'
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            'save time by finding quicker ways to do repitive tasks'
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            this.state.more
+	          ),
+	          React.createElement(
+	            'h2',
+	            { onClick: this.clickFindOutMore },
+	            'Find out more'
+	          )
+	        )
 	      )
 	    );
 	  }
