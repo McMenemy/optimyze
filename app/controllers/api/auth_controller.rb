@@ -20,7 +20,7 @@ class Api::AuthController < ApplicationController
       sign_in(@user)
       render :json => {id: @user.id, username: @user.username, token: @user.session_token}
     else
-      render :json => {error: ['Invalid username or password']}
+      render json: ['Invalid username or password'], status: 422
     end
   end
 

@@ -7,7 +7,7 @@ var SignInUpForm = React.createClass({
   mixins: [History, LinkedStateMixin],
 
   getInitialState: function () {
-    return { username: '', password: '', buttonClicked: '' };
+    return { username: '', password: '', buttonClicked: '', errors: '' };
   },
 
   signIn: function () {
@@ -45,6 +45,7 @@ var SignInUpForm = React.createClass({
   render: function () {
     return (
       <div className="user-form-container">
+        <h1>{this.state.errors.toString()}</h1>
         <form className="user-form" onSubmit={this.handleSubmit}>
           <div className="user-form-group">
             <label>username</label>

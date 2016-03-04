@@ -1,6 +1,7 @@
 var React = require('react');
 var OptimizationActions = require('../actions/optimizationActions');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var AuthStore = require('../stores/authStore');
 var History = require('react-router').History;
 
 var OptimizationNewForm = React.createClass({
@@ -74,7 +75,7 @@ var OptimizationNewForm = React.createClass({
     var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
     postParams.optimization.time_saved_per_occurrence = this.timeConvert(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
 
-    postParams.optimization.user_id = window.currentUser.userId;
+    postParams.optimization.user_id = AuthStore.currentUser().id;
     return postParams;
   },
 

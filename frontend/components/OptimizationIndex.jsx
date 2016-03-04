@@ -2,11 +2,12 @@ var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
 var OptimizationIndexItem = require('./optimizationIndexItem');
+var AuthStore = require('../stores/authStore');
 
 var OptimizationsIndex = React.createClass({
 
   getInitialState: function () {
-    if (window.currentUser) {
+    if (AuthStore.isSignedIn()) {
       return { optimizations: OptimizationStore.allForCurrentUser() };
     } else {
       return { optimizations: OptimizationStore.all() };

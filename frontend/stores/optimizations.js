@@ -1,6 +1,7 @@
 var Dispatcher = require('../dispatcher/dispatcher');
 var Store = require('flux/utils').Store;
 var OptimizationConstants = require('../constants/optimizationConstants');
+var AuthStore = require('../stores/authStore');
 
 var OptimizationStore = new Store(Dispatcher);
 var _allOptimizations = {};
@@ -28,7 +29,7 @@ OptimizationStore.all = function () {
 OptimizationStore.allForCurrentUser = function () {
   var allUserOptimizations = [];
   Object.keys(_allOptimizations).forEach(function (key) {
-    if (window.currentUser.userId === _allOptimizations[key].user_id) {
+    if (AuthStore.currentUser.id === _allOptimizations[key].user_id) {
       allUserOptimizations.push(_allOptimizations[key]);
     }
   });

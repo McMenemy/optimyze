@@ -40,9 +40,8 @@ var Header = React.createClass({
     );
     } else {
       return (
-          <ul className="header-list-group">
-            <li><button onClick={this.signInUp}>Sign In</button></li>
-            <li><button onClick={this.signInUp}>Sign Up</button></li>
+          <ul className="header-list group">
+            <li><button onClick={this.signInUp}>Sign In/Up</button></li>
           </ul>
         );
     }

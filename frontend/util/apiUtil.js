@@ -88,9 +88,9 @@ var ApiUtil = {
         },
 
       error:
-        function (respData) {
-          errorCallback(respData);
-          console.log('ajax signIn error', respData);
+        function (respError) {
+          errorCallback(respError.responseText);
+          console.log('ajax signIn error', respError);
         },
     });
   },
@@ -109,9 +109,9 @@ var ApiUtil = {
         },
 
       error:
-        function (respData) {
-          errorCallback(respData);
-          console.log('ajax singUp error', respData);
+        function (respError) {
+          errorCallback(respError.responseText);
+          console.log('ajax singUp error', respError);
         },
     });
   },
