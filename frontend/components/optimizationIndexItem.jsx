@@ -36,7 +36,6 @@ var OptimizationIndexItem = React.createClass({
   },
 
   render: function () {
-    console.log(this.props.isUserOnly);
     return (
       <div>
         {this.populateItem()}

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post 'auth/signin', to: 'auth#signin'
     post 'auth/signup', to: 'auth#signup'
     delete 'auth/signout', to: 'auth#signout'
+    post 'auth/session', to: 'auth#sign_in_session'
   end
 
 end

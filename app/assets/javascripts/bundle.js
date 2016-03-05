@@ -20128,6 +20128,23 @@
 	        console.log('ajax signOut', respData);
 	      }
 	    });
+	  },
+	
+	  signInSession: function (sessionParams, actionCallback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/auth/session',
+	      data: sessionParams,
+	      dataType: 'json',
+	      success: function (respData) {
+	        actionCallback(respData);
+	        console.log('ajax session', respData);
+	      },
+	
+	      error: function (respError) {
+	        console.log('ajax session errer', respError);
+	      }
+	    });
 	  }
 	
 	};
@@ -20247,7 +20264,7 @@
 	  var allFilteredOptimizations = [];
 	  var titleFilter = new RegExp('' + searchParams.title.toLowerCase());
 	
-	  if (searchParams.userOnly) {
+	  if (searchParams.isUserOnly) {
 	    allFilteredOptimizations = this.allForCurrentUser();
 	  } else {
 	    allFilteredOptimizations = this.all();
@@ -26738,6 +26755,7 @@
 	
 	AuthStore.resetAuthStore = function (user) {
 	  localStorage.token = user.token;
+	
 	  // to make this persist do an ajax call and session lock in
 	  _currentUser = user;
 	}, AuthStore.signOut = function () {
@@ -31550,11 +31568,17 @@
 	var React = __webpack_require__(1);
 	var SearchIndex = __webpack_require__(238);
 	var Header = __webpack_require__(241);
+	var AuthStore = __webpack_require__(184);
+	var AuthActions = __webpack_require__(242);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
+	
 	  render: function () {
+	    if (localStorage.token) {
+	      AuthActions.retrieveSignedInUser({ user: { token: localStorage.token } });
+	    }
 	
 	    return React.createElement(
 	      'div',
@@ -31598,12 +31622,12 @@
 	    var searchParams = {};
 	    searchParams.title = '';
 	
-	    if (window.currentUser) {
-	      searchParams.userOnly = true;
+	    if (AuthStore.isSignedIn()) {
+	      searchParams.isUserOnly = true;
 	      return { optimizations: OptimizationStore.allForCurrentUser(),
 	        searchParams: searchParams };
 	    } else {
-	      searchParams.userOnly = false;
+	      searchParams.isUserOnly = false;
 	      return { optimizations: OptimizationStore.all(),
 	        searchParams: searchParams };
 	    }
@@ -31617,26 +31641,10 @@
 	
 	  clickToggleOptimizations: function () {
 	    if (AuthStore.isSignedIn()) {
-	      this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
+	      this.state.searchParams.isUserOnly = !this.state.searchParams.isUserOnly;
 	      this.setState(this.state.searchParams);
 	    } else {
 	      this.history.push('auth');
-	    }
-	  },
-	
-	  setHeadingTitle: function () {
-	    if (this.state.searchParams.userOnly) {
-	      return 'your optimizations';
-	    } else {
-	      return 'all optimizations';
-	    }
-	  },
-	
-	  setBrowseButtonTitle: function () {
-	    if (this.state.searchParams.userOnly) {
-	      return 'All Optimizations';
-	    } else {
-	      return 'Your Optimizations';
 	    }
 	  },
 	
@@ -31648,6 +31656,40 @@
 	    }
 	  },
 	
+	  renderTabs: function () {
+	    if (this.state.searchParams.isUserOnly) {
+	      return React.createElement(
+	        'div',
+	        { className: 'tab-container' },
+	        React.createElement(
+	          'button',
+	          { className: 'tab-selected', onClick: this.clickToggleOptimizations },
+	          'My Optimizations'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'tab', onClick: this.clickToggleOptimizations },
+	          'All Optimizations'
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'tab-container' },
+	        React.createElement(
+	          'button',
+	          { className: 'tab', onClick: this.clickToggleOptimizations },
+	          'My Optimizations'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'tab-selected', onClick: this.clickToggleOptimizations },
+	          'All Optimizations'
+	        )
+	      );
+	    }
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -31655,17 +31697,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'search-index-fixed' },
-	        React.createElement(
-	          'h2',
-	          null,
-	          this.setHeadingTitle()
-	        ),
 	        React.createElement('input', { type: 'text', className: 'search-input', placeholder: 'search by title', onChange: this.handleInput, value: this.state.searchParams.title }),
-	        React.createElement(
-	          'button',
-	          { className: 'whiteButton', onClick: this.clickToggleOptimizations },
-	          this.setBrowseButtonTitle()
-	        ),
 	        React.createElement(
 	          'button',
 	          { className: 'whiteButton', onClick: this.clickNewOptimization },
@@ -31675,7 +31707,8 @@
 	          'button',
 	          { className: 'whiteButton', onClick: this.clickNewOptimization },
 	          'Category (not implemented)'
-	        )
+	        ),
+	        this.renderTabs()
 	      ),
 	      React.createElement(
 	        'div',
@@ -31730,7 +31763,7 @@
 	  createOptimizationList: function () {
 	    var _this = this;
 	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
-	      return React.createElement(OptimizationIndexItem, { isUserOnly: _this.props.searchParams.userOnly, key: idx, optimization: el });
+	      return React.createElement(OptimizationIndexItem, { isUserOnly: _this.props.searchParams.isUserOnly, key: idx, optimization: el });
 	    });
 	
 	    return listOfOptimizations;
@@ -31824,7 +31857,6 @@
 	  },
 	
 	  render: function () {
-	    console.log(this.props.isUserOnly);
 	    return React.createElement(
 	      'div',
 	      null,
@@ -31965,6 +31997,10 @@
 	
 	  signUp: function (signUpParams, successCallback, errorCallback) {
 	    ApiUtil.signUp(signUpParams, this.receiveSignInUp, successCallback, errorCallback);
+	  },
+	
+	  retrieveSignedInUser: function (sessionParams) {
+	    ApiUtil.signInSession(sessionParams, this.receiveSignInUp);
 	  }
 	};
 	

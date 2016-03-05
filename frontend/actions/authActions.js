@@ -29,6 +29,10 @@ var AuthActions = {
   signUp: function (signUpParams, successCallback, errorCallback) {
     ApiUtil.signUp(signUpParams, this.receiveSignInUp, successCallback, errorCallback);
   },
+
+  retrieveSignedInUser: function (sessionParams) {
+    ApiUtil.signInSession(sessionParams, this.receiveSignInUp);
+  },
 };
 
 module.exports = AuthActions;

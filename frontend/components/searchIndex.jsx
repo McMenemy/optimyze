@@ -10,12 +10,12 @@ var SearchIndex = React.createClass({
     var searchParams = {};
     searchParams.title = '';
 
-    if (window.currentUser) {
-      searchParams.userOnly = true;
+    if (AuthStore.isSignedIn()) {
+      searchParams.isUserOnly = true;
       return { optimizations: OptimizationStore.allForCurrentUser(),
                searchParams: searchParams, };
     } else {
-      searchParams.userOnly = false;
+      searchParams.isUserOnly = false;
       return { optimizations: OptimizationStore.all(),
                searchParams: searchParams, };
     }
@@ -30,26 +30,10 @@ var SearchIndex = React.createClass({
 
   clickToggleOptimizations: function () {
     if (AuthStore.isSignedIn()) {
-      this.state.searchParams.userOnly = !this.state.searchParams.userOnly;
+      this.state.searchParams.isUserOnly = !this.state.searchParams.isUserOnly;
       this.setState(this.state.searchParams);
     } else {
       this.history.push('auth');
-    }
-  },
-
-  setHeadingTitle: function () {
-    if (this.state.searchParams.userOnly) {
-      return 'your optimizations';
-    } else {
-      return 'all optimizations';
-    }
-  },
-
-  setBrowseButtonTitle: function () {
-    if (this.state.searchParams.userOnly) {
-      return 'All Optimizations';
-    } else {
-      return 'Your Optimizations';
     }
   },
 
@@ -61,15 +45,32 @@ var SearchIndex = React.createClass({
     }
   },
 
+  renderTabs: function () {
+    if (this.state.searchParams.isUserOnly) {
+      return (
+        <div className="tab-container">
+        <button className="tab-selected" onClick={this.clickToggleOptimizations}>My Optimizations</button>
+        <button className="tab" onClick={this.clickToggleOptimizations}>All Optimizations</button>
+      </div>
+    );
+    } else {
+      return (
+      <div className="tab-container">
+        <button className="tab" onClick={this.clickToggleOptimizations}>My Optimizations</button>
+        <button className="tab-selected" onClick={this.clickToggleOptimizations}>All Optimizations</button>
+      </div>
+    );
+    }
+  },
+
   render: function () {
     return (
       <div>
         <div className="search-index-fixed">
-          <h2>{this.setHeadingTitle()}</h2>
           <input type="text" className='search-input' placeholder='search by title' onChange={this.handleInput} value={this.state.searchParams.title} />
-          <button className="whiteButton" onClick={this.clickToggleOptimizations}>{this.setBrowseButtonTitle()}</button>
           <button className="whiteButton" onClick={this.clickNewOptimization}>New Optimization</button>
           <button className="whiteButton" onClick={this.clickNewOptimization}>Category (not implemented)</button>
+          {this.renderTabs()}
         </div>
         <div className="search-index">
             <OptimizationIndex searchParams={this.state.searchParams}/>

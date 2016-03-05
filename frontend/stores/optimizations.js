@@ -41,7 +41,7 @@ OptimizationStore.allWithSearchParams = function (searchParams) {
   var allFilteredOptimizations = [];
   var titleFilter = new RegExp('' + searchParams.title.toLowerCase());
 
-  if (searchParams.userOnly) {
+  if (searchParams.isUserOnly) {
     allFilteredOptimizations = this.allForCurrentUser();
   } else {
     allFilteredOptimizations = this.all();

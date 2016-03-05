@@ -128,6 +128,25 @@ var ApiUtil = {
     });
   },
 
+  signInSession: function (sessionParams, actionCallback) {
+    $.ajax({
+      type: 'POST',
+      url: 'api/auth/session',
+      data: sessionParams,
+      dataType: 'json',
+      success:
+        function (respData) {
+          actionCallback(respData);
+          console.log('ajax session', respData);
+        },
+
+      error:
+        function (respError) {
+          console.log('ajax session errer', respError);
+        },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;
