@@ -130,7 +130,8 @@
   position: fixed;
   width: 400px;
   height: 181px;
-  right: 52%;
+  right: 50%;
+  margin-right: 29px;
   top: 56px;
   margin-top: 0;
   padding-top: 0;
