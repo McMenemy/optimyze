@@ -36,3 +36,12 @@ num_users.times do
     Optimization.create!(opt_params)
   end
 end
+
+Category.create(name: 'Sleep')
+Category.create(name: 'Technology')
+Category.create(name: 'Exercise')
+
+CategoryOptimization.create(category_id: 1, optimization_id: 1)
+CategoryOptimization.create(category_id: 1, optimization_id: 2)
+CategoryOptimization.create(category_id: 2, optimization_id: 2)
+CategoryOptimization.create(category_id: 3, optimization_id: 1)

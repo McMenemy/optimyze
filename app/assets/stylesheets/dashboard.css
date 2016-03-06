@@ -12,5 +12,5 @@
   height: 90vh;
   left: 50%;
   top: 83px;
-  overflow: scroll;
+  overflow: auto;
 }

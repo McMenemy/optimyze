@@ -5,12 +5,12 @@
 #  id                        :integer          not null, primary key
 #  title                     :string           not null
 #  description               :text
-#  investment_time           :integer          not null
-#  time_saved_per_occurrence :integer          not null
-#  frequency                 :integer          not null
+#  investment_time           :decimal(, )      not null
+#  time_saved_per_occurrence :decimal(, )      not null
+#  frequency                 :decimal(, )      not null
+#  user_id                   :integer          not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  user_id                   :integer
 #
 
 require 'test_helper'

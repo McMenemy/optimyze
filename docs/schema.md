@@ -19,8 +19,7 @@ user_id                   | integer   | not null, foreign key, indexed
 column name     | data type | details
 ----------------|-----------|-----------------------
 id              | integer   | not null, primary key
-name            | string    | not null, indexed
-optimization_id | integer   | not null, foreign key, indexed
+name            | string    | not null
 
 ## categories_optimizations
 column name     | data type | details
