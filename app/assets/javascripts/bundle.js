@@ -32039,7 +32039,7 @@
 	  createChartOptions: function () {
 	    var config = {
 	      chart: {
-	        type: 'scatter',
+	        type: 'area',
 	        style: {
 	          fontFamily: 'sans-serif'
 	        }
@@ -32086,6 +32086,7 @@
 	        name: 'theoretical',
 	        step: true,
 	        color: '#3DD0AC',
+	        negativeColor: '#ff4d4d',
 	        data: this.createTheoreticalSeriesData()
 	
 	      }]

@@ -7,7 +7,7 @@ var OptimizationDetail = React.createClass({
   createChartOptions: function () {
     var config = {
       chart: {
-        type: 'scatter',
+        type: 'area',
         style: {
           fontFamily: 'sans-serif',
         },
@@ -54,6 +54,7 @@ var OptimizationDetail = React.createClass({
         name: 'theoretical',
         step: true,
         color: '#3DD0AC',
+        negativeColor: '#ff4d4d',
         data: this.createTheoreticalSeriesData(),
 
       },
