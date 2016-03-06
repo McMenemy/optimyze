@@ -129,7 +129,7 @@
 .search-index-fixed {
   position: fixed;
   width: 400px;
-  height: 181px;
+  height: 163px;
   right: 50%;
   margin-right: 29px;
   top: 56px;
@@ -160,7 +160,7 @@
 
 .tab-container {
   background: black;
-  padding-top: 71px;
+  padding-top: 16px;
   padding-left: 40px;
   background-color: #00C58E;
   color: #777;
@@ -181,13 +181,45 @@
   padding: 5px;
 }
 
+.search-options {
+  display: inline-block;
+  width: calc(40% - 8px);
+  padding-top: 5px;
+}
+
+.search-options:first-of-type {
+  margin-right: 16px;
+}
+
+.search-options > label {
+  display: inline-block;
+  width: 50%;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  background-color: #3dd0ac;
+  color: white;
+  font-size: 16px;
+}
+
+.search-options > div {
+  display: inline-block;
+  width: 50%;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  background-color: white;
+  color: #777;
+  font-size: 16px;
+}
+
 /*optimizationsIndex*/
 
 .optimizations-index {
   position: relative;
   width: 100%;
   margin: 0 auto;
-  padding-top: 236px;
+  padding-top: 225px;
   padding-bottom: 15px;
   text-align: center;
   background-color: #00C58E;

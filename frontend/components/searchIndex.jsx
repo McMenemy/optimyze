@@ -68,8 +68,14 @@ var SearchIndex = React.createClass({
       <div>
         <div className="search-index-fixed">
           <input type="text" className='search-input' placeholder='search by title' onChange={this.handleInput} value={this.state.searchParams.title} />
-          <button className="whiteButton" onClick={this.clickNewOptimization}>New Optimization</button>
-          <button className="whiteButton" onClick={this.clickNewOptimization}>Category (not implemented)</button>
+            <div className="search-options">
+              <label>sort by</label>
+              <div>upvotes</div>
+            </div>
+            <div className="search-options">
+              <label>category</label>
+              <div>all</div>
+            </div>
           {this.renderTabs()}
         </div>
         <div className="search-index">

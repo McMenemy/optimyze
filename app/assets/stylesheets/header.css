@@ -12,7 +12,7 @@
   line-height: 1;
 }
 
-.header a {
+.header button {
   display: block;
   padding: 0;
   height: 37px;
@@ -24,16 +24,18 @@
 }
 
 .header-logo {
+  height: 38px;
   float: left;
-  padding-left: 6px;
+  margin-left: 6px;
   line-height: 50px;
   color: #3dd0ac;
   font-weight: 700;
   font-size: 24px;
+  cursor: pointer;
 }
 
 .header-logo:hover {
-  border-bottom: 2px solid #3dd0ac;
+  border-bottom: 2px solid #737373;
 }
 
 .header-list {
@@ -51,11 +53,10 @@
   padding-left: 4px;
   padding-right: 6px;
   line-height: 50px;
-  cursor: pointer;
   margin: 0;
   color: #737373;
 }
 
-.header-list > li:hover > a{
+.header-list > li:hover > button{
   border-bottom: 2px solid #3dd0ac;
 }

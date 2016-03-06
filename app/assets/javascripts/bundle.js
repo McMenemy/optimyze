@@ -31699,14 +31699,32 @@
 	        { className: 'search-index-fixed' },
 	        React.createElement('input', { type: 'text', className: 'search-input', placeholder: 'search by title', onChange: this.handleInput, value: this.state.searchParams.title }),
 	        React.createElement(
-	          'button',
-	          { className: 'whiteButton', onClick: this.clickNewOptimization },
-	          'New Optimization'
+	          'div',
+	          { className: 'search-options' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'sort by'
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'upvotes'
+	          )
 	        ),
 	        React.createElement(
-	          'button',
-	          { className: 'whiteButton', onClick: this.clickNewOptimization },
-	          'Category (not implemented)'
+	          'div',
+	          { className: 'search-options' },
+	          React.createElement(
+	            'label',
+	            null,
+	            'category'
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'all'
+	          )
 	        ),
 	        this.renderTabs()
 	      ),
@@ -32164,6 +32182,12 @@
 	          null,
 	          'time saved per occurence: ',
 	          this.state.optimization.time_saved_per_occurrence
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          'categories: ',
+	          this.state.optimization.categories
 	        )
 	      )
 	    );

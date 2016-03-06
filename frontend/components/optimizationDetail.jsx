@@ -122,6 +122,7 @@ var OptimizationDetail = React.createClass({
           <p>frequency: {this.state.optimization.frequency}</p>
           <p>investment time: {this.state.optimization.investment_time}</p>
           <p>time saved per occurence: {this.state.optimization.time_saved_per_occurrence}</p>
+          <p>categories: {this.state.optimization.categories}</p>
         </div>
       </div>
     );
