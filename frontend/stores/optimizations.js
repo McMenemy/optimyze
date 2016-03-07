@@ -47,6 +47,14 @@ OptimizationStore.allWithSearchParams = function (searchParams) {
     allFilteredOptimizations = this.all();
   }
 
+  if (searchParams.category !== 'all') {
+    allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
+      var categoryArray = currentOptimization.categories;
+
+      return categoryArray.includes(searchParams.category);
+    });
+  }
+
   allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
     var currentTitle = currentOptimization.title.toLowerCase();
 

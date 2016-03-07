@@ -1,3 +1,10 @@
 * have groceries delivered
 * macros
-* 
+*
+
+
+to dos
+set max length on optimization title at model level
+make sign in sign out two different links
+change yaxis units of graph
+add xaxis graph options

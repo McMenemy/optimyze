@@ -9,6 +9,7 @@ var SearchIndex = React.createClass({
   getInitialState: function () {
     var searchParams = {};
     searchParams.title = '';
+    searchParams.category = 'all';
 
     if (AuthStore.isSignedIn()) {
       searchParams.isUserOnly = true;
@@ -37,6 +38,11 @@ var SearchIndex = React.createClass({
     }
   },
 
+  clickCategory: function (category) {
+    this.state.searchParams.category = category;
+    this.setState(this.state.searchParams);
+  },
+
   renderTabs: function () {
     if (this.state.searchParams.isUserOnly) {
       return (
@@ -63,7 +69,7 @@ var SearchIndex = React.createClass({
           <div className="search-options-container">
               <div className="search-options scoot">
                 <label>sort by</label>
-                <div>upvotes</div>
+                <div>newest</div>
                 <ul className="dropdown-options">
                   <li className="dropdown-option">newest</li>
                   <li className="dropdown-option">oldest</li>
@@ -71,11 +77,17 @@ var SearchIndex = React.createClass({
               </div>
               <div className="search-options">
                 <label>category</label>
-                <div>all</div>
+                <div>{this.state.searchParams.category}</div>
                 <ul className="dropdown-options col-2">
-                  <li className="dropdown-option">sleep</li>
-                  <li className="dropdown-option">tech</li>
-                  <li className="dropdown-option">exercise</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'exercise')} >exercise</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'food')}>food</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'household')}>household</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'sleep')}>sleep</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'social')}>social</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'tech')}>tech</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'transport')}>transport</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'other')}>other</li>
+                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'all')}>all</li>
                 </ul>
               </div>
             </div>

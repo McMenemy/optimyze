@@ -207,7 +207,7 @@
   text-align: center;
   background-color: white;
   color: #777;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .search-options:hover .dropdown-options {
@@ -226,7 +226,7 @@
   text-align: center;
   background-color: white;
   color: #777;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .dropdown-option {
@@ -238,7 +238,7 @@
 }
 
 .dropdown-option:hover {
-  background-color: #d6f5ed;
+  background-color: #adebdc;
 }
 
 .scoot {
@@ -289,9 +289,10 @@
 }
 
 .optimization-item-title-button {
+  position: relative;
   float: left;
+  height: 60px;
   width: calc(80% - 10px);
-  padding: 21px 0px 21px 0px;
   text-align: left;
   margin: 0px;
   font-size: 18px;
@@ -301,7 +302,11 @@
   width: 100%;
 }
 .optimization-item-title-button > p {
+  position: relative;
   padding-left: 11px;
+  line-height: 30px;
+  margin: auto auto;
+  vertical-align: middle;
 }
 
 .optimization-item-edit-button {

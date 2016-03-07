@@ -20270,6 +20270,14 @@
 	    allFilteredOptimizations = this.all();
 	  }
 	
+	  if (searchParams.category !== 'all') {
+	    allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
+	      var categoryArray = currentOptimization.categories;
+	
+	      return categoryArray.includes(searchParams.category);
+	    });
+	  }
+	
 	  allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
 	    var currentTitle = currentOptimization.title.toLowerCase();
 	
@@ -31621,6 +31629,7 @@
 	  getInitialState: function () {
 	    var searchParams = {};
 	    searchParams.title = '';
+	    searchParams.category = 'all';
 	
 	    if (AuthStore.isSignedIn()) {
 	      searchParams.isUserOnly = true;
@@ -31646,6 +31655,11 @@
 	    } else {
 	      this.history.push('auth');
 	    }
+	  },
+	
+	  clickCategory: function (category) {
+	    this.state.searchParams.category = category;
+	    this.setState(this.state.searchParams);
 	  },
 	
 	  renderTabs: function () {
@@ -31704,7 +31718,7 @@
 	            React.createElement(
 	              'div',
 	              null,
-	              'upvotes'
+	              'newest'
 	            ),
 	            React.createElement(
 	              'ul',
@@ -31732,25 +31746,55 @@
 	            React.createElement(
 	              'div',
 	              null,
-	              'all'
+	              this.state.searchParams.category
 	            ),
 	            React.createElement(
 	              'ul',
 	              { className: 'dropdown-options col-2' },
 	              React.createElement(
 	                'li',
-	                { className: 'dropdown-option' },
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'exercise') },
+	                'exercise'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'food') },
+	                'food'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'household') },
+	                'household'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'sleep') },
 	                'sleep'
 	              ),
 	              React.createElement(
 	                'li',
-	                { className: 'dropdown-option' },
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'social') },
+	                'social'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'tech') },
 	                'tech'
 	              ),
 	              React.createElement(
 	                'li',
-	                { className: 'dropdown-option' },
-	                'exercise'
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'transport') },
+	                'transport'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'other') },
+	                'other'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option', onClick: this.clickCategory.bind(this, 'all') },
+	                'all'
 	              )
 	            )
 	          )
