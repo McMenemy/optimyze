@@ -1,7 +1,7 @@
 var React = require('react');
+var History = require('react-router').History;
 var OptimizationIndex = require('./optimizationIndex');
 var AuthStore = require('../stores/authStore');
-var History = require('react-router').History;
 
 var SearchIndex = React.createClass({
   mixins: [History],
@@ -32,14 +32,6 @@ var SearchIndex = React.createClass({
     if (AuthStore.isSignedIn()) {
       this.state.searchParams.isUserOnly = !this.state.searchParams.isUserOnly;
       this.setState(this.state.searchParams);
-    } else {
-      this.history.push('auth');
-    }
-  },
-
-  clickNewOptimization: function () {
-    if (AuthStore.isSignedIn()) {
-      this.history.push('optimizations/form/new');
     } else {
       this.history.push('auth');
     }

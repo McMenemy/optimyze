@@ -29,7 +29,7 @@ var OptimizationIndexItem = React.createClass({
     } else {
       return (
         <li className="optimization-index-item">
-          <button className="optimization-item-title-button" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
+          <button className="optimization-item-title-button full" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
         </li>
       );
     }

@@ -31609,9 +31609,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var History = __webpack_require__(186).History;
 	var OptimizationIndex = __webpack_require__(239);
 	var AuthStore = __webpack_require__(184);
-	var History = __webpack_require__(186).History;
 	
 	var SearchIndex = React.createClass({
 	  displayName: 'SearchIndex',
@@ -31643,14 +31643,6 @@
 	    if (AuthStore.isSignedIn()) {
 	      this.state.searchParams.isUserOnly = !this.state.searchParams.isUserOnly;
 	      this.setState(this.state.searchParams);
-	    } else {
-	      this.history.push('auth');
-	    }
-	  },
-	
-	  clickNewOptimization: function () {
-	    if (AuthStore.isSignedIn()) {
-	      this.history.push('optimizations/form/new');
 	    } else {
 	      this.history.push('auth');
 	    }
@@ -31748,10 +31740,12 @@
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationIndexItem = __webpack_require__(240);
 	var AuthStore = __webpack_require__(184);
+	var History = __webpack_require__(186).History;
 	
 	var OptimizationsIndex = React.createClass({
 	  displayName: 'OptimizationsIndex',
 	
+	  mixins: [History],
 	
 	  getInitialState: function () {
 	    if (AuthStore.isSignedIn()) {
@@ -31778,6 +31772,14 @@
 	    this.optimizationToken.remove();
 	  },
 	
+	  clickNewOptimization: function () {
+	    if (AuthStore.isSignedIn()) {
+	      this.history.push('optimizations/form/new');
+	    } else {
+	      this.history.push('auth');
+	    }
+	  },
+	
 	  createOptimizationList: function () {
 	    var _this = this;
 	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
@@ -31787,10 +31789,29 @@
 	    return listOfOptimizations;
 	  },
 	
+	  createNewButton: function () {
+	    if (this.props.searchParams.isUserOnly) {
+	      return React.createElement(
+	        'li',
+	        { className: 'optimization-index-item' },
+	        React.createElement(
+	          'button',
+	          { className: 'optimization-item-title-button full', onClick: this.clickNewOptimization },
+	          React.createElement(
+	            'p',
+	            null,
+	            '+ create new optimization'
+	          )
+	        )
+	      );
+	    }
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'ul',
 	      { className: 'optimizations-index group' },
+	      this.createNewButton(),
 	      this.createOptimizationList()
 	    );
 	  }
@@ -31863,7 +31884,7 @@
 	        { className: 'optimization-index-item' },
 	        React.createElement(
 	          'button',
-	          { className: 'optimization-item-title-button', onClick: this.clickOptimization },
+	          { className: 'optimization-item-title-button full', onClick: this.clickOptimization },
 	          React.createElement(
 	            'p',
 	            null,

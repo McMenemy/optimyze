@@ -261,6 +261,9 @@
   font-size: 18px;
 }
 
+.full {
+  width: 100%;
+}
 .optimization-item-title-button > p {
   padding-left: 11px;
 }
