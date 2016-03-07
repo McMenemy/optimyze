@@ -21,6 +21,26 @@ end
 
 # Optimization.new(title: 'test', description: 'testing', investment_time: '22', time_saved_per_occurrence: '1', frequency: '22', user_id: '1')
 
+Category.create(name: 'exercise')
+exercise_id = 1
+Category.create(name: 'food')
+food_id = 2
+Category.create(name: 'household')
+household_id = 3
+Category.create(name: 'sleep')
+sleep_id = 4
+Category.create(name: 'social')
+social_id = 5
+Category.create(name: 'tech')
+tech_id = 6
+Category.create(name: 'transport')
+transport_id = 7
+Category.create(name: 'other')
+other_id = 8
+Category.create(name: 'all')
+all_id = 9
+optim_id = 0
+
 # Exercise
 Optimization.create!(
   title: 'FOCUS T25 Workout',
@@ -30,6 +50,18 @@ Optimization.create!(
   frequency: '121000000',
   user_id: '1'
 )
+CategoryOptimization.create(category_id: exercise_id, optimization_id: optim_id += 1)
+
+# Food
+Optimization.create!(
+  title: 'Soylent',
+  description: 'Soylent comes in either a bottle or powder form and was created by engineers to have everything the body needs! Don\'t waste time decideing what to eat or prepping food again! (For those not willing to switch every meal to Soylent you can also just use it as needed for a quick ToGo meal. https://www.soylent.com/ (Comes out roughly $3 a meal.)',
+  investment_time: '0',
+  time_saved_per_occurrence: '900000',
+  frequency: '28800000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: food_id, optimization_id: optim_id += 1)
 
 # Sleep
 Optimization.create!(
@@ -38,8 +70,9 @@ Optimization.create!(
   investment_time: '0',
   time_saved_per_occurrence: '600000',
   frequency: '86400000',
-  user_id: '2'
+  user_id: '1'
 )
+CategoryOptimization.create(category_id: sleep_id, optimization_id: optim_id += 1)
 
 Optimization.create!(
   title: 'Never hit snooze for the undisciplined',
@@ -49,32 +82,87 @@ Optimization.create!(
   frequency: '86400000',
   user_id: '1'
 )
+CategoryOptimization.create(category_id: sleep_id, optimization_id: optim_id += 1)
+
+# Social
+Optimization.create!(
+  title: 'Automatically text your significant other sweet things',
+  description: 'http://broapp.net/ is an app that automatically texts your significant other sweet things. You can set a schedule and choose a message or make a custom message for sweet messages to be sent. It also adds some randomness to the schedule and won\'t send messages if you\'ve recently talked to your significant other or if you are connected to their WIFI',
+  investment_time: '1800000',
+  time_saved_per_occurrence: '120000',
+  frequency: '86400000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: sleep_id, optimization_id: optim_id += 1)
 
 
-optimizations_per_user = 3
+# Tech
+Optimization.create!(
+  title: 'Learn Chrome hotkeys',
+  description: 'Chrome has a bunch of built in keyboard shortcuts for navigation such as opening new tabs, closing tabs, switching between tabs, going back in history etc. Using a keyboard shortcut saves at least half a second every time over having to move your hand to the mouse and back to the keyboard. Here is a link to the shortcuts: https://support.google.com/chrome/answer/157179?hl=en . There is a slight learning curve of having to look up the shortcuts until you memorize them, so you probably lose 10 minutes or so over the first week until you become proficient. I estimated I use these shortcuts at least 20 times a day, conservaly.',
+  investment_time: '600000',
+  time_saved_per_occurrence: '500',
+  frequency: '3600000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: tech_id, optimization_id: optim_id += 1)
 
-num_users.times do
-  optimizations_per_user.times do |i|
-    opt_params = {}
-    opt_params[:title] = Faker::Address.city
-    opt_params[:description] = Faker::Hacker.say_something_smart
-    opt_params[:investment_time] = Faker::Number.number(7) # about a few hours
-    opt_params[:time_saved_per_occurrence] = Faker::Number.number(6) # about 10 minutes
-    opt_params[:frequency] = Faker::Number.number(9) # about every several days to week
-    opt_params[:user_id] = i
+Optimization.create!(
+  title: 'Use Amazon Subscription',
+  description: 'Using Amazon subscriptions you can have most household and toiletry items delivered to you at any set time interval you desire (with prime shipping is also free.) So, instead of spending 20 minutes everytime you go to the store to find these items you can just have them always show up at door. Investment time is just the 30 minutes it takes to find all your items on amazon and set up the subscriptions',
+  investment_time: '108000000',
+  time_saved_per_occurrence: '72000000',
+  frequency: '1210000000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: tech_id, optimization_id: optim_id += 1)
+CategoryOptimization.create(category_id: household_id, optimization_id: optim_id)
 
-    Optimization.create!(opt_params)
-  end
-end
+# Transport
+Optimization.create!(
+  title: 'Self-balancing two-wheeled board',
+  description: 'Instead of walking use one of those self-balacning two-wheeled boards: https://en.wikipedia.org/wiki/Self-balancing_two-wheeled_board . To estimate the time saved I looked up the speed of the boards which is 6-10mph so easily twice as fast as a person walks. The avg American walks 40 minutes a day so on average a person would save 20 minutes a day!',
+  investment_time: '600000',
+  time_saved_per_occurrence: '1200000',
+  frequency: '86400000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: transport_id, optimization_id: optim_id += 1)
 
-Category.create(name: 'sleep')
-Category.create(name: 'technology')
-Category.create(name: 'exercise')
 
-num_optimizations = num_users * optimizations_per_user
+# Other
+Optimization.create!(
+  title: 'Wear Loafers only',
+  description: 'Don\t waste time tieing your shoes - just always wear loafers =). Only requires the investment time of buying a pair of loafers',
+  investment_time: '600000',
+  time_saved_per_occurrence: '5000',
+  frequency: '86400000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: other_id, optimization_id: optim_id += 1)
 
-num_optimizations.times do |i|
-  CategoryOptimization.create(category_id: 1, optimization_id: i)
-  CategoryOptimization.create(category_id: 2, optimization_id: i)
-  CategoryOptimization.create(category_id: 3, optimization_id: i)
-end
+
+
+# optimizations_per_user = 3
+#
+# num_users.times do
+#   optimizations_per_user.times do |i|
+#     opt_params = {}
+#     opt_params[:title] = Faker::Address.city
+#     opt_params[:description] = Faker::Hacker.say_something_smart
+#     opt_params[:investment_time] = Faker::Number.number(7) # about a few hours
+#     opt_params[:time_saved_per_occurrence] = Faker::Number.number(6) # about 10 minutes
+#     opt_params[:frequency] = Faker::Number.number(9) # about every several days to week
+#     opt_params[:user_id] = i
+#
+#     Optimization.create!(opt_params)
+#   end
+# end
+#
+# num_optimizations = num_users * optimizations_per_user
+#
+# num_optimizations.times do |i|
+#   CategoryOptimization.create(category_id: 1, optimization_id: i)
+#   CategoryOptimization.create(category_id: 2, optimization_id: i)
+#   CategoryOptimization.create(category_id: 3, optimization_id: i)
+# end
