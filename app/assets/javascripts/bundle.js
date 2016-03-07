@@ -31692,30 +31692,67 @@
 	        React.createElement('input', { type: 'text', className: 'search-input', placeholder: 'search by title', onChange: this.handleInput, value: this.state.searchParams.title }),
 	        React.createElement(
 	          'div',
-	          { className: 'search-options' },
+	          { className: 'search-options-container' },
 	          React.createElement(
-	            'label',
-	            null,
-	            'sort by'
+	            'div',
+	            { className: 'search-options scoot' },
+	            React.createElement(
+	              'label',
+	              null,
+	              'sort by'
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'upvotes'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'dropdown-options' },
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option' },
+	                'newest'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option' },
+	                'oldest'
+	              )
+	            )
 	          ),
 	          React.createElement(
 	            'div',
-	            null,
-	            'upvotes'
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'search-options' },
-	          React.createElement(
-	            'label',
-	            null,
-	            'category'
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'all'
+	            { className: 'search-options' },
+	            React.createElement(
+	              'label',
+	              null,
+	              'category'
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'all'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'dropdown-options col-2' },
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option' },
+	                'sleep'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option' },
+	                'tech'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option' },
+	                'exercise'
+	              )
+	            )
 	          )
 	        ),
 	        this.renderTabs()
@@ -32087,6 +32124,14 @@
 	
 	      title: {
 	        text: this.state.optimization.title
+	      },
+	
+	      subtitle: {
+	        text: 'estimated time saved from this optimization'
+	      },
+	
+	      legend: {
+	        enabled: false
 	      },
 	
 	      xAxis: {

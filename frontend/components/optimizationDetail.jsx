@@ -36,6 +36,14 @@ var OptimizationDetail = React.createClass({
         text: this.state.optimization.title,
       },
 
+      subtitle: {
+        text: 'estimated time saved from this optimization',
+      },
+
+      legend: {
+        enabled: false,
+      },
+
       xAxis: {
         type: 'datetime',
         dateTimeLabelFormats: {
