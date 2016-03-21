@@ -23,6 +23,19 @@ var SearchIndex = React.createClass({
 
   },
 
+  _onChange: function () {
+    this.state.searchParams.isUserOnly = AuthStore.isSignedIn();
+    this.setState(this.state);
+  },
+
+  componentDidMount: function () {
+    this.authToken = AuthStore.addListener(this._onChange);
+  },
+
+  componentWillUnmount: function () {
+    this.authToken.remove();
+  },
+
   handleInput: function (e) {
     e.preventDefault();
     this.state.searchParams.title = e.currentTarget.value;
