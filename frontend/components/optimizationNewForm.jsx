@@ -81,6 +81,15 @@ var OptimizationNewForm = React.createClass({
     this.navigateToDashboard();
   },
 
+  // <div className="formGroup">
+  //   <label>category</label>
+  //   <label>exercise</label>
+  //   <input type="checkbox" />
+  //   <label>exercise</label>
+  //   <input type="checkbox" />
+  //   <label>exercise</label>
+  //   <input type="checkbox" />
+  // </div>
   render: function () {
     return (
       <div id="optimization-form-container">

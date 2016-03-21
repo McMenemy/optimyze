@@ -32033,6 +32033,7 @@
 	        React.createElement(
 	          'li',
 	          null,
+	          'Hi, ',
 	          AuthStore.currentUser().username
 	        ),
 	        React.createElement(
@@ -32217,7 +32218,7 @@
 	
 	    var msAdded = 0;
 	    var timeSaved = timeInvested * -1;
-	    while (msAdded < 7.884 * Math.pow(10, 9)) {
+	    while (msAdded < this.state.graph.unit) {
 	      msAdded += frequency;
 	      newDate = new Date(startDate.getTime() + msAdded);
 	      timeSaved += timeSavedperOccurrence;
@@ -32228,7 +32229,8 @@
 	  },
 	
 	  getStateFromStore: function () {
-	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+	    return { optimization: OptimizationStore.find(this.props.params.optimizationId),
+	      graph: { unit: 7.884 * Math.pow(10, 9) } };
 	  },
 	
 	  _onChange: function () {
@@ -32401,6 +32403,15 @@
 	    this.navigateToDashboard();
 	  },
 	
+	  // <div className="formGroup">
+	  //   <label>category</label>
+	  //   <label>exercise</label>
+	  //   <input type="checkbox" />
+	  //   <label>exercise</label>
+	  //   <input type="checkbox" />
+	  //   <label>exercise</label>
+	  //   <input type="checkbox" />
+	  // </div>
 	  render: function () {
 	    return React.createElement(
 	      'div',

@@ -34,7 +34,7 @@ var Header = React.createClass({
     if (AuthStore.isSignedIn()) {
       return (
         <ul className="header-list group">
-          <li>{AuthStore.currentUser().username}</li>
+          <li>Hi, {AuthStore.currentUser().username}</li>
           <li><button onClick={this.signOut}>Sign Out</button></li>
         </ul>
     );

@@ -84,7 +84,7 @@ var OptimizationDetail = React.createClass({
 
     var msAdded = 0;
     var timeSaved = timeInvested * -1;
-    while (msAdded < 7.884 * Math.pow(10, 9)) {
+    while (msAdded < this.state.graph.unit) {
       msAdded += frequency;
       newDate = new Date(startDate.getTime() + msAdded);
       timeSaved += timeSavedperOccurrence;
@@ -95,7 +95,8 @@ var OptimizationDetail = React.createClass({
   },
 
   getStateFromStore: function () {
-    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+    return { optimization: OptimizationStore.find(this.props.params.optimizationId),
+      graph: { unit: 7.884 * Math.pow(10, 9) }, };
   },
 
   _onChange: function () {
