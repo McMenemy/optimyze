@@ -20034,14 +20034,14 @@
 	    });
 	  },
 	
-	  createOptimization: function (postParams, callback, errorCallback, successCallback) {
+	  createOptimization: function (postParams, actionCallback, errorCallback, successCallback) {
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/optimizations',
 	      data: postParams,
 	      dataType: 'json',
 	      success: function (respData) {
-	        callback(respData);
+	        actionCallback(respData);
 	        successCallback(respData);
 	        console.log('ajax create', respData);
 	      },
@@ -20053,15 +20053,21 @@
 	    });
 	  },
 	
-	  updateOptimization: function (patchParams, callback) {
+	  updateOptimization: function (patchParams, actionCallback, errorCallback, successCallback) {
 	    $.ajax({
 	      type: 'PATCH',
 	      url: 'api/optimizations/' + patchParams.optimization.id,
 	      data: patchParams,
 	      dataType: 'json',
 	      success: function (respData) {
-	        callback(respData);
+	        actionCallback(respData);
+	        successCallback(respData);
 	        console.log('ajax update', respData);
+	      },
+	
+	      error: function (respError) {
+	        console.log('ajax update error', respError.responseText);
+	        errorCallback(respError.responseText);
 	      }
 	    });
 	  },
@@ -20142,7 +20148,7 @@
 	      },
 	
 	      error: function (respError) {
-	        console.log('ajax session errer', respError);
+	        console.log('ajax session error', respError);
 	      }
 	    });
 	  }
@@ -20186,8 +20192,8 @@
 	    ApiUtil.createOptimization(postParams, this.receiveOneOptimization, errorCallback, successCallback);
 	  },
 	
-	  retrieveUpdatedOptimization: function (patchParams) {
-	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization);
+	  retrieveUpdatedOptimization: function (patchParams, errorCallback, successCallback) {
+	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization, errorCallback, successCallback);
 	  },
 	
 	  receiveDeletedOptimization: function (data) {
@@ -32367,13 +32373,13 @@
 	    postParams.optimization.description = params.optimization.description;
 	
 	    var frequency = params.optimization.frequency;
-	    postParams.optimization.frequency = TimeFormat.frequencyConvert(frequency, frequencyUnit);
+	    postParams.optimization.frequency = TimeFormat.timesPerUnitToEveryMilliSec(frequency, frequencyUnit);
 	
 	    var investmentTime = params.optimization.investment_time;
-	    postParams.optimization.investment_time = TimeFormat.milliSecToUnit(investmentTime, investmentTimeUnit);
+	    postParams.optimization.investment_time = TimeFormat.unitToMilliSec(investmentTime, investmentTimeUnit);
 	
 	    var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
-	    postParams.optimization.time_saved_per_occurrence = TimeFormat.milliSecToUnit(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
+	    postParams.optimization.time_saved_per_occurrence = TimeFormat.unitToMilliSec(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
 	
 	    postParams.optimization.user_id = AuthStore.currentUser().id;
 	    return postParams;
@@ -32835,31 +32841,43 @@
 /***/ function(module, exports) {
 
 	var timeFormat = {
-	  milliSecToUnit: function (milliSecs, unit) {
+	  unitToMilliSec: function (time, unit) {
 	    if (unit === 'milliseconds') {
-	      return milliSecs;
+	      return time;
 	    } else if (unit === 'seconds') {
-	      return this.milliSecToSec(milliSecs);
+	      return this.secToMilliSec(time);
 	    } else if (unit === 'minutes') {
-	      return this.milliSecToMin(milliSecs);
+	      return this.minToMilliSec(time);
 	    } else if (unit === 'hours') {
-	      return this.milliSecToHour(milliSecs);
+	      return this.hourToMilliSec(time);
 	    }
 	  },
 	
-	  milliSecToSec: function (milliSecs) {
-	    return milliSecs * 1000;
+	  secToMilliSec: function (time) {
+	    return time * 1000;
 	  },
 	
-	  milliSecToMin: function (milliSecs) {
-	    return milliSecs * 1000 * 60;
+	  minToMilliSec: function (time) {
+	    return time * 1000 * 60;
 	  },
 	
-	  milliSecToHour: function (milliSecs) {
-	    return milliSecs * 1000 * 60 * 60;
+	  hourToMilliSec: function (time) {
+	    return time * 1000 * 60 * 60;
 	  },
 	
-	  frequencyConvert: function (frequency, unit) {
+	  calcTimeUnit: function (milliSecs) {
+	    if (milliseconds < 1000) {
+	      return 'milliseconds';
+	    } else if (milliseconds < 1000 * 60) {
+	      return 'seconds';
+	    } else if (milliseconds < 1000 * 60 * 60) {
+	      return 'minutes';
+	    } else {
+	      return 'hours';
+	    }
+	  },
+	
+	  timesPerUnitToEveryMilliSec: function (frequency, unit) {
 	    if (unit === 'per hour') {
 	      return Math.round(60 * 60 * 1000 / frequency);
 	    } else if (unit === 'per day') {
@@ -32871,26 +32889,9 @@
 	    } else if (unit === 'per year') {
 	      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
 	    }
-	  }
-	};
+	  },
 	
-	module.exports = timeFormat;
-
-/***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(246);
-	var History = __webpack_require__(186).History;
-	
-	var OptimizationEditForm = React.createClass({
-	  displayName: 'OptimizationEditForm',
-	
-	  mixins: [LinkedStateMixin, History],
-	
-	  formatTime: function (milliseconds) {
+	  milliSecsToAppropriateUnit: function (milliseconds) {
 	    var time;
 	    if (milliseconds < 1000) {
 	      time = milliseconds;
@@ -32907,7 +32908,7 @@
 	    }
 	  },
 	
-	  formatFrequency: function (milliseconds) {
+	  everyMilliSecsToTimesPerUnit: function (milliseconds) {
 	    var frequency;
 	    if (milliseconds <= 60 * 60 * 1000) {
 	      frequency = Math.round(60 * 60 * 1000 / milliseconds);
@@ -32925,12 +32926,31 @@
 	      frequency = Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
 	      return [frequency, 'per year'];
 	    }
-	  },
+	  }
+	
+	};
+	
+	module.exports = timeFormat;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var OptimizationActions = __webpack_require__(164);
+	var LinkedStateMixin = __webpack_require__(246);
+	var History = __webpack_require__(186).History;
+	var TimeFormat = __webpack_require__(250);
+	
+	var OptimizationEditForm = React.createClass({
+	  displayName: 'OptimizationEditForm',
+	
+	  mixins: [LinkedStateMixin, History],
 	
 	  formatOptimization: function (optimization) {
-	    frequencyFormatted = this.formatFrequency(optimization.frequency);
-	    investmentTimeFormatted = this.formatTime(optimization.investment_time);
-	    timeSavedPerOccurrenceFormatted = this.formatTime(optimization.time_saved_per_occurrence);
+	    var frequencyFormatted = TimeFormat.everyMilliSecsToTimesPerUnit(optimization.frequency);
+	    var investmentTimeFormatted = TimeFormat.milliSecsToAppropriateUnit(optimization.investment_time);
+	    var timeSavedPerOccurrenceFormatted = TimeFormat.milliSecsToAppropriateUnit(optimization.time_saved_per_occurrence);
 	
 	    optimization.frequency = frequencyFormatted[0];
 	    optimization.frequency_unit = frequencyFormatted[1];
@@ -32944,7 +32964,9 @@
 	  getStateFromStore: function (id) {
 	    // make a clone so that original object is not modified
 	    var optimization = JSON.parse(JSON.stringify(OptimizationStore.find(id)));
-	    return this.formatOptimization(optimization);
+	    var initialState = this.formatOptimization(optimization);
+	    initialState.errors = [];
+	    return initialState;
 	  },
 	
 	  getInitialState: function () {
@@ -32955,15 +32977,32 @@
 	    this.setState(this.getStateFromStore(newProps.params.optimizationId));
 	  },
 	
-	  handleSubmit: function (event) {
-	    event.preventDefault();
-	    var patchParams = { optimization: this.state };
-	    OptimizationActions.retrieveUpdatedOptimization(patchParams);
-	    this.navigateToDashboard();
+	  proccessParams: function (patchParams) {
+	    var proccessedParams = { optimization: {} };
+	    proccessedParams.optimization.description = patchParams.optimization.description;
+	    proccessedParams.optimization.title = patchParams.optimization.title;
+	    proccessedParams.optimization.frequency = TimeFormat.timesPerUnitToEveryMilliSec(patchParams.optimization.frequency, patchParams.optimization.frequency_unit);
+	    proccessedParams.optimization.time_saved_per_occurrence = TimeFormat.unitToMilliSec(patchParams.optimization.time_saved_per_occurrence, patchParams.optimization.time_saved_per_occurrence_unit);
+	    proccessedParams.optimization.investment_time = TimeFormat.unitToMilliSec(patchParams.optimization.investment_time, patchParams.optimization.investment_time_unit);
+	    proccessedParams.optimization.user_id = patchParams.optimization.user_id;
+	    proccessedParams.optimization.id = patchParams.optimization.id;
+	
+	    return proccessedParams;
 	  },
 	
-	  navigateToDashboard: function () {
-	    this.history.push('/');
+	  successCallback: function (updatedOptimization) {
+	    this.history.push('/optimizations/' + updatedOptimization.id);
+	  },
+	
+	  errorCallback: function (errorArray) {
+	    this.state.errors = JSON.parse(errorArray);
+	    this.setState(this.state);
+	  },
+	
+	  handleFormSubmit: function (event) {
+	    event.preventDefault();
+	    var patchParams = { optimization: this.state };
+	    OptimizationActions.retrieveUpdatedOptimization(this.proccessParams(patchParams), this.errorCallback, this.successCallback);
 	  },
 	
 	  handleCancel: function (event) {
@@ -32981,8 +33020,13 @@
 	        'Edit an Optimization'
 	      ),
 	      React.createElement(
+	        'h1',
+	        null,
+	        this.state.errors.toString()
+	      ),
+	      React.createElement(
 	        'form',
-	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
+	        { className: 'optimizationForm', onSubmit: this.handleFormSubmit },
 	        React.createElement(
 	          'div',
 	          { className: 'formGroup' },
@@ -33011,10 +33055,18 @@
 	            null,
 	            'setup time'
 	          ),
-	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
+	          React.createElement('input', {
+	            type: 'number',
+	            className: 'has-time-selector',
+	            valueLink: this.linkState('investment_time')
+	          }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: this.state.investment_time_unit, valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
+	            {
+	              defaultValue: this.state.investment_time_unit,
+	              valueLink: this.linkState('investment_time_unit'),
+	              name: 'time-unit'
+	            },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -33045,10 +33097,18 @@
 	            null,
 	            'time saved per occurrence'
 	          ),
-	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
+	          React.createElement('input', {
+	            type: 'number',
+	            className: 'has-time-selector',
+	            valueLink: this.linkState('time_saved_per_occurrence')
+	          }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: this.state.time_saved_per_occurrence_unit, valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
+	            {
+	              defaultValue: this.state.time_saved_per_occurrence_unit,
+	              valueLink: this.linkState('time_saved_per_occurrence_unit'),
+	              name: 'time-unit'
+	            },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -33079,10 +33139,17 @@
 	            null,
 	            'frequency'
 	          ),
-	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
+	          React.createElement('input', {
+	            type: 'number',
+	            className: 'has-time-selector',
+	            valueLink: this.linkState('frequency')
+	          }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: this.state.frequency_unit, valueLink: this.linkState('frequency_unit') },
+	            {
+	              defaultValue: this.state.frequency_unit,
+	              valueLink: this.linkState('frequency_unit')
+	            },
 	            React.createElement(
 	              'option',
 	              { value: 'per hour' },
@@ -33110,11 +33177,17 @@
 	            )
 	          )
 	        ),
-	        React.createElement('input', { type: 'submit', className: 'whiteButton green-button-overlay', value: 'update optimization' })
+	        React.createElement('input', {
+	          type: 'submit',
+	          className: 'whiteButton green-button-overlay',
+	          value: 'update optimization'
+	        })
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
+	        {
+	          className: 'whiteButton green-button-overlay',
+	          onClick: this.handleCancel },
 	        'cancel'
 	      )
 	    );

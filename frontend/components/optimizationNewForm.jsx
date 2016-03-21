@@ -39,15 +39,17 @@ var OptimizationNewForm = React.createClass({
     postParams.optimization.description = params.optimization.description;
 
     var frequency = params.optimization.frequency;
-    postParams.optimization.frequency = TimeFormat.frequencyConvert(frequency, frequencyUnit);
+    postParams.optimization.frequency = TimeFormat.timesPerUnitToEveryMilliSec(
+      frequency, frequencyUnit
+    );
 
     var investmentTime = params.optimization.investment_time;
-    postParams.optimization.investment_time = TimeFormat.milliSecToUnit(
+    postParams.optimization.investment_time = TimeFormat.unitToMilliSec(
       investmentTime, investmentTimeUnit
     );
 
     var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
-    postParams.optimization.time_saved_per_occurrence = TimeFormat.milliSecToUnit(
+    postParams.optimization.time_saved_per_occurrence = TimeFormat.unitToMilliSec(
       timeSavedPerOccurrence, timeSavedPerOccurrenceUnit
     );
 

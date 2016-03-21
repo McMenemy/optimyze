@@ -23,7 +23,7 @@ var ApiUtil = {
     });
   },
 
-  createOptimization: function (postParams, callback, errorCallback, successCallback) {
+  createOptimization: function (postParams, actionCallback, errorCallback, successCallback) {
     $.ajax({
       type: 'POST',
       url: 'api/optimizations',
@@ -31,7 +31,7 @@ var ApiUtil = {
       dataType: 'json',
       success:
         function (respData) {
-          callback(respData);
+          actionCallback(respData);
           successCallback(respData);
           console.log('ajax create', respData);
         },
@@ -44,7 +44,7 @@ var ApiUtil = {
     });
   },
 
-  updateOptimization: function (patchParams, callback) {
+  updateOptimization: function (patchParams, actionCallback, errorCallback, successCallback) {
     $.ajax({
       type: 'PATCH',
       url: 'api/optimizations/' + patchParams.optimization.id,
@@ -52,8 +52,15 @@ var ApiUtil = {
       dataType: 'json',
       success:
         function (respData) {
-          callback(respData);
+          actionCallback(respData);
+          successCallback(respData);
           console.log('ajax update', respData);
+        },
+
+      error:
+        function (respError) {
+          console.log('ajax update error', respError.responseText);
+          errorCallback(respError.responseText);
         },
     });
   },
@@ -142,7 +149,7 @@ var ApiUtil = {
 
       error:
         function (respError) {
-          console.log('ajax session errer', respError);
+          console.log('ajax session error', respError);
         },
     });
   },

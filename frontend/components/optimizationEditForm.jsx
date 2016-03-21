@@ -2,51 +2,17 @@ var React = require('react');
 var OptimizationActions = require('../actions/optimizationActions');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var History = require('react-router').History;
+var TimeFormat = require('../util/timeFormat');
 
 var OptimizationEditForm = React.createClass({
   mixins: [LinkedStateMixin, History],
 
-  formatTime: function (milliseconds) {
-    var time;
-    if (milliseconds < 1000) {
-      time = milliseconds;
-      return [time, 'milliseconds'];
-    } else if (milliseconds < 1000 * 60) {
-      time = Math.round(milliseconds / 1000);
-      return [time, 'seconds'];
-    } else if (milliseconds < 1000 * 60 * 60) {
-      time = Math.round(milliseconds / 1000 / 60);
-      return [time, 'minutes'];
-    } else {
-      time = Math.round(milliseconds / 1000 / 60 / 60);
-      return [time, 'hours'];
-    }
-  },
-
-  formatFrequency: function (milliseconds) {
-    var frequency;
-    if (milliseconds <= 60 * 60 * 1000) {
-      frequency = Math.round(60 * 60 * 1000 / milliseconds);
-      return [frequency, 'per hour'];
-    } else if (milliseconds <= 24 * 60 * 60 * 1000) {
-      frequency = Math.round(24 * 60 * 60 * 1000 / milliseconds);
-      return [frequency, 'per day'];
-    } else if (milliseconds <= 7 * 24 * 60 * 60 * 1000) {
-      frequency = Math.round(7 * 24 * 60 * 60 * 1000 / milliseconds);
-      return [frequency, 'per week'];
-    } else if (milliseconds <= 30.4167 * 24 * 60 * 60 * 1000) {
-      frequency = Math.round(30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
-      return [frequency, 'per month'];
-    } else {
-      frequency = Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
-      return [frequency, 'per year'];
-    }
-  },
-
   formatOptimization: function (optimization) {
-    frequencyFormatted = this.formatFrequency(optimization.frequency);
-    investmentTimeFormatted = this.formatTime(optimization.investment_time);
-    timeSavedPerOccurrenceFormatted = this.formatTime(optimization.time_saved_per_occurrence);
+    var frequencyFormatted = TimeFormat.everyMilliSecsToTimesPerUnit(optimization.frequency);
+    var investmentTimeFormatted = TimeFormat.milliSecsToAppropriateUnit(optimization.investment_time);
+    var timeSavedPerOccurrenceFormatted = TimeFormat.milliSecsToAppropriateUnit(
+      optimization.time_saved_per_occurrence
+    );
 
     optimization.frequency = frequencyFormatted[0];
     optimization.frequency_unit = frequencyFormatted[1];
@@ -60,7 +26,9 @@ var OptimizationEditForm = React.createClass({
   getStateFromStore: function (id) {
     // make a clone so that original object is not modified
     var optimization = JSON.parse(JSON.stringify(OptimizationStore.find(id)));
-    return this.formatOptimization(optimization);
+    var initialState = this.formatOptimization(optimization);
+    initialState.errors = [];
+    return initialState;
   },
 
   getInitialState: function () {
@@ -71,15 +39,40 @@ var OptimizationEditForm = React.createClass({
     this.setState(this.getStateFromStore(newProps.params.optimizationId));
   },
 
-  handleSubmit: function (event) {
-    event.preventDefault();
-    var patchParams = { optimization: this.state };
-    OptimizationActions.retrieveUpdatedOptimization(patchParams);
-    this.navigateToDashboard();
+  proccessParams: function (patchParams) {
+    var proccessedParams = { optimization: {} };
+    proccessedParams.optimization.description = patchParams.optimization.description;
+    proccessedParams.optimization.title = patchParams.optimization.title;
+    proccessedParams.optimization.frequency = TimeFormat.timesPerUnitToEveryMilliSec(
+      patchParams.optimization.frequency, patchParams.optimization.frequency_unit
+    );
+    proccessedParams.optimization.time_saved_per_occurrence = TimeFormat.unitToMilliSec(
+      patchParams.optimization.time_saved_per_occurrence, patchParams.optimization.time_saved_per_occurrence_unit
+    );
+    proccessedParams.optimization.investment_time = TimeFormat.unitToMilliSec(
+      patchParams.optimization.investment_time, patchParams.optimization.investment_time_unit
+    );
+    proccessedParams.optimization.user_id = patchParams.optimization.user_id;
+    proccessedParams.optimization.id = patchParams.optimization.id;
+
+    return proccessedParams;
   },
 
-  navigateToDashboard: function () {
-    this.history.push('/');
+  successCallback: function (updatedOptimization) {
+    this.history.push('/optimizations/' + updatedOptimization.id);
+  },
+
+  errorCallback: function (errorArray) {
+    this.state.errors = JSON.parse(errorArray);
+    this.setState(this.state);
+  },
+
+  handleFormSubmit: function (event) {
+    event.preventDefault();
+    var patchParams = { optimization: this.state };
+    OptimizationActions.retrieveUpdatedOptimization(
+      this.proccessParams(patchParams), this.errorCallback, this.successCallback
+    );
   },
 
   handleCancel: function (event) {
@@ -91,7 +84,8 @@ var OptimizationEditForm = React.createClass({
     return (
       <div id="optimization-form-container">
         <h2>Edit an Optimization</h2>
-        <form className='optimizationForm' onSubmit={this.handleSubmit}>
+        <h1>{this.state.errors.toString()}</h1>
+        <form className='optimizationForm' onSubmit={this.handleFormSubmit}>
           <div className="formGroup">
             <label>title</label>
             <input type="text" valueLink={this.linkState('title')} />
@@ -102,8 +96,16 @@ var OptimizationEditForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>setup time</label>
-            <input type="number" className="has-time-selector" valueLink={this.linkState('investment_time')} />
-            <select defaultValue={this.state.investment_time_unit} valueLink={this.linkState('investment_time_unit')} name="time-unit">
+            <input
+              type="number"
+              className="has-time-selector"
+              valueLink={this.linkState('investment_time')}
+            />
+            <select
+              defaultValue={this.state.investment_time_unit}
+              valueLink={this.linkState('investment_time_unit')}
+              name="time-unit"
+            >
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -112,8 +114,16 @@ var OptimizationEditForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>time saved per occurrence</label>
-            <input type="number" className="has-time-selector" valueLink={this.linkState('time_saved_per_occurrence')} />
-            <select defaultValue={this.state.time_saved_per_occurrence_unit} valueLink={this.linkState('time_saved_per_occurrence_unit')} name="time-unit">
+            <input
+              type="number"
+              className="has-time-selector"
+              valueLink={this.linkState('time_saved_per_occurrence')}
+            />
+            <select
+              defaultValue={this.state.time_saved_per_occurrence_unit}
+              valueLink={this.linkState('time_saved_per_occurrence_unit')}
+              name="time-unit"
+            >
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -122,8 +132,15 @@ var OptimizationEditForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>frequency</label>
-            <input type="number" className="has-time-selector" valueLink={this.linkState('frequency')} />
-            <select defaultValue={this.state.frequency_unit} valueLink={this.linkState('frequency_unit')}>
+            <input
+              type="number"
+              className="has-time-selector"
+              valueLink={this.linkState('frequency')}
+            />
+            <select
+              defaultValue={this.state.frequency_unit}
+              valueLink={this.linkState('frequency_unit')}
+            >
               <option value="per hour">times per hour</option>
               <option value="per day">times per day</option>
               <option value="per week">times per week</option>
@@ -131,9 +148,16 @@ var OptimizationEditForm = React.createClass({
               <option value="per year">times per year</option>
             </select>
           </div>
-          <input type="submit" className="whiteButton green-button-overlay" value="update optimization"/>
+          <input
+            type="submit"
+            className="whiteButton green-button-overlay"
+            value="update optimization"
+          />
         </form>
-        <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>
+        <button
+          className="whiteButton green-button-overlay"
+          onClick={this.handleCancel}>cancel</button
+        >
       </div>
     );
   },
