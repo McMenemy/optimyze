@@ -43,7 +43,7 @@ optim_id = 0
 
 # Exercise
 Optimization.create!(
-  title: 'FOCUS T25 Workout',
+  title: 'FOCUS T25 Workout Series',
   description: 'T25 is a beachbody.com 60-day workout video series that uses high-interval, high-intensity exercises to get an hours worth of exercise in 25 minutes. The early videos require no equipment and later videos use light dumbells. Different videos focus on working different muscle groups and get progressivly more difficult. See the details here: https://www.beachbody.com/product/fitness_programs/focus-t25-workout.do . Also, saves time on not having to drive to gym. Investment time is just ordering the videos online. The series cost about $100, which is not too bad when you compare that to the cost of a gym membership.',
   investment_time: '300000',
   time_saved_per_occurrence: '2700000',
@@ -51,6 +51,20 @@ Optimization.create!(
   user_id: '1'
 )
 CategoryOptimization.create(category_id: exercise_id, optimization_id: optim_id += 1)
+
+
+Optimization.create!(
+  title: 'P90x3 Workout Series',
+  description: 'Made from the same guy who made P90x, but workouts are only 25 minutes instead of 1 hour. Requires pull up bar and dumbells and focuses on getting you ripped as efficently as possible. They might be short workouts but they are not easy! Also, saves time on not having to drive to the gym. Link: https://www.beachbody.com/product/fitness_programs/p90x3-workout.do
+ ',
+  investment_time: '300000',
+  time_saved_per_occurrence: '2700000',
+  frequency: '121000000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: exercise_id, optimization_id: optim_id += 1)
+
+
 
 # Food
 Optimization.create!(

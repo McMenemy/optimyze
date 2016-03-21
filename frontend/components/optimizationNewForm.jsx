@@ -3,40 +3,13 @@ var OptimizationActions = require('../actions/optimizationActions');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var AuthStore = require('../stores/authStore');
 var History = require('react-router').History;
+var TimeFormat = require('../util/timeFormat');
 
 var OptimizationNewForm = React.createClass({
   mixins: [LinkedStateMixin, History],
 
   getInitialState: function () {
-    return { errors: []};
-  },
-
-  // converts time to milliseconds
-  timeConvert: function (time, unit) {
-    if (unit === 'milliseconds') {
-      return time;
-    } else if (unit === 'seconds') {
-      return time * 1000;
-    } else if (unit === 'minutes') {
-      return time * 60 * 1000;
-    } else if (unit === 'hours') {
-      return time * 60 * 60 * 1000;
-    }
-  },
-
-  // converts to every blank millisconds
-  frequencyConvert: function (frequency, unit) {
-    if (unit === 'per hour') {
-      return Math.round(60 * 60 * 1000 / frequency);
-    } else if (unit === 'per day') {
-      return Math.round(24 * 60 * 60 * 1000 / frequency);
-    } else if (unit === 'per week') {
-      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
-    } else if (unit === 'per month') {
-      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
-    } else if (unit === 'per year') {
-      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
-    }
+    return { errors: [] };
   },
 
   proccessParams: function (params) {
@@ -45,8 +18,7 @@ var OptimizationNewForm = React.createClass({
       return params;
     }
 
-    var postParams = { optimization: {status: 'not good'} };
-
+    var postParams = { optimization: { status: 'not good' } };
 
     var frequencyUnit = params.optimization.frequency_unit;
     if (typeof frequencyUnit === 'undefined') {
@@ -67,13 +39,17 @@ var OptimizationNewForm = React.createClass({
     postParams.optimization.description = params.optimization.description;
 
     var frequency = params.optimization.frequency;
-    postParams.optimization.frequency = this.frequencyConvert(frequency, frequencyUnit);
+    postParams.optimization.frequency = TimeFormat.frequencyConvert(frequency, frequencyUnit);
 
     var investmentTime = params.optimization.investment_time;
-    postParams.optimization.investment_time = this.timeConvert(investmentTime, investmentTimeUnit);
+    postParams.optimization.investment_time = TimeFormat.milliSecToUnit(
+      investmentTime, investmentTimeUnit
+    );
 
     var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
-    postParams.optimization.time_saved_per_occurrence = this.timeConvert(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
+    postParams.optimization.time_saved_per_occurrence = TimeFormat.milliSecToUnit(
+      timeSavedPerOccurrence, timeSavedPerOccurrenceUnit
+    );
 
     postParams.optimization.user_id = AuthStore.currentUser().id;
     return postParams;
@@ -88,10 +64,12 @@ var OptimizationNewForm = React.createClass({
     this.setState(this.state);
   },
 
-  handleSubmit: function (event) {
+  handleFormSubmit: function (event) {
     event.preventDefault();
     var postParams = { optimization: this.state };
-    OptimizationActions.retrieveNewOptimization(this.proccessParams(postParams), this.errorCallback, this.successCallback);
+    OptimizationActions.retrieveNewOptimization(
+      this.proccessParams(postParams), this.errorCallback, this.successCallback
+    );
   },
 
   navigateToDashboard: function () {
@@ -108,7 +86,7 @@ var OptimizationNewForm = React.createClass({
       <div id="optimization-form-container">
         <h2>Create an Optimization</h2>
         <h1>{this.state.errors.toString()}</h1>
-        <form className='optimizationForm' onSubmit={this.handleSubmit}>
+        <form className='optimizationForm' onSubmit={this.handleFormSubmit}>
           <div className="formGroup">
             <label>title</label>
             <input type="text" valueLink={this.linkState('title')} />
@@ -119,8 +97,16 @@ var OptimizationNewForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>setup time</label>
-            <input type="number" className="has-time-selector" valueLink={this.linkState('investment_time')} />
-            <select defaultValue="minutes" valueLink={this.linkState('investment_time_unit')} name="time-unit">
+            <input
+              type="number"
+              className="has-time-selector"
+              valueLink={this.linkState('investment_time')}
+            />
+            <select
+              defaultValue="minutes"
+              valueLink={this.linkState('investment_time_unit')}
+              name="time-unit"
+            >
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -129,8 +115,16 @@ var OptimizationNewForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>time saved per occurrence</label>
-            <input type="number" className="has-time-selector" valueLink={this.linkState('time_saved_per_occurrence')} />
-            <select defaultValue="minutes" valueLink={this.linkState('time_saved_per_occurrence_unit')} name="time-unit">
+            <input
+              type="number"
+              className="has-time-selector"
+              valueLink={this.linkState('time_saved_per_occurrence')}
+            />
+            <select
+              defaultValue="minutes"
+              valueLink={this.linkState('time_saved_per_occurrence_unit')}
+              name="time-unit"
+            >
               <option value="milliseconds">milliseconds</option>
               <option value="seconds">seconds</option>
               <option value="minutes">minutes</option>
@@ -139,8 +133,16 @@ var OptimizationNewForm = React.createClass({
           </div>
           <div className="formGroup">
             <label>frequency</label>
-            <input type="number" className="has-time-selector" valueLink={this.linkState('frequency')} />
-            <select defaultValue="per week" valueLink={this.linkState('frequency_unit')} name="time-unit">
+            <input
+              type="number"
+              className="has-time-selector"
+              valueLink={this.linkState('frequency')}
+            />
+            <select
+              defaultValue="per week"
+              valueLink={this.linkState('frequency_unit')}
+              name="time-unit"
+            >
               <option value="per hour">times per hour</option>
               <option value="per day">times per day</option>
               <option value="per week">times per week</option>
@@ -148,9 +150,16 @@ var OptimizationNewForm = React.createClass({
               <option value="per year">times per year</option>
             </select>
           </div>
-          <input className="whiteButton green-button-overlay" type="submit" value="create optimization"/>
+          <input
+            className="whiteButton green-button-overlay"
+            type="submit"
+            value="create optimization"/
+          >
         </form>
-        <button className="whiteButton green-button-overlay" onClick={this.handleCancel}>cancel</button>
+        <button
+          className="whiteButton green-button-overlay"
+          onClick={this.handleCancel}
+        >cancel</button>
       </div>
     );
   },

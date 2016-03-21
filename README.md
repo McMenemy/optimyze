@@ -128,6 +128,16 @@ user interface.
 
 **objective:** Make the site feel more cohesive, intuitive, and appealing to the eye.
 
-- [ ] 
+- [ ]
 
 ### Phase 9: Work on Bonus features.
+ToDo:
+[ ] fix edit form
+[ ] add category to new form
+[ ] separate sign-in/sing-out
+[ ] add demo account button
+[ ] add updown/downvote feature
+[ ] move side bar over
+[ ] make other bar larger
+[ ] redo description area
+[ ] 

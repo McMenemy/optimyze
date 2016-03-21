@@ -60,9 +60,9 @@
 	var OptimizationIndex = __webpack_require__(239);
 	var OptimizationDetail = __webpack_require__(243);
 	var OptimizationNewForm = __webpack_require__(245);
-	var OptimizationEditForm = __webpack_require__(250);
-	var Auth = __webpack_require__(251);
-	var Splash = __webpack_require__(253);
+	var OptimizationEditForm = __webpack_require__(251);
+	var Auth = __webpack_require__(252);
+	var Splash = __webpack_require__(254);
 	var Header = __webpack_require__(241);
 	
 	// for testing
@@ -32327,6 +32327,7 @@
 	var LinkedStateMixin = __webpack_require__(246);
 	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
+	var TimeFormat = __webpack_require__(250);
 	
 	var OptimizationNewForm = React.createClass({
 	  displayName: 'OptimizationNewForm',
@@ -32335,34 +32336,6 @@
 	
 	  getInitialState: function () {
 	    return { errors: [] };
-	  },
-	
-	  // converts time to milliseconds
-	  timeConvert: function (time, unit) {
-	    if (unit === 'milliseconds') {
-	      return time;
-	    } else if (unit === 'seconds') {
-	      return time * 1000;
-	    } else if (unit === 'minutes') {
-	      return time * 60 * 1000;
-	    } else if (unit === 'hours') {
-	      return time * 60 * 60 * 1000;
-	    }
-	  },
-	
-	  // converts to every blank millisconds
-	  frequencyConvert: function (frequency, unit) {
-	    if (unit === 'per hour') {
-	      return Math.round(60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per day') {
-	      return Math.round(24 * 60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per week') {
-	      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per month') {
-	      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per year') {
-	      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
-	    }
 	  },
 	
 	  proccessParams: function (params) {
@@ -32392,13 +32365,13 @@
 	    postParams.optimization.description = params.optimization.description;
 	
 	    var frequency = params.optimization.frequency;
-	    postParams.optimization.frequency = this.frequencyConvert(frequency, frequencyUnit);
+	    postParams.optimization.frequency = TimeFormat.frequencyConvert(frequency, frequencyUnit);
 	
 	    var investmentTime = params.optimization.investment_time;
-	    postParams.optimization.investment_time = this.timeConvert(investmentTime, investmentTimeUnit);
+	    postParams.optimization.investment_time = TimeFormat.milliSecToUnit(investmentTime, investmentTimeUnit);
 	
 	    var timeSavedPerOccurrence = params.optimization.time_saved_per_occurrence;
-	    postParams.optimization.time_saved_per_occurrence = this.timeConvert(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
+	    postParams.optimization.time_saved_per_occurrence = TimeFormat.milliSecToUnit(timeSavedPerOccurrence, timeSavedPerOccurrenceUnit);
 	
 	    postParams.optimization.user_id = AuthStore.currentUser().id;
 	    return postParams;
@@ -32413,7 +32386,7 @@
 	    this.setState(this.state);
 	  },
 	
-	  handleSubmit: function (event) {
+	  handleFormSubmit: function (event) {
 	    event.preventDefault();
 	    var postParams = { optimization: this.state };
 	    OptimizationActions.retrieveNewOptimization(this.proccessParams(postParams), this.errorCallback, this.successCallback);
@@ -32444,7 +32417,7 @@
 	      ),
 	      React.createElement(
 	        'form',
-	        { className: 'optimizationForm', onSubmit: this.handleSubmit },
+	        { className: 'optimizationForm', onSubmit: this.handleFormSubmit },
 	        React.createElement(
 	          'div',
 	          { className: 'formGroup' },
@@ -32473,10 +32446,18 @@
 	            null,
 	            'setup time'
 	          ),
-	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('investment_time') }),
+	          React.createElement('input', {
+	            type: 'number',
+	            className: 'has-time-selector',
+	            valueLink: this.linkState('investment_time')
+	          }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: 'minutes', valueLink: this.linkState('investment_time_unit'), name: 'time-unit' },
+	            {
+	              defaultValue: 'minutes',
+	              valueLink: this.linkState('investment_time_unit'),
+	              name: 'time-unit'
+	            },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32507,10 +32488,18 @@
 	            null,
 	            'time saved per occurrence'
 	          ),
-	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('time_saved_per_occurrence') }),
+	          React.createElement('input', {
+	            type: 'number',
+	            className: 'has-time-selector',
+	            valueLink: this.linkState('time_saved_per_occurrence')
+	          }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: 'minutes', valueLink: this.linkState('time_saved_per_occurrence_unit'), name: 'time-unit' },
+	            {
+	              defaultValue: 'minutes',
+	              valueLink: this.linkState('time_saved_per_occurrence_unit'),
+	              name: 'time-unit'
+	            },
 	            React.createElement(
 	              'option',
 	              { value: 'milliseconds' },
@@ -32541,10 +32530,18 @@
 	            null,
 	            'frequency'
 	          ),
-	          React.createElement('input', { type: 'number', className: 'has-time-selector', valueLink: this.linkState('frequency') }),
+	          React.createElement('input', {
+	            type: 'number',
+	            className: 'has-time-selector',
+	            valueLink: this.linkState('frequency')
+	          }),
 	          React.createElement(
 	            'select',
-	            { defaultValue: 'per week', valueLink: this.linkState('frequency_unit'), name: 'time-unit' },
+	            {
+	              defaultValue: 'per week',
+	              valueLink: this.linkState('frequency_unit'),
+	              name: 'time-unit'
+	            },
 	            React.createElement(
 	              'option',
 	              { value: 'per hour' },
@@ -32572,11 +32569,17 @@
 	            )
 	          )
 	        ),
-	        React.createElement('input', { className: 'whiteButton green-button-overlay', type: 'submit', value: 'create optimization' })
+	        React.createElement('input', {
+	          className: 'whiteButton green-button-overlay',
+	          type: 'submit',
+	          value: 'create optimization' })
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'whiteButton green-button-overlay', onClick: this.handleCancel },
+	        {
+	          className: 'whiteButton green-button-overlay',
+	          onClick: this.handleCancel
+	        },
 	        'cancel'
 	      )
 	    );
@@ -32818,6 +32821,52 @@
 
 /***/ },
 /* 250 */
+/***/ function(module, exports) {
+
+	var timeFormat = {
+	  milliSecToUnit: function (milliSecs, unit) {
+	    if (unit === 'milliseconds') {
+	      return milliSecs;
+	    } else if (unit === 'seconds') {
+	      return this.milliSecToSec(milliSecs);
+	    } else if (unit === 'minutes') {
+	      return this.milliSecToMin(milliSecs);
+	    } else if (unit === 'hours') {
+	      return this.milliSecToHour(milliSecs);
+	    }
+	  },
+	
+	  milliSecToSec: function (milliSecs) {
+	    return milliSecs * 1000;
+	  },
+	
+	  milliSecToMin: function (milliSecs) {
+	    return milliSecs * 1000 * 60;
+	  },
+	
+	  milliSecToHour: function (milliSecs) {
+	    return milliSecs * 1000 * 60 * 60;
+	  },
+	
+	  frequencyConvert: function (frequency, unit) {
+	    if (unit === 'per hour') {
+	      return Math.round(60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per day') {
+	      return Math.round(24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per week') {
+	      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per month') {
+	      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per year') {
+	      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
+	    }
+	  }
+	};
+	
+	module.exports = timeFormat;
+
+/***/ },
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33065,11 +33114,11 @@
 	module.exports = OptimizationEditForm;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SignInUpForm = __webpack_require__(252);
+	var SignInUpForm = __webpack_require__(253);
 	
 	var Auth = React.createClass({
 	  displayName: 'Auth',
@@ -33092,7 +33141,7 @@
 	module.exports = Auth;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33189,7 +33238,7 @@
 	module.exports = SignInUpForm;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
