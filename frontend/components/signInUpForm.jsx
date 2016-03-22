@@ -10,6 +10,10 @@ var SignInUpForm = React.createClass({
     return { username: '', password: '', buttonClicked: '', errors: '' };
   },
 
+  demoSignIn: function () {
+    this.state.buttonClicked = 'demoSignin';
+  },
+
   signIn: function () {
     this.state.buttonClicked = 'signin';
   },
@@ -39,6 +43,11 @@ var SignInUpForm = React.createClass({
       delete this.state.errors;
       var signUpParams = { user: this.state };
       AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+    } else if (this.state.buttonClicked == 'demoSignin') {
+      delete this.state.buttonClicked;
+      delete this.state.errors;
+      var signInParams = { user: { username: 'User42', password: 'password' } };
+      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
     }
   },
 
@@ -46,7 +55,6 @@ var SignInUpForm = React.createClass({
     return (
       <div className="user-form-container">
         <h1>{this.state.errors.toString()}</h1>
-        <h1>Demo Account: username: Admin password: password</h1>
         <form className="user-form" onSubmit={this.handleSubmit}>
           <div className="user-form-group">
             <label>username</label>
@@ -56,8 +64,25 @@ var SignInUpForm = React.createClass({
             <label>password</label>
             <input type="password" valueLink={this.linkState('password')} />
           </div>
-          <input onClick={this.signIn} className="whiteButton green-button-overlay user-form-button" name="signin" type="submit" value="sign in" />
-          <input onClick={this.signUp} className="whiteButton green-button-overlay user-form-button" name="signup" type="submit" value="sign up" />
+          <input
+            onClick={this.signIn}
+            className="whiteButton green-button-overlay user-form-button"
+            name="signin" type="submit" value="sign in"
+          />
+          <input
+            onClick={this.signUp}
+            className="whiteButton green-button-overlay user-form-button"
+            name="signup"
+            type="submit"
+            value="sign up"
+          />
+          <input
+            onClick={this.demoSignIn}
+            className="whiteButton green-button-overlay user-form-button"
+            name="demo account"
+            type="submit"
+            value="demo account"
+          />
         </form>
       </div>
     );

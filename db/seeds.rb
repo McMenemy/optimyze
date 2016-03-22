@@ -8,7 +8,7 @@
 
 # User seed data
 
-User.create(username: 'Admin', password: 'password')
+User.create(username: 'User42', password: 'password')
 
 num_users = 4
 num_users.times do

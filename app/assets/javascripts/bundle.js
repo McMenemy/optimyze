@@ -33255,6 +33255,10 @@
 	    return { username: '', password: '', buttonClicked: '', errors: '' };
 	  },
 	
+	  demoSignIn: function () {
+	    this.state.buttonClicked = 'demoSignin';
+	  },
+	
 	  signIn: function () {
 	    this.state.buttonClicked = 'signin';
 	  },
@@ -33284,6 +33288,11 @@
 	      delete this.state.errors;
 	      var signUpParams = { user: this.state };
 	      AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+	    } else if (this.state.buttonClicked == 'demoSignin') {
+	      delete this.state.buttonClicked;
+	      delete this.state.errors;
+	      var signInParams = { user: { username: 'User42', password: 'password' } };
+	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
 	    }
 	  },
 	
@@ -33295,11 +33304,6 @@
 	        'h1',
 	        null,
 	        this.state.errors.toString()
-	      ),
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Demo Account: username: Admin password: password'
 	      ),
 	      React.createElement(
 	        'form',
@@ -33324,8 +33328,25 @@
 	          ),
 	          React.createElement('input', { type: 'password', valueLink: this.linkState('password') })
 	        ),
-	        React.createElement('input', { onClick: this.signIn, className: 'whiteButton green-button-overlay user-form-button', name: 'signin', type: 'submit', value: 'sign in' }),
-	        React.createElement('input', { onClick: this.signUp, className: 'whiteButton green-button-overlay user-form-button', name: 'signup', type: 'submit', value: 'sign up' })
+	        React.createElement('input', {
+	          onClick: this.signIn,
+	          className: 'whiteButton green-button-overlay user-form-button',
+	          name: 'signin', type: 'submit', value: 'sign in'
+	        }),
+	        React.createElement('input', {
+	          onClick: this.signUp,
+	          className: 'whiteButton green-button-overlay user-form-button',
+	          name: 'signup',
+	          type: 'submit',
+	          value: 'sign up'
+	        }),
+	        React.createElement('input', {
+	          onClick: this.demoSignIn,
+	          className: 'whiteButton green-button-overlay user-form-button',
+	          name: 'demo account',
+	          type: 'submit',
+	          value: 'demo account'
+	        })
 	      )
 	    );
 	  }
