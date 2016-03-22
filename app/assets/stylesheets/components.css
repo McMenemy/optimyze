@@ -377,7 +377,12 @@
   min-height: 20px;
 }
 
-#optimization-form-container > h2 {
+.optimization-form-container {
+  width: 600px;
+  margin: auto;
+}
+
+.optimization-form-container > h2 {
   text-align: center;
   font-size: 24px;
   padding: 15px;
@@ -385,7 +390,7 @@
 }
 
 /*submit and input button for optimization forms*/
-#optimization-form-container > button, .optimizationForm > input {
+.optimization-form-container > button, .optimizationForm > input {
   margin: 10px;
   padding: 10px;
   height: 20px;
@@ -396,6 +401,9 @@
 .user-form-container {
   position: relative;
   border: solid 3px #00C58E;
+  width: 400px;
+  margin: auto;
+  top: 23px;
 }
 
 .user-form {

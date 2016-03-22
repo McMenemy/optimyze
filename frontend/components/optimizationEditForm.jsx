@@ -82,7 +82,7 @@ var OptimizationEditForm = React.createClass({
 
   render: function () {
     return (
-      <div id="optimization-form-container">
+      <div className="optimization-form-container">
         <h2>Edit an Optimization</h2>
         <h1>{this.state.errors.toString()}</h1>
         <form className='optimizationForm' onSubmit={this.handleFormSubmit}>

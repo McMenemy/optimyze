@@ -32434,7 +32434,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'optimization-form-container' },
+	      { className: 'optimization-form-container' },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -33026,7 +33026,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'optimization-form-container' },
+	      { className: 'optimization-form-container' },
 	      React.createElement(
 	        'h2',
 	        null,
