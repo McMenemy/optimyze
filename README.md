@@ -1,6 +1,6 @@
 # Optimyze
-[link]: optimyze.xyz
-[optimyze.xyz][link] allows users to find, visualize, and post quicker ways to do repetitive tasks.
+[link]: https://optimyze.herokuapp.com
+[www.optimyze.xyz][link] allows users to find, visualize, and post quicker ways to do repetitive tasks.
 
 ## ScreenShot
 [screenshot]: ./docs/images/graph_screenshot.png
