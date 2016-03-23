@@ -31716,6 +31716,14 @@
 	  },
 	
 	  render: function () {
+	    // <div className="search-options scoot">
+	    //   <label>sort by</label>
+	    //   <div>newest</div>
+	    //   <ul className="dropdown-options">
+	    //     <li className="dropdown-option">newest</li>
+	    //     <li className="dropdown-option">oldest</li>
+	    //   </ul>
+	    // </div>
 	    return React.createElement(
 	      'div',
 	      null,
@@ -31726,34 +31734,6 @@
 	        React.createElement(
 	          'div',
 	          { className: 'search-options-container' },
-	          React.createElement(
-	            'div',
-	            { className: 'search-options scoot' },
-	            React.createElement(
-	              'label',
-	              null,
-	              'sort by'
-	            ),
-	            React.createElement(
-	              'div',
-	              null,
-	              'newest'
-	            ),
-	            React.createElement(
-	              'ul',
-	              { className: 'dropdown-options' },
-	              React.createElement(
-	                'li',
-	                { className: 'dropdown-option' },
-	                'newest'
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'dropdown-option' },
-	                'oldest'
-	              )
-	            )
-	          ),
 	          React.createElement(
 	            'div',
 	            { className: 'search-options' },

@@ -75,19 +75,19 @@ var SearchIndex = React.createClass({
   },
 
   render: function () {
+    // <div className="search-options scoot">
+    //   <label>sort by</label>
+    //   <div>newest</div>
+    //   <ul className="dropdown-options">
+    //     <li className="dropdown-option">newest</li>
+    //     <li className="dropdown-option">oldest</li>
+    //   </ul>
+    // </div>
     return (
       <div>
         <div className="search-index-fixed">
           <input type="text" className='search-input' placeholder='search by title' onChange={this.handleInput} value={this.state.searchParams.title} />
           <div className="search-options-container">
-              <div className="search-options scoot">
-                <label>sort by</label>
-                <div>newest</div>
-                <ul className="dropdown-options">
-                  <li className="dropdown-option">newest</li>
-                  <li className="dropdown-option">oldest</li>
-                </ul>
-              </div>
               <div className="search-options">
                 <label>category</label>
                 <div>{this.state.searchParams.category}</div>
