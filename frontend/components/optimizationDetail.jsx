@@ -117,22 +117,26 @@ var OptimizationDetail = React.createClass({
 
   componentWillUnmount: function () {
     this.optimizationListener.remove();
-    console.log('unmounted');
+  },
+
+  displayNumericalInfo: function () {
+    return (
+      <p><b>invest {this.state.optimization.investment_time} milliseconds</b> to <b>save {this.state.optimization.time_saved_per_occurrence} milliseconds
+        every {this.state.optimization.frequency} milliseconds</b>
+      </p>
+    );
   },
 
   render: function () {
     if (this.state.optimization === undefined) { return <div></div>; }
 
     return (
-      <div id='optimizationDetail'>
+      <div className="optimization-detail">
         <ReactHighcharts className="chart" config={this.createChartOptions()} />
-        <div className='optimization-info'>
-          <p>title: {this.state.optimization.title}</p>
-          <p>description: {this.state.optimization.description}</p>
-          <p>frequency: {this.state.optimization.frequency}</p>
-          <p>investment time: {this.state.optimization.investment_time}</p>
-          <p>time saved per occurence: {this.state.optimization.time_saved_per_occurrence}</p>
-          <p>categories: {this.state.optimization.categories}</p>
+        <div className="optimization-info">
+          {this.displayNumericalInfo()}
+          <p><b>categories</b> {this.state.optimization.categories.join(', ')}</p>
+          <p><b>description</b> {this.state.optimization.description}</p>
         </div>
       </div>
     );

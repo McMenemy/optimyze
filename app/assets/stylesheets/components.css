@@ -346,7 +346,7 @@
 
 /*optimizationDetail*/
 
-#optimizationDetail {
+.optimization-detail {
   position: relative;
   width: calc(100% - 46px);
   margin-left: 23px;
@@ -355,18 +355,29 @@
 }
 
 .chart {
-  width: 100%;
+  width: 98%;
 }
 
 .optimization-info {
-
+  width: 90%;
+  margin: auto;
 }
 
 .optimization-info > p {
   width: 100%;
-  color: #777777;
+  display: inline-block;
   padding: 5px;
+  margin: 5px;
+  border-left: 2px solid #00C58E;
+  color: #4d4d4d;
 }
+
+.optimization-info > p > b {
+  display: inline-block;
+  color: #00C58E;
+}
+
+
 
 /*optimizationNewForm and optimizationEditForm*/
 

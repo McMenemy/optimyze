@@ -32270,7 +32270,30 @@
 	
 	  componentWillUnmount: function () {
 	    this.optimizationListener.remove();
-	    console.log('unmounted');
+	  },
+	
+	  displayNumericalInfo: function () {
+	    return React.createElement(
+	      'p',
+	      null,
+	      React.createElement(
+	        'b',
+	        null,
+	        'invest ',
+	        this.state.optimization.investment_time,
+	        ' milliseconds'
+	      ),
+	      ' to ',
+	      React.createElement(
+	        'b',
+	        null,
+	        'save ',
+	        this.state.optimization.time_saved_per_occurrence,
+	        ' milliseconds every ',
+	        this.state.optimization.frequency,
+	        ' milliseconds'
+	      )
+	    );
 	  },
 	
 	  render: function () {
@@ -32280,46 +32303,33 @@
 	
 	    return React.createElement(
 	      'div',
-	      { id: 'optimizationDetail' },
+	      { className: 'optimization-detail' },
 	      React.createElement(ReactHighcharts, { className: 'chart', config: this.createChartOptions() }),
 	      React.createElement(
 	        'div',
 	        { className: 'optimization-info' },
+	        this.displayNumericalInfo(),
 	        React.createElement(
 	          'p',
 	          null,
-	          'title: ',
-	          this.state.optimization.title
+	          React.createElement(
+	            'b',
+	            null,
+	            'categories'
+	          ),
+	          ' ',
+	          this.state.optimization.categories.join(', ')
 	        ),
 	        React.createElement(
 	          'p',
 	          null,
-	          'description: ',
+	          React.createElement(
+	            'b',
+	            null,
+	            'description'
+	          ),
+	          ' ',
 	          this.state.optimization.description
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'frequency: ',
-	          this.state.optimization.frequency
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'investment time: ',
-	          this.state.optimization.investment_time
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'time saved per occurence: ',
-	          this.state.optimization.time_saved_per_occurrence
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'categories: ',
-	          this.state.optimization.categories
 	        )
 	      )
 	    );
