@@ -124,8 +124,8 @@ CategoryOptimization.create(category_id: tech_id, optimization_id: optim_id += 1
 Optimization.create!(
   title: 'Use Amazon Subscription',
   description: 'Using Amazon subscriptions you can have most household and toiletry items delivered to you at any set time interval you desire (with prime shipping is also free.) So, instead of spending 20 minutes everytime you go to the store to find these items you can just have them always show up at door. Investment time is just the 30 minutes it takes to find all your items on amazon and set up the subscriptions',
-  investment_time: '180000',
-  time_saved_per_occurrence: '120000',
+  investment_time: '1800000',
+  time_saved_per_occurrence: '1200000',
   frequency: '1210000000',
   user_id: '1'
 )
