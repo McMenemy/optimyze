@@ -2,6 +2,7 @@ var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
 var ReactHighcharts = require('react-highcharts/bundle/ReactHighcharts');
+var TimeFormat = require('../util/timeFormat');
 
 var OptimizationDetail = React.createClass({
   createChartOptions: function () {
@@ -54,7 +55,7 @@ var OptimizationDetail = React.createClass({
 
       yAxis: {
         title: {
-          text: 'time saved (milliseconds)',
+          text: 'time saved (minutes)',
         },
       },
 
@@ -75,18 +76,20 @@ var OptimizationDetail = React.createClass({
   createTheoreticalSeriesData: function () {
     var startDate = new Date;
     var data = [];
-    var timeInvested = Math.round(this.state.optimization.investment_time);
-    var frequency = Math.round(this.state.optimization.frequency);
-    var timeSavedperOccurrence = Math.round(this.state.optimization.time_saved_per_occurrence);
+    var timeUnit = TimeFormat.calcTimeUnit(this.state.optimization.time_saved_per_occurrence);
+    var timeInvested = TimeFormat.milliSecToMin(this.state.optimization.investment_time);
+    var frequency = TimeFormat.milliSecToMin(this.state.optimization.frequency);
+    var timeSavedperOccurrence = TimeFormat.milliSecToMin(this.state.optimization.time_saved_per_occurrence);
+    var xMaxValue = TimeFormat.milliSecToMin(7.884 * Math.pow(10, 9));
 
     startDate = new Date(startDate.getTime());
     data.push([Date.now(), timeInvested * -1]);
 
-    var msAdded = 0;
+    var timeAdded = 0;
     var timeSaved = timeInvested * -1;
-    while (msAdded < this.state.graph.unit) {
-      msAdded += frequency;
-      newDate = new Date(startDate.getTime() + msAdded);
+    while (timeAdded < xMaxValue) {
+      timeAdded += frequency;
+      newDate = new Date(startDate.getTime() + TimeFormat.unitToMilliSec(timeAdded, 'minutes'));
       timeSaved += timeSavedperOccurrence;
       data.push([newDate.valueOf(), timeSaved]);
     }
@@ -95,8 +98,7 @@ var OptimizationDetail = React.createClass({
   },
 
   getStateFromStore: function () {
-    return { optimization: OptimizationStore.find(this.props.params.optimizationId),
-      graph: { unit: 7.884 * Math.pow(10, 9) }, };
+    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
   },
 
   _onChange: function () {
@@ -120,9 +122,19 @@ var OptimizationDetail = React.createClass({
   },
 
   displayNumericalInfo: function () {
+    var investmentTimeFormatted = TimeFormat.milliSecsToAppropriateUnit(
+      this.state.optimization.investment_time
+    );
+    var timeSaverPerOccurenceFormmated = TimeFormat.milliSecsToAppropriateUnit(
+      this.state.optimization.time_saved_per_occurrence
+    );
+    var frequencyFormatted = TimeFormat.everyMilliSecsToTimesPerUnit(
+      this.state.optimization.frequency
+    );
     return (
-      <p><b>invest {this.state.optimization.investment_time} milliseconds</b> to <b>save {this.state.optimization.time_saved_per_occurrence} milliseconds
-        every {this.state.optimization.frequency} milliseconds</b>
+      <p><b>invest {investmentTimeFormatted[0]} {investmentTimeFormatted[1]}</b> to <b>
+        save {timeSaverPerOccurenceFormmated[0]} {timeSaverPerOccurenceFormmated[1]} {' '}
+        {frequencyFormatted[0]} time(s) {frequencyFormatted[1]}</b>
       </p>
     );
   },

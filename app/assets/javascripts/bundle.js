@@ -32134,6 +32134,7 @@
 	var OptimizationStore = __webpack_require__(166);
 	var OptimizationActions = __webpack_require__(164);
 	var ReactHighcharts = __webpack_require__(244);
+	var TimeFormat = __webpack_require__(250);
 	
 	var OptimizationDetail = React.createClass({
 	  displayName: 'OptimizationDetail',
@@ -32188,7 +32189,7 @@
 	
 	      yAxis: {
 	        title: {
-	          text: 'time saved (milliseconds)'
+	          text: 'time saved (minutes)'
 	        }
 	      },
 	
@@ -32208,18 +32209,20 @@
 	  createTheoreticalSeriesData: function () {
 	    var startDate = new Date();
 	    var data = [];
-	    var timeInvested = Math.round(this.state.optimization.investment_time);
-	    var frequency = Math.round(this.state.optimization.frequency);
-	    var timeSavedperOccurrence = Math.round(this.state.optimization.time_saved_per_occurrence);
+	    var timeUnit = TimeFormat.calcTimeUnit(this.state.optimization.time_saved_per_occurrence);
+	    var timeInvested = TimeFormat.milliSecToMin(this.state.optimization.investment_time);
+	    var frequency = TimeFormat.milliSecToMin(this.state.optimization.frequency);
+	    var timeSavedperOccurrence = TimeFormat.milliSecToMin(this.state.optimization.time_saved_per_occurrence);
+	    var xMaxValue = TimeFormat.milliSecToMin(7.884 * Math.pow(10, 9));
 	
 	    startDate = new Date(startDate.getTime());
 	    data.push([Date.now(), timeInvested * -1]);
 	
-	    var msAdded = 0;
+	    var timeAdded = 0;
 	    var timeSaved = timeInvested * -1;
-	    while (msAdded < this.state.graph.unit) {
-	      msAdded += frequency;
-	      newDate = new Date(startDate.getTime() + msAdded);
+	    while (timeAdded < xMaxValue) {
+	      timeAdded += frequency;
+	      newDate = new Date(startDate.getTime() + TimeFormat.unitToMilliSec(timeAdded, 'minutes'));
 	      timeSaved += timeSavedperOccurrence;
 	      data.push([newDate.valueOf(), timeSaved]);
 	    }
@@ -32228,8 +32231,7 @@
 	  },
 	
 	  getStateFromStore: function () {
-	    return { optimization: OptimizationStore.find(this.props.params.optimizationId),
-	      graph: { unit: 7.884 * Math.pow(10, 9) } };
+	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
 	  },
 	
 	  _onChange: function () {
@@ -32253,6 +32255,9 @@
 	  },
 	
 	  displayNumericalInfo: function () {
+	    var investmentTimeFormatted = TimeFormat.milliSecsToAppropriateUnit(this.state.optimization.investment_time);
+	    var timeSaverPerOccurenceFormmated = TimeFormat.milliSecsToAppropriateUnit(this.state.optimization.time_saved_per_occurrence);
+	    var frequencyFormatted = TimeFormat.everyMilliSecsToTimesPerUnit(this.state.optimization.frequency);
 	    return React.createElement(
 	      'p',
 	      null,
@@ -32260,18 +32265,23 @@
 	        'b',
 	        null,
 	        'invest ',
-	        this.state.optimization.investment_time,
-	        ' milliseconds'
+	        investmentTimeFormatted[0],
+	        ' ',
+	        investmentTimeFormatted[1]
 	      ),
 	      ' to ',
 	      React.createElement(
 	        'b',
 	        null,
 	        'save ',
-	        this.state.optimization.time_saved_per_occurrence,
-	        ' milliseconds every ',
-	        this.state.optimization.frequency,
-	        ' milliseconds'
+	        timeSaverPerOccurenceFormmated[0],
+	        ' ',
+	        timeSaverPerOccurenceFormmated[1],
+	        ' ',
+	        ' ',
+	        frequencyFormatted[0],
+	        ' time(s) ',
+	        frequencyFormatted[1]
 	      )
 	    );
 	  },
@@ -32868,12 +32878,16 @@
 	    return time * 1000 * 60 * 60;
 	  },
 	
+	  milliSecToMin: function (milliSecs) {
+	    return milliSecs / 1000 / 60;
+	  },
+	
 	  calcTimeUnit: function (milliSecs) {
-	    if (milliseconds < 1000) {
+	    if (milliSecs < 1000) {
 	      return 'milliseconds';
-	    } else if (milliseconds < 1000 * 60) {
+	    } else if (milliSecs < 1000 * 60) {
 	      return 'seconds';
-	    } else if (milliseconds < 1000 * 60 * 60) {
+	    } else if (milliSecs < 1000 * 60 * 60) {
 	      return 'minutes';
 	    } else {
 	      return 'hours';
@@ -32897,7 +32911,7 @@
 	  milliSecsToAppropriateUnit: function (milliseconds) {
 	    var time;
 	    if (milliseconds < 1000) {
-	      time = milliseconds;
+	      time = Math.round(milliseconds);
 	      return [time, 'milliseconds'];
 	    } else if (milliseconds < 1000 * 60) {
 	      time = Math.round(milliseconds / 1000);
@@ -32991,6 +33005,10 @@
 	    proccessedParams.optimization.id = patchParams.optimization.id;
 	
 	    return proccessedParams;
+	  },
+	
+	  navigateToDashboard: function () {
+	    this.history.push('/');
 	  },
 	
 	  successCallback: function (updatedOptimization) {

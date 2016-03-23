@@ -23,12 +23,16 @@ var timeFormat = {
     return time * 1000 * 60 * 60;
   },
 
+  milliSecToMin: function (milliSecs) {
+    return milliSecs / 1000 / 60;
+  },
+
   calcTimeUnit: function (milliSecs) {
-    if (milliseconds < 1000) {
+    if (milliSecs < 1000) {
       return 'milliseconds';
-    } else if (milliseconds < 1000 * 60) {
+    } else if (milliSecs < 1000 * 60) {
       return 'seconds';
-    } else if (milliseconds < 1000 * 60 * 60) {
+    } else if (milliSecs < 1000 * 60 * 60) {
       return 'minutes';
     } else {
       return 'hours';
@@ -52,7 +56,7 @@ var timeFormat = {
   milliSecsToAppropriateUnit: function (milliseconds) {
     var time;
     if (milliseconds < 1000) {
-      time = milliseconds;
+      time = Math.round(milliseconds);
       return [time, 'milliseconds'];
     } else if (milliseconds < 1000 * 60) {
       time = Math.round(milliseconds / 1000);

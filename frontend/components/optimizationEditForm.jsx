@@ -58,6 +58,10 @@ var OptimizationEditForm = React.createClass({
     return proccessedParams;
   },
 
+  navigateToDashboard: function () {
+    this.history.push('/');
+  },
+
   successCallback: function (updatedOptimization) {
     this.history.push('/optimizations/' + updatedOptimization.id);
   },
