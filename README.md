@@ -14,3 +14,11 @@
 
 ## Technology
 Optimyze is a single-page asynchronous app using Ruby on Rails and React with a SQL database.
+
+## Future Features
+- can change the graph to see time saved over different time intervals
+- up-vote and down-vote optimizations
+- easily copy an optimization to your optimizations
+- a meta data component that show's users how much time they would save from all their optimizations
+- an user can 'track' an optimization and input data of how much time they saved and then the user can compare actual time saved to the estimated time saved
+- take into consideration other factors of an optimization such as health and financial effects
