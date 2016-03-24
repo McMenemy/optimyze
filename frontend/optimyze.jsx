@@ -18,6 +18,7 @@ var OptimizationEditForm = require('./components/optimizationEditForm');
 var Auth = require('./components/auth');
 var Splash = require('./components/splash');
 var Header = require('./components/header');
+var About = require('./components/about');
 
 // for testing
 window.ApiUtil = ApiUtil;
@@ -32,6 +33,7 @@ var routes = (
     <Route component={OptimizationDetail} path='optimizations/:optimizationId'></Route>
     <Route component={OptimizationNewForm} path='optimizations/form/new'></Route>
     <Route component={OptimizationEditForm} path='optimizations/form/edit/:optimizationId'></Route>
+    <Route component={About} path='about'></Route>
   </Route>
 );
 

@@ -64,6 +64,7 @@
 	var Auth = __webpack_require__(252);
 	var Splash = __webpack_require__(254);
 	var Header = __webpack_require__(241);
+	var About = __webpack_require__(256);
 	
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -78,7 +79,8 @@
 	  React.createElement(Route, { component: Auth, path: 'auth' }),
 	  React.createElement(Route, { component: OptimizationDetail, path: 'optimizations/:optimizationId' }),
 	  React.createElement(Route, { component: OptimizationNewForm, path: 'optimizations/form/new' }),
-	  React.createElement(Route, { component: OptimizationEditForm, path: 'optimizations/form/edit/:optimizationId' })
+	  React.createElement(Route, { component: OptimizationEditForm, path: 'optimizations/form/edit/:optimizationId' }),
+	  React.createElement(Route, { component: About, path: 'about' })
 	);
 	
 	document.addEventListener('DOMContentLoaded', function () {
@@ -33410,9 +33412,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var History = __webpack_require__(186).History;
+	var About = __webpack_require__(256);
 	
 	var Splash = React.createClass({
 	  displayName: 'Splash',
+	
+	  mixins: [History],
 	
 	  //
 	  // <p>Save time by finding quicker ways to do repitive tasks</p>
@@ -33429,8 +33435,7 @@
 	
 	  clickFindOutMore: function () {
 	    // this.state.more = 'Sorry this has not been completed yet =(';
-	    window.scrollTo(0, 100);
-	    this.setState(this.state);
+	    this.history.push('about');
 	  },
 	
 	  render: function () {
@@ -33460,84 +33465,101 @@
 	          )
 	        )
 	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'about-info-container' },
-	        React.createElement(
-	          'p',
-	          null,
-	          'Optimyze allows you to find quicker ways to do repitive tasks'
-	        ),
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Current Features'
-	        ),
-	        React.createElement(
-	          'ul',
-	          null,
-	          React.createElement(
-	            'li',
-	            null,
-	            'filter optimizations by category'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'search optimizations by title'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'graphically visualize time saved by an optimization'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'create an account to post, edit, and save optimizations'
-	          )
-	        ),
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Future Features'
-	        ),
-	        React.createElement(
-	          'ul',
-	          null,
-	          React.createElement(
-	            'li',
-	            null,
-	            'up-vote optimizations'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'easily copy an optimization to your optimizations'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'meta data panel of time saved using multiple optimizations'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'record and graph actual time saved by using an optimization'
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            'take into consideration other factors of an optimization such as health and financial effects'
-	          )
-	        )
-	      )
+	      React.createElement(About, null)
 	    );
 	  }
 	
 	});
 	
 	module.exports = Splash;
+
+/***/ },
+/* 255 */,
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var About = React.createClass({
+	  displayName: 'About',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'about-info-container' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'Optimyze allows you to find quicker ways to do repitive tasks'
+	      ),
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Current Features'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          null,
+	          'filter optimizations by category'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'search optimizations by title'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'graphically visualize time saved by an optimization'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'create an account to post, edit, and save optimizations'
+	        )
+	      ),
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Future Features'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          null,
+	          'up-vote optimizations'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'easily copy an optimization to your optimizations'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'meta data panel of time saved using multiple optimizations'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'record and graph actual time saved by using an optimization'
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'take into consideration other factors of an optimization such as health and financial effects'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = About;
 
 /***/ }
 /******/ ]);
