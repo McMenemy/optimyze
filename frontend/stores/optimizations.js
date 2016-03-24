@@ -61,7 +61,11 @@ OptimizationStore.allWithSearchParams = function (searchParams) {
     return currentTitle.match(titleFilter);
   });
 
-  return allFilteredOptimizations;
+  if (searchParams.sort == 'oldest') {
+    return allFilteredOptimizations.reverse();
+  } else {
+    return allFilteredOptimizations;
+  }
 },
 
 OptimizationStore.__onDispatch = function (payload) {

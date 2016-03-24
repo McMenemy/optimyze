@@ -60,34 +60,52 @@ var SearchIndex = React.createClass({
     if (this.state.searchParams.isUserOnly) {
       return (
         <div className="tab-container">
-        <button className="tab-selected" onClick={this.clickToggleOptimizations}>My Optimizations</button>
-        <button className="tab" onClick={this.clickToggleOptimizations}>All Optimizations</button>
+        <button
+          className="tab-selected"
+          onClick={this.clickToggleOptimizations}>My Optimizations</button>
+        <button className="tab"
+          onClick={this.clickToggleOptimizations}>All Optimizations</button>
       </div>
     );
     } else {
       return (
       <div className="tab-container">
-        <button className="tab" onClick={this.clickToggleOptimizations}>My Optimizations</button>
-        <button className="tab-selected" onClick={this.clickToggleOptimizations}>All Optimizations</button>
+        <button
+          className="tab"
+          onClick={this.clickToggleOptimizations}>My Optimizations</button>
+        <button
+          className="tab-selected"
+          onClick={this.clickToggleOptimizations}>All Optimizations</button>
       </div>
     );
     }
   },
 
+  dateSort: function (order) {
+    this.state.searchParams.sort = order;
+    this.setState(this.state.searchParams);
+  },
+
   render: function () {
-    // <div className="search-options scoot">
-    //   <label>sort by</label>
-    //   <div>newest</div>
-    //   <ul className="dropdown-options">
-    //     <li className="dropdown-option">newest</li>
-    //     <li className="dropdown-option">oldest</li>
-    //   </ul>
-    // </div>
     return (
       <div>
         <div className="search-index-fixed">
-          <input type="text" className='search-input' placeholder='search by title' onChange={this.handleInput} value={this.state.searchParams.title} />
+          <input type="text"
+            className='search-input'
+            placeholder='search by title'
+            onChange={this.handleInput} value={this.state.searchParams.title}
+          />
           <div className="search-options-container">
+              <div className="search-options scoot">
+                <label>sort by</label>
+                <div>newest</div>
+                <ul className="dropdown-options">
+                  <li className="dropdown-option"
+                    onClick={this.dateSort.bind(this, 'newest')}>newest</li>
+                  <li className="dropdown-option"
+                    onClick={this.dateSort.bind(this, 'oldest')}>oldest</li>
+                </ul>
+              </div>
               <div className="search-options">
                 <label>category</label>
                 <div>{this.state.searchParams.category}</div>

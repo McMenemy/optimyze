@@ -20290,7 +20290,11 @@
 	    return currentTitle.match(titleFilter);
 	  });
 	
-	  return allFilteredOptimizations;
+	  if (searchParams.sort == 'oldest') {
+	    return allFilteredOptimizations.reverse();
+	  } else {
+	    return allFilteredOptimizations;
+	  }
 	}, OptimizationStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
@@ -31688,12 +31692,15 @@
 	        { className: 'tab-container' },
 	        React.createElement(
 	          'button',
-	          { className: 'tab-selected', onClick: this.clickToggleOptimizations },
+	          {
+	            className: 'tab-selected',
+	            onClick: this.clickToggleOptimizations },
 	          'My Optimizations'
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'tab', onClick: this.clickToggleOptimizations },
+	          { className: 'tab',
+	            onClick: this.clickToggleOptimizations },
 	          'All Optimizations'
 	        )
 	      );
@@ -31703,37 +31710,72 @@
 	        { className: 'tab-container' },
 	        React.createElement(
 	          'button',
-	          { className: 'tab', onClick: this.clickToggleOptimizations },
+	          {
+	            className: 'tab',
+	            onClick: this.clickToggleOptimizations },
 	          'My Optimizations'
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'tab-selected', onClick: this.clickToggleOptimizations },
+	          {
+	            className: 'tab-selected',
+	            onClick: this.clickToggleOptimizations },
 	          'All Optimizations'
 	        )
 	      );
 	    }
 	  },
 	
+	  dateSort: function (order) {
+	    this.state.searchParams.sort = order;
+	    this.setState(this.state.searchParams);
+	  },
+	
 	  render: function () {
-	    // <div className="search-options scoot">
-	    //   <label>sort by</label>
-	    //   <div>newest</div>
-	    //   <ul className="dropdown-options">
-	    //     <li className="dropdown-option">newest</li>
-	    //     <li className="dropdown-option">oldest</li>
-	    //   </ul>
-	    // </div>
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'div',
 	        { className: 'search-index-fixed' },
-	        React.createElement('input', { type: 'text', className: 'search-input', placeholder: 'search by title', onChange: this.handleInput, value: this.state.searchParams.title }),
+	        React.createElement('input', { type: 'text',
+	          className: 'search-input',
+	          placeholder: 'search by title',
+	          onChange: this.handleInput, value: this.state.searchParams.title
+	        }),
 	        React.createElement(
 	          'div',
 	          { className: 'search-options-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'search-options scoot' },
+	            React.createElement(
+	              'label',
+	              null,
+	              'sort by'
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'newest'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'dropdown-options' },
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option',
+	                  onClick: this.dateSort.bind(this, 'newest') },
+	                'newest'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'dropdown-option',
+	                  onClick: this.dateSort.bind(this, 'oldest') },
+	                'oldest'
+	              )
+	            )
+	          ),
 	          React.createElement(
 	            'div',
 	            { className: 'search-options' },
