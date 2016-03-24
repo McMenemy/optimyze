@@ -59,7 +59,7 @@
 	var App = __webpack_require__(237);
 	var OptimizationIndex = __webpack_require__(239);
 	var OptimizationDetail = __webpack_require__(243);
-	var OptimizationNewForm = __webpack_require__(245);
+	var OptimizationNewForm = __webpack_require__(246);
 	var OptimizationEditForm = __webpack_require__(251);
 	var Auth = __webpack_require__(252);
 	var Splash = __webpack_require__(254);
@@ -32134,7 +32134,7 @@
 	var OptimizationStore = __webpack_require__(166);
 	var OptimizationActions = __webpack_require__(164);
 	var ReactHighcharts = __webpack_require__(244);
-	var TimeFormat = __webpack_require__(250);
+	var TimeFormat = __webpack_require__(245);
 	
 	var OptimizationDetail = React.createClass({
 	  displayName: 'OptimizationDetail',
@@ -32341,14 +32341,114 @@
 
 /***/ },
 /* 245 */
+/***/ function(module, exports) {
+
+	var timeFormat = {
+	  unitToMilliSec: function (time, unit) {
+	    if (unit === 'milliseconds') {
+	      return time;
+	    } else if (unit === 'seconds') {
+	      return this.secToMilliSec(time);
+	    } else if (unit === 'minutes') {
+	      return this.minToMilliSec(time);
+	    } else if (unit === 'hours') {
+	      return this.hourToMilliSec(time);
+	    }
+	  },
+	
+	  secToMilliSec: function (time) {
+	    return time * 1000;
+	  },
+	
+	  minToMilliSec: function (time) {
+	    return time * 1000 * 60;
+	  },
+	
+	  hourToMilliSec: function (time) {
+	    return time * 1000 * 60 * 60;
+	  },
+	
+	  milliSecToMin: function (milliSecs) {
+	    return milliSecs / 1000 / 60;
+	  },
+	
+	  calcTimeUnit: function (milliSecs) {
+	    if (milliSecs < 1000) {
+	      return 'milliseconds';
+	    } else if (milliSecs < 1000 * 60) {
+	      return 'seconds';
+	    } else if (milliSecs < 1000 * 60 * 60) {
+	      return 'minutes';
+	    } else {
+	      return 'hours';
+	    }
+	  },
+	
+	  timesPerUnitToEveryMilliSec: function (frequency, unit) {
+	    if (unit === 'per hour') {
+	      return Math.round(60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per day') {
+	      return Math.round(24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per week') {
+	      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per month') {
+	      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
+	    } else if (unit === 'per year') {
+	      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
+	    }
+	  },
+	
+	  milliSecsToAppropriateUnit: function (milliseconds) {
+	    var time;
+	    if (milliseconds < 1000) {
+	      time = Math.round(milliseconds);
+	      return [time, 'milliseconds'];
+	    } else if (milliseconds < 1000 * 60) {
+	      time = Math.round(milliseconds / 1000);
+	      return [time, 'seconds'];
+	    } else if (milliseconds < 1000 * 60 * 60) {
+	      time = Math.round(milliseconds / 1000 / 60);
+	      return [time, 'minutes'];
+	    } else {
+	      time = Math.round(milliseconds / 1000 / 60 / 60);
+	      return [time, 'hours'];
+	    }
+	  },
+	
+	  everyMilliSecsToTimesPerUnit: function (milliseconds) {
+	    var frequency;
+	    if (milliseconds <= 60 * 60 * 1000) {
+	      frequency = Math.round(60 * 60 * 1000 / milliseconds);
+	      return [frequency, 'per hour'];
+	    } else if (milliseconds <= 24 * 60 * 60 * 1000) {
+	      frequency = Math.round(24 * 60 * 60 * 1000 / milliseconds);
+	      return [frequency, 'per day'];
+	    } else if (milliseconds <= 7 * 24 * 60 * 60 * 1000) {
+	      frequency = Math.round(7 * 24 * 60 * 60 * 1000 / milliseconds);
+	      return [frequency, 'per week'];
+	    } else if (milliseconds <= 30.4167 * 24 * 60 * 60 * 1000) {
+	      frequency = Math.round(30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
+	      return [frequency, 'per month'];
+	    } else {
+	      frequency = Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
+	      return [frequency, 'per year'];
+	    }
+	  }
+	
+	};
+	
+	module.exports = timeFormat;
+
+/***/ },
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(246);
+	var LinkedStateMixin = __webpack_require__(247);
 	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
-	var TimeFormat = __webpack_require__(250);
+	var TimeFormat = __webpack_require__(245);
 	
 	var OptimizationNewForm = React.createClass({
 	  displayName: 'OptimizationNewForm',
@@ -32620,13 +32720,13 @@
 	module.exports = OptimizationNewForm;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(247);
+	module.exports = __webpack_require__(248);
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32643,8 +32743,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(248);
-	var ReactStateSetters = __webpack_require__(249);
+	var ReactLink = __webpack_require__(249);
+	var ReactStateSetters = __webpack_require__(250);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32667,7 +32767,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32741,7 +32841,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports) {
 
 	/**
@@ -32850,114 +32950,14 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 250 */
-/***/ function(module, exports) {
-
-	var timeFormat = {
-	  unitToMilliSec: function (time, unit) {
-	    if (unit === 'milliseconds') {
-	      return time;
-	    } else if (unit === 'seconds') {
-	      return this.secToMilliSec(time);
-	    } else if (unit === 'minutes') {
-	      return this.minToMilliSec(time);
-	    } else if (unit === 'hours') {
-	      return this.hourToMilliSec(time);
-	    }
-	  },
-	
-	  secToMilliSec: function (time) {
-	    return time * 1000;
-	  },
-	
-	  minToMilliSec: function (time) {
-	    return time * 1000 * 60;
-	  },
-	
-	  hourToMilliSec: function (time) {
-	    return time * 1000 * 60 * 60;
-	  },
-	
-	  milliSecToMin: function (milliSecs) {
-	    return milliSecs / 1000 / 60;
-	  },
-	
-	  calcTimeUnit: function (milliSecs) {
-	    if (milliSecs < 1000) {
-	      return 'milliseconds';
-	    } else if (milliSecs < 1000 * 60) {
-	      return 'seconds';
-	    } else if (milliSecs < 1000 * 60 * 60) {
-	      return 'minutes';
-	    } else {
-	      return 'hours';
-	    }
-	  },
-	
-	  timesPerUnitToEveryMilliSec: function (frequency, unit) {
-	    if (unit === 'per hour') {
-	      return Math.round(60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per day') {
-	      return Math.round(24 * 60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per week') {
-	      return Math.round(7 * 24 * 60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per month') {
-	      return Math.round(30.4167 * 24 * 60 * 60 * 1000 / frequency);
-	    } else if (unit === 'per year') {
-	      return Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / frequency);
-	    }
-	  },
-	
-	  milliSecsToAppropriateUnit: function (milliseconds) {
-	    var time;
-	    if (milliseconds < 1000) {
-	      time = Math.round(milliseconds);
-	      return [time, 'milliseconds'];
-	    } else if (milliseconds < 1000 * 60) {
-	      time = Math.round(milliseconds / 1000);
-	      return [time, 'seconds'];
-	    } else if (milliseconds < 1000 * 60 * 60) {
-	      time = Math.round(milliseconds / 1000 / 60);
-	      return [time, 'minutes'];
-	    } else {
-	      time = Math.round(milliseconds / 1000 / 60 / 60);
-	      return [time, 'hours'];
-	    }
-	  },
-	
-	  everyMilliSecsToTimesPerUnit: function (milliseconds) {
-	    var frequency;
-	    if (milliseconds <= 60 * 60 * 1000) {
-	      frequency = Math.round(60 * 60 * 1000 / milliseconds);
-	      return [frequency, 'per hour'];
-	    } else if (milliseconds <= 24 * 60 * 60 * 1000) {
-	      frequency = Math.round(24 * 60 * 60 * 1000 / milliseconds);
-	      return [frequency, 'per day'];
-	    } else if (milliseconds <= 7 * 24 * 60 * 60 * 1000) {
-	      frequency = Math.round(7 * 24 * 60 * 60 * 1000 / milliseconds);
-	      return [frequency, 'per week'];
-	    } else if (milliseconds <= 30.4167 * 24 * 60 * 60 * 1000) {
-	      frequency = Math.round(30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
-	      return [frequency, 'per month'];
-	    } else {
-	      frequency = Math.round(12 * 30.4167 * 24 * 60 * 60 * 1000 / milliseconds);
-	      return [frequency, 'per year'];
-	    }
-	  }
-	
-	};
-	
-	module.exports = timeFormat;
-
-/***/ },
 /* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(246);
+	var LinkedStateMixin = __webpack_require__(247);
 	var History = __webpack_require__(186).History;
-	var TimeFormat = __webpack_require__(250);
+	var TimeFormat = __webpack_require__(245);
 	
 	var OptimizationEditForm = React.createClass({
 	  displayName: 'OptimizationEditForm',
@@ -33250,7 +33250,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(246);
+	var LinkedStateMixin = __webpack_require__(247);
 	var AuthActions = __webpack_require__(242);
 	var History = __webpack_require__(186).History;
 	
