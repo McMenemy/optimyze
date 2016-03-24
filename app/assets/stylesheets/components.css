@@ -509,9 +509,39 @@
   color: white;
   padding-left: 70px;
   padding-top: 15px;
+  cursor: pointer;
 }
 
 .splash-text-container:hover > h2 {
   color: #c1f0e4;
   font-weight: bold;
+}
+
+.about-info-container {
+  width: 100%;
+  display: inline-block;
+  padding: 5px;
+  margin: 5px;
+  border-left: 2px solid #00C58E;
+  color: #4d4d4d;
+}
+
+.about-info-container > ul > li {
+  padding-left: 20px;
+}
+
+.about-info-container > p {
+  padding-bottom: 10px;
+}
+
+.about-info-container > ul{
+  padding-bottom: 10px;
+}
+
+.about-info-container > p {
+}
+
+.about-info-container > h2, .about-info-container > ul {
+  display: inline-block;
+  color: #00C58E;
 }

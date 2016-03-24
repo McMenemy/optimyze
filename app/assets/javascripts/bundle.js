@@ -32616,7 +32616,7 @@
 	          React.createElement(
 	            'label',
 	            null,
-	            'setup time'
+	            'investment time'
 	          ),
 	          React.createElement('input', {
 	            type: 'number',
@@ -33116,7 +33116,7 @@
 	          React.createElement(
 	            'label',
 	            null,
-	            'setup time'
+	            'investment time'
 	          ),
 	          React.createElement('input', {
 	            type: 'number',
@@ -33428,7 +33428,8 @@
 	  },
 	
 	  clickFindOutMore: function () {
-	    this.state.more = 'Sorry this has not been completed yet =(';
+	    // this.state.more = 'Sorry this has not been completed yet =(';
+	    window.scrollTo(0, 100);
 	    this.setState(this.state);
 	  },
 	
@@ -33453,14 +33454,81 @@
 	            'save time by finding quicker ways to do repitive tasks'
 	          ),
 	          React.createElement(
-	            'p',
-	            null,
-	            this.state.more
-	          ),
-	          React.createElement(
 	            'h2',
 	            { onClick: this.clickFindOutMore },
 	            'Find out more'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'about-info-container' },
+	        React.createElement(
+	          'p',
+	          null,
+	          'Optimyze allows you to find quicker ways to do repitive tasks'
+	        ),
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Current Features'
+	        ),
+	        React.createElement(
+	          'ul',
+	          null,
+	          React.createElement(
+	            'li',
+	            null,
+	            'filter optimizations by category'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'search optimizations by title'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'graphically visualize time saved by an optimization'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'create an account to post, edit, and save optimizations'
+	          )
+	        ),
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Future Features'
+	        ),
+	        React.createElement(
+	          'ul',
+	          null,
+	          React.createElement(
+	            'li',
+	            null,
+	            'up-vote optimizations'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'easily copy an optimization to your optimizations'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'meta data panel of time saved using multiple optimizations'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'record and graph actual time saved by using an optimization'
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            'take into consideration other factors of an optimization such as health and financial effects'
 	          )
 	        )
 	      )

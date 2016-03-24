@@ -99,7 +99,7 @@ var OptimizationEditForm = React.createClass({
             <input type="text" valueLink={this.linkState('description')} />
           </div>
           <div className="formGroup">
-            <label>setup time</label>
+            <label>investment time</label>
             <input
               type="number"
               className="has-time-selector"
