@@ -4,7 +4,7 @@ var About = React.createClass({
   render: function () {
     return (
       <div className='about-info-container'>
-        <p>Optimyze allows you to find quicker ways to do repitive tasks</p>
+        <p>Optimyze allows you to find quicker ways to do repetitive tasks</p>
         <h1>Current Features</h1>
         <ul>
           <li>filter optimizations by category</li>

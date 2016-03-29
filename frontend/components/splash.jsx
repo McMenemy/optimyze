@@ -6,7 +6,7 @@ var Splash = React.createClass({
   mixins: [History],
 
   //
-  // <p>Save time by finding quicker ways to do repitive tasks</p>
+  // <p>Save time by finding quicker ways to do repetitive tasks</p>
   //
   // <p>Keep track of optimizations you want to use</p>
   // <h2>FAQ</h2>
@@ -29,7 +29,7 @@ var Splash = React.createClass({
         <div className='splash-picture-div'>
           <div className='splash-text-container'>
             <h1>Optimyze</h1>
-            <p>save time by finding quicker ways to do repitive tasks</p>
+            <p>save time by finding quicker ways to do repetitive tasks</p>
             <h2 onClick={this.clickFindOutMore}>Find out more</h2>
           </div>
         </div>
