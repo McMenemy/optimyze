@@ -18,7 +18,8 @@ var About = React.createClass({
           <li>easily copy an optimization to your optimizations</li>
           <li>meta data panel of time saved using multiple optimizations</li>
           <li>record and graph actual time saved by using an optimization</li>
-          <li>take into consideration other factors of an optimization such as health and financial effects</li>
+          <li>take into consideration other factors of an optimization such as
+            health and financial effects</li>
         </ul>
       </div>
     );

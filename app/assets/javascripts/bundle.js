@@ -64,7 +64,7 @@
 	var Auth = __webpack_require__(252);
 	var Splash = __webpack_require__(254);
 	var Header = __webpack_require__(241);
-	var About = __webpack_require__(256);
+	var About = __webpack_require__(255);
 	
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -33413,7 +33413,7 @@
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(186).History;
-	var About = __webpack_require__(256);
+	var About = __webpack_require__(255);
 	
 	var Splash = React.createClass({
 	  displayName: 'Splash',
@@ -33421,7 +33421,7 @@
 	  mixins: [History],
 	
 	  //
-	  // <p>Save time by finding quicker ways to do repitive tasks</p>
+	  // <p>Save time by finding quicker ways to do repetitive tasks</p>
 	  //
 	  // <p>Keep track of optimizations you want to use</p>
 	  // <h2>FAQ</h2>
@@ -33456,7 +33456,7 @@
 	          React.createElement(
 	            'p',
 	            null,
-	            'save time by finding quicker ways to do repitive tasks'
+	            'save time by finding quicker ways to do repetitive tasks'
 	          ),
 	          React.createElement(
 	            'h2',
@@ -33474,8 +33474,7 @@
 	module.exports = Splash;
 
 /***/ },
-/* 255 */,
-/* 256 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33490,7 +33489,7 @@
 	      React.createElement(
 	        'p',
 	        null,
-	        'Optimyze allows you to find quicker ways to do repitive tasks'
+	        'Optimyze allows you to find quicker ways to do repetitive tasks'
 	      ),
 	      React.createElement(
 	        'h1',
