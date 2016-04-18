@@ -130,6 +130,17 @@ Optimization.create!(
 CategoryOptimization.create(category_id: tech_id, optimization_id: optim_id += 1)
 CategoryOptimization.create(category_id: household_id, optimization_id: optim_id)
 
+# household
+Optimization.create!(
+  title: 'Pay Bills Online',
+  description: 'Pay bills online and save time from writing and mailing. This probably saves 1-2 minutes a bill which adds up if you are paying 10 plus bills a month.',
+  investment_time: '300000',
+  time_saved_per_occurrence: '90000',
+  frequency: '259200000',
+  user_id: '1'
+)
+CategoryOptimization.create(category_id: household_id, optimization_id: optim_id += 1)
+
 # Transport
 Optimization.create!(
   title: 'Self-balancing two-wheeled board',
