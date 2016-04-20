@@ -3,6 +3,12 @@ var AuthStore = require('../stores/authStore');
 var AuthActions = require('../actions/authActions');
 var History = require('react-router').History;
 
+// style
+var Toolbar = require('material-ui/lib/toolbar/toolbar');
+var ToolbarGroup =  require('material-ui/lib/toolbar/toolbar-group');
+var ToolbarTitle = require('material-ui/lib/toolbar/toolbar-title');
+var FlatButton = require('material-ui/lib/flat-button');
+
 var Header = React.createClass({
   mixins: [History],
 
@@ -33,15 +39,15 @@ var Header = React.createClass({
   makeHeaderList: function () {
     if (AuthStore.isSignedIn()) {
       return (
-        <ul className="header-list group">
-          <li>Hi, {AuthStore.currentUser().username}</li>
-          <li><button onClick={this.signOut}>Sign Out</button></li>
-        </ul>
+        <ToolbarGroup float='right'>
+          <ToolbarTitle text={'Hi, ' + AuthStore.currentUser().username} />
+          <FlatButton label='Sign Out' onClick={this.signOut} />
+        </ToolbarGroup>
     );
     } else {
       return (
           <ul className="header-list group">
-            <li><button onClick={this.signInUp}>Sign In/Up</button></li>
+            <FlatButton label='Sign In/Up' onClick={this.signInUp} />
           </ul>
         );
     }
@@ -49,12 +55,12 @@ var Header = React.createClass({
 
   render: function () {
     return (
-      <header className="header">
-        <nav className="header-nav">
-          <h1 className="header-logo" onClick={this.navigateToRoot}>Optimyze</h1>
-          {this.makeHeaderList()}
-        </nav>
-      </header>
+      <Toolbar>
+        <ToolbarGroup firstChild={true} float='left'>
+          <ToolbarTitle text='Optimyze' onClick={this.navigateToRoot}/>
+        </ToolbarGroup>
+        {this.makeHeaderList()}
+      </Toolbar>
     );
   },
 
