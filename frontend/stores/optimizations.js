@@ -5,6 +5,13 @@ var AuthStore = require('../stores/authStore');
 
 var OptimizationStore = new Store(Dispatcher);
 var _allOptimizations = {};
+var _searchParams = { title: '', category: 'all', sort: 'newest' };
+
+OptimizationStore.allSearchParams = function () {
+  _searchParams.isUserOnly = AuthStore.isSignedIn();
+
+  return _searchParams;
+};
 
 OptimizationStore.resetOptimizations = function (optimizations) {
   _optimizations = {};
@@ -37,21 +44,21 @@ OptimizationStore.allForCurrentUser = function () {
   return allUserOptimizations;
 };
 
-OptimizationStore.allWithSearchParams = function (searchParams) {
+OptimizationStore.allWithSearchParams = function () {
   var allFilteredOptimizations = [];
-  var titleFilter = new RegExp('' + searchParams.title.toLowerCase());
+  var titleFilter = new RegExp('' + _searchParams.title.toLowerCase());
 
-  if (searchParams.isUserOnly) {
+  if (_searchParams.isUserOnly) {
     allFilteredOptimizations = this.allForCurrentUser();
   } else {
     allFilteredOptimizations = this.all();
   }
 
-  if (searchParams.category !== 'all') {
+  if (_searchParams.category !== 'all') {
     allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
       var categoryArray = currentOptimization.categories;
 
-      return categoryArray.includes(searchParams.category);
+      return categoryArray.includes(_searchParams.category);
     });
   }
 
@@ -61,7 +68,7 @@ OptimizationStore.allWithSearchParams = function (searchParams) {
     return currentTitle.match(titleFilter);
   });
 
-  if (searchParams.sort == 'oldest') {
+  if (_searchParams.sort == 'oldest') {
     return allFilteredOptimizations.reverse();
   } else {
     return allFilteredOptimizations;
@@ -80,6 +87,10 @@ OptimizationStore.__onDispatch = function (payload) {
       break;
     case OptimizationConstants.OPTIMIZATION_DELETED:
       delete _allOptimizations[payload.optimization.id];
+      this.__emitChange();
+      break;
+    case OptimizationConstants.SEARCH_PARAM_RECEIVED:
+      _searchParams[payload.key] = payload.value;
       this.__emitChange();
       break;
   }

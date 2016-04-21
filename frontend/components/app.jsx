@@ -14,11 +14,11 @@ var App = React.createClass({
     return (
       <div>
         <Header />
-        <div className="app group">
-          <div className="left-pane">
+        <div className='app group'>
+          <div className='left-pane'>
             <SearchIndex />
           </div>
-          <div className="right-pane">
+          <div className='right-pane'>
             {this.props.children}
           </div>
         </div>

@@ -32,7 +32,7 @@ injectTapEventPlugin();
 
 var routes = (
   <Route component={App} path='/'>
-    <IndexRoute component={Splash}></IndexRoute>
+    <IndexRoute component={OptimizationIndex}></IndexRoute>
     <Route component={Auth} path='auth'></Route>
     <Route component={OptimizationDetail} path='optimizations/:optimizationId'></Route>
     <Route component={OptimizationNewForm} path='optimizations/form/new'></Route>

@@ -2,6 +2,8 @@ var React = require('react');
 var History = require('react-router').History;
 var OptimizationIndex = require('./optimizationIndex');
 var AuthStore = require('../stores/authStore');
+var OptimizationStore = require('../stores/optimizations');
+var OptimizationActions = require('../actions/optimizationActions');
 
 // style
 var Style = require('../util/styleObj');
@@ -15,63 +17,39 @@ var SearchIndex = React.createClass({
   mixins: [History],
 
   getInitialState: function () {
-    var searchParams = {};
-    searchParams.title = '';
-    searchParams.category = 'all';
-    searchParams.sort = 'newest';
-
-    if (AuthStore.isSignedIn()) {
-      searchParams.isUserOnly = true;
-      return { optimizations: OptimizationStore.allForCurrentUser(),
-               searchParams: searchParams, };
-    } else {
-      searchParams.isUserOnly = false;
-      return { optimizations: OptimizationStore.all(),
-               searchParams: searchParams, };
-    }
-
+    return { searchParams: OptimizationStore.allSearchParams() };
   },
 
   _onChange: function () {
-    this.state.searchParams.isUserOnly = AuthStore.isSignedIn();
-    this.setState(this.state);
+    this.setState({ searchParams: OptimizationStore.allSearchParams() });
+    console.log(this.state);
   },
 
   componentDidMount: function () {
     this.authToken = AuthStore.addListener(this._onChange);
+    this.searchToken = OptimizationStore.addListener(this._onChange);
   },
 
   componentWillUnmount: function () {
     this.authToken.remove();
+    this.searchToken.remove();
   },
 
   handleInput: function (e) {
     e.preventDefault();
-    this.state.searchParams.title = e.currentTarget.value;
-    this.setState(this.state.searchParams);
+    OptimizationActions.receiveSearchParam('title', e.currentTarget.value);
   },
 
-  clickToggleOptimizations: function () {
-    if (AuthStore.isSignedIn()) {
-      this.state.searchParams.isUserOnly = !this.state.searchParams.isUserOnly;
-      this.setState(this.state.searchParams);
-    } else {
-      this.history.push('auth');
-    }
-  },
-
-  clickCategory: function (event, index, value) {
-    this.state.searchParams.category = value;
-    this.setState(this.state.searchParams);
+  clickCategory: function (e, index, value) {
+    OptimizationActions.receiveSearchParam('category', value);
   },
 
   navigateToRoot: function () {
     this.history.push('/');
   },
 
-  dateSort: function (event, index, value) {
-    this.state.searchParams.sort = value;
-    this.setState(this.state.searchParams);
+  dateSort: function (e, index, value) {
+    OptimizationActions.receiveSearchParam('sort', value);
   },
 
   render: function () {

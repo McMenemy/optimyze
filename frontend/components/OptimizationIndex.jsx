@@ -20,10 +20,6 @@ var OptimizationsIndex = React.createClass({
     this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
   },
 
-  componentWillReceiveProps: function (newProps) {
-    this.setState({ optimizations: OptimizationStore.allWithSearchParams(newProps.searchParams) });
-  },
-
   componentDidMount: function () {
     this.optimizationToken = OptimizationStore.addListener(this._onChange);
     OptimizationActions.retrieveAllOptimizations();
@@ -45,27 +41,16 @@ var OptimizationsIndex = React.createClass({
     var _this = this;
     var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
       return (
-        <OptimizationIndexItem isUserOnly={_this.props.searchParams.isUserOnly} key={idx} optimization={el} />
+        <OptimizationIndexItem isUserOnly={AuthStore.isSignedIn()} key={idx} optimization={el} />
       );
     });
 
     return listOfOptimizations;
   },
 
-  createNewButton: function () {
-    if (this.props.searchParams.isUserOnly) {
-      return (
-        <li className="optimization-index-item">
-          <button className="optimization-item-title-button full" onClick={this.clickNewOptimization}><p>+ create new optimization</p></button>
-        </li>
-      );
-    }
-  },
-
   render: function () {
     return (
       <ul className="optimizations-index group">
-        {this.createNewButton()}
         {this.createOptimizationList()}
       </ul>
     );

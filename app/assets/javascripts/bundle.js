@@ -79,7 +79,7 @@
 	var routes = React.createElement(
 	  Route,
 	  { component: App, path: '/' },
-	  React.createElement(IndexRoute, { component: Splash }),
+	  React.createElement(IndexRoute, { component: OptimizationIndex }),
 	  React.createElement(Route, { component: Auth, path: 'auth' }),
 	  React.createElement(Route, { component: OptimizationDetail, path: 'optimizations/:optimizationId' }),
 	  React.createElement(Route, { component: OptimizationNewForm, path: 'optimizations/form/new' }),
@@ -20215,6 +20215,14 @@
 	
 	  retrieveDeletedOptimization: function (deleteParams) {
 	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
+	  },
+	
+	  receiveSearchParam: function (key, value) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.SEARCH_PARAM_RECEIVED,
+	      key: key,
+	      value: value
+	    });
 	  }
 	
 	};
@@ -20228,7 +20236,8 @@
 	var OptimizationConstants = {
 	  ALL_OPTIMIZATIONS_RECEIVED: 'ALL_OPTIMIZATIONS_RECEIVED',
 	  OPTIMIZATION_RECEIVED: 'OPTIMIZATION_RECEIVED',
-	  OPTIMIZATION_DELETED: 'OPTIMIZATION_DELETED'
+	  OPTIMIZATION_DELETED: 'OPTIMIZATION_DELETED',
+	  SEARCH_PARAM_RECEIVED: 'SEARCH_PARAM_RECEIVED'
 	};
 	
 	module.exports = OptimizationConstants;
@@ -20244,6 +20253,13 @@
 	
 	var OptimizationStore = new Store(Dispatcher);
 	var _allOptimizations = {};
+	var _searchParams = { title: '', category: 'all', sort: 'newest' };
+	
+	OptimizationStore.allSearchParams = function () {
+	  _searchParams.isUserOnly = AuthStore.isSignedIn();
+	
+	  return _searchParams;
+	};
 	
 	OptimizationStore.resetOptimizations = function (optimizations) {
 	  _optimizations = {};
@@ -20276,21 +20292,21 @@
 	  return allUserOptimizations;
 	};
 	
-	OptimizationStore.allWithSearchParams = function (searchParams) {
+	OptimizationStore.allWithSearchParams = function () {
 	  var allFilteredOptimizations = [];
-	  var titleFilter = new RegExp('' + searchParams.title.toLowerCase());
+	  var titleFilter = new RegExp('' + _searchParams.title.toLowerCase());
 	
-	  if (searchParams.isUserOnly) {
+	  if (_searchParams.isUserOnly) {
 	    allFilteredOptimizations = this.allForCurrentUser();
 	  } else {
 	    allFilteredOptimizations = this.all();
 	  }
 	
-	  if (searchParams.category !== 'all') {
+	  if (_searchParams.category !== 'all') {
 	    allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
 	      var categoryArray = currentOptimization.categories;
 	
-	      return categoryArray.includes(searchParams.category);
+	      return categoryArray.includes(_searchParams.category);
 	    });
 	  }
 	
@@ -20300,7 +20316,7 @@
 	    return currentTitle.match(titleFilter);
 	  });
 	
-	  if (searchParams.sort == 'oldest') {
+	  if (_searchParams.sort == 'oldest') {
 	    return allFilteredOptimizations.reverse();
 	  } else {
 	    return allFilteredOptimizations;
@@ -20317,6 +20333,10 @@
 	      break;
 	    case OptimizationConstants.OPTIMIZATION_DELETED:
 	      delete _allOptimizations[payload.optimization.id];
+	      this.__emitChange();
+	      break;
+	    case OptimizationConstants.SEARCH_PARAM_RECEIVED:
+	      _searchParams[payload.key] = payload.value;
 	      this.__emitChange();
 	      break;
 	  }
@@ -31640,6 +31660,8 @@
 	var History = __webpack_require__(186).History;
 	var OptimizationIndex = __webpack_require__(239);
 	var AuthStore = __webpack_require__(184);
+	var OptimizationStore = __webpack_require__(166);
+	var OptimizationActions = __webpack_require__(164);
 	
 	// style
 	var Style = __webpack_require__(356);
@@ -31655,62 +31677,39 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    var searchParams = {};
-	    searchParams.title = '';
-	    searchParams.category = 'all';
-	    searchParams.sort = 'newest';
-	
-	    if (AuthStore.isSignedIn()) {
-	      searchParams.isUserOnly = true;
-	      return { optimizations: OptimizationStore.allForCurrentUser(),
-	        searchParams: searchParams };
-	    } else {
-	      searchParams.isUserOnly = false;
-	      return { optimizations: OptimizationStore.all(),
-	        searchParams: searchParams };
-	    }
+	    return { searchParams: OptimizationStore.allSearchParams() };
 	  },
 	
 	  _onChange: function () {
-	    this.state.searchParams.isUserOnly = AuthStore.isSignedIn();
-	    this.setState(this.state);
+	    this.setState({ searchParams: OptimizationStore.allSearchParams() });
+	    console.log(this.state);
 	  },
 	
 	  componentDidMount: function () {
 	    this.authToken = AuthStore.addListener(this._onChange);
+	    this.searchToken = OptimizationStore.addListener(this._onChange);
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.authToken.remove();
+	    this.searchToken.remove();
 	  },
 	
 	  handleInput: function (e) {
 	    e.preventDefault();
-	    this.state.searchParams.title = e.currentTarget.value;
-	    this.setState(this.state.searchParams);
+	    OptimizationActions.receiveSearchParam('title', e.currentTarget.value);
 	  },
 	
-	  clickToggleOptimizations: function () {
-	    if (AuthStore.isSignedIn()) {
-	      this.state.searchParams.isUserOnly = !this.state.searchParams.isUserOnly;
-	      this.setState(this.state.searchParams);
-	    } else {
-	      this.history.push('auth');
-	    }
-	  },
-	
-	  clickCategory: function (event, index, value) {
-	    this.state.searchParams.category = value;
-	    this.setState(this.state.searchParams);
+	  clickCategory: function (e, index, value) {
+	    OptimizationActions.receiveSearchParam('category', value);
 	  },
 	
 	  navigateToRoot: function () {
 	    this.history.push('/');
 	  },
 	
-	  dateSort: function (event, index, value) {
-	    this.state.searchParams.sort = value;
-	    this.setState(this.state.searchParams);
+	  dateSort: function (e, index, value) {
+	    OptimizationActions.receiveSearchParam('sort', value);
 	  },
 	
 	  render: function () {
@@ -31775,10 +31774,6 @@
 	    this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
 	  },
 	
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState({ optimizations: OptimizationStore.allWithSearchParams(newProps.searchParams) });
-	  },
-	
 	  componentDidMount: function () {
 	    this.optimizationToken = OptimizationStore.addListener(this._onChange);
 	    OptimizationActions.retrieveAllOptimizations();
@@ -31799,35 +31794,16 @@
 	  createOptimizationList: function () {
 	    var _this = this;
 	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
-	      return React.createElement(OptimizationIndexItem, { isUserOnly: _this.props.searchParams.isUserOnly, key: idx, optimization: el });
+	      return React.createElement(OptimizationIndexItem, { isUserOnly: AuthStore.isSignedIn(), key: idx, optimization: el });
 	    });
 	
 	    return listOfOptimizations;
-	  },
-	
-	  createNewButton: function () {
-	    if (this.props.searchParams.isUserOnly) {
-	      return React.createElement(
-	        'li',
-	        { className: 'optimization-index-item' },
-	        React.createElement(
-	          'button',
-	          { className: 'optimization-item-title-button full', onClick: this.clickNewOptimization },
-	          React.createElement(
-	            'p',
-	            null,
-	            '+ create new optimization'
-	          )
-	        )
-	      );
-	    }
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'ul',
 	      { className: 'optimizations-index group' },
-	      this.createNewButton(),
 	      this.createOptimizationList()
 	    );
 	  }

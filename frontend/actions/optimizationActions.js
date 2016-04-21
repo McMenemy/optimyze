@@ -44,6 +44,14 @@ var OptimizationActions = {
     ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
   },
 
+  receiveSearchParam: function (key, value) {
+    Dispatcher.dispatch({
+      actionType: OptimizationConstants.SEARCH_PARAM_RECEIVED,
+      key: key,
+      value: value,
+    });
+  },
+
 };
 
 module.exports = OptimizationActions;
