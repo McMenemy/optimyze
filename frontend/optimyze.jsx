@@ -8,6 +8,7 @@ var AuthStore = require('./stores/authStore');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
+var injectTapEventPlugin = require('react-tap-event-plugin');
 
 // Components
 var App = require('./components/app');
@@ -25,6 +26,9 @@ window.ApiUtil = ApiUtil;
 window.OptimizationActions = OptimizationActions;
 window.OptimizationStore = OptimizationStore;
 window.AuthStore = AuthStore;
+
+// used for expand boxes and touch tap
+injectTapEventPlugin();
 
 var routes = (
   <Route component={App} path='/'>

@@ -3,6 +3,14 @@ var History = require('react-router').History;
 var OptimizationIndex = require('./optimizationIndex');
 var AuthStore = require('../stores/authStore');
 
+// style
+var Style = require('../util/styleObj');
+var LeftNav = require('material-ui/lib/left-nav');
+var FlatButton = require('material-ui/lib/flat-button');
+var TextField = require('material-ui/lib/text-field');
+var SelectField = require('material-ui/lib/select-field');
+var MenuItem = require('material-ui/lib/menus/menu-item');
+
 var SearchIndex = React.createClass({
   mixins: [History],
 
@@ -10,6 +18,7 @@ var SearchIndex = React.createClass({
     var searchParams = {};
     searchParams.title = '';
     searchParams.category = 'all';
+    searchParams.sort = 'newest';
 
     if (AuthStore.isSignedIn()) {
       searchParams.isUserOnly = true;
@@ -51,83 +60,59 @@ var SearchIndex = React.createClass({
     }
   },
 
-  clickCategory: function (category) {
-    this.state.searchParams.category = category;
+  clickCategory: function (event, index, value) {
+    this.state.searchParams.category = value;
     this.setState(this.state.searchParams);
   },
 
-  renderTabs: function () {
-    if (this.state.searchParams.isUserOnly) {
-      return (
-        <div className="tab-container">
-        <button
-          className="tab-selected"
-          onClick={this.clickToggleOptimizations}>My Optimizations</button>
-        <button className="tab"
-          onClick={this.clickToggleOptimizations}>All Optimizations</button>
-      </div>
-    );
-    } else {
-      return (
-      <div className="tab-container">
-        <button
-          className="tab"
-          onClick={this.clickToggleOptimizations}>My Optimizations</button>
-        <button
-          className="tab-selected"
-          onClick={this.clickToggleOptimizations}>All Optimizations</button>
-      </div>
-    );
-    }
+  navigateToRoot: function () {
+    this.history.push('/');
   },
 
-  dateSort: function (order) {
-    this.state.searchParams.sort = order;
+  dateSort: function (event, index, value) {
+    this.state.searchParams.sort = value;
     this.setState(this.state.searchParams);
   },
 
   render: function () {
     return (
-      <div>
-        <div className="search-index-fixed">
-          <input type="text"
-            className='search-input'
-            placeholder='search by title'
-            onChange={this.handleInput} value={this.state.searchParams.title}
-          />
-          <div className="search-options-container">
-              <div className="search-options scoot">
-                <label>sort by</label>
-                <div>newest</div>
-                <ul className="dropdown-options">
-                  <li className="dropdown-option"
-                    onClick={this.dateSort.bind(this, 'newest')}>newest</li>
-                  <li className="dropdown-option"
-                    onClick={this.dateSort.bind(this, 'oldest')}>oldest</li>
-                </ul>
-              </div>
-              <div className="search-options">
-                <label>category</label>
-                <div>{this.state.searchParams.category}</div>
-                <ul className="dropdown-options col-2">
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'exercise')} >exercise</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'food')}>food</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'household')}>household</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'sleep')}>sleep</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'social')}>social</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'tech')}>tech</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'transport')}>transport</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'other')}>other</li>
-                  <li className="dropdown-option" onClick={this.clickCategory.bind(this, 'all')}>all</li>
-                </ul>
-              </div>
-            </div>
-          {this.renderTabs()}
-        </div>
-        <div className="search-index">
-            <OptimizationIndex searchParams={this.state.searchParams}/>
-        </div>
-    </div>
+      <LeftNav style={Style.leftNav}>
+        <FlatButton label='Optimyze' onClick={this.navigateToRoot}/>
+        <TextField
+          hintText='search by title'
+          onChange={this.handleInput}
+          value={this.state.searchParams.title}
+        />
+
+        <SelectField
+          value={this.state.searchParams.sort}
+          onChange={this.dateSort}
+          floatingLabelText='Sort By'
+        >
+          {[
+            <MenuItem key={1} value={'newest'} primaryText='Newest' />,
+            <MenuItem key={2} value={'oldest'} primaryText='Oldest' />,
+          ]}
+        </SelectField>
+
+        <SelectField
+          value={this.state.searchParams.category}
+          onChange={this.clickCategory}
+          floatingLabelText='Category'
+        >
+          {[
+            <MenuItem key={1} value={'exercise'} primaryText='Exercise' />,
+            <MenuItem key={2} value={'food'} primaryText='Food' />,
+            <MenuItem key={3} value={'household'} primaryText='Household' />,
+            <MenuItem key={4} value={'sleep'} primaryText='Sleep' />,
+            <MenuItem key={5} value={'social'} primaryText='Social' />,
+            <MenuItem key={6} value={'tech'} primaryText='Tech' />,
+            <MenuItem key={7} value={'transport'} primaryText='Transport' />,
+            <MenuItem key={8} value={'other'} primaryText='Other' />,
+            <MenuItem key={9} value={'all'} primaryText='All' />,
+          ]}
+        </SelectField>
+      </LeftNav>
     );
   },
 });
