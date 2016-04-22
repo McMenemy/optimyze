@@ -32,6 +32,10 @@ var Header = React.createClass({
     this.history.push('auth');
   },
 
+  navigateToRoot: function () {
+    this.history.push('/');
+  },
+
   makeHeaderList: function () {
     if (AuthStore.isSignedIn()) {
       return (
@@ -42,9 +46,9 @@ var Header = React.createClass({
     );
     } else {
       return (
-          <ul className="header-list group">
+          <ToolbarGroup float='right'>
             <FlatButton label='Sign In/Up' onClick={this.signInUp} />
-          </ul>
+          </ToolbarGroup>
         );
     }
   },
@@ -52,6 +56,9 @@ var Header = React.createClass({
   render: function () {
     return (
       <Toolbar>
+        <ToolbarGroup firstChild={true}>
+          <FlatButton label='Optimyze' onClick={this.navigateToRoot}/>
+        </ToolbarGroup>
         {this.makeHeaderList()}
       </Toolbar>
     );

@@ -2,6 +2,10 @@ var React = require('react');
 var History = require('react-router').History;
 var OptimizationActions = require('../actions/optimizationActions');
 
+// Style
+var MenuItem = require('material-ui/lib/menus/menu-item');
+var Style = require('../util/styleObj');
+
 var OptimizationIndexItem = React.createClass({
   mixins: [History],
 
@@ -17,29 +21,12 @@ var OptimizationIndexItem = React.createClass({
     OptimizationActions.retrieveDeletedOptimization(this.props);
   },
 
-  populateItem: function () {
-    if (this.props.isUserOnly) {
-      return (
-        <li className="optimization-index-item">
-          <button className="optimization-item-title-button" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
-          <button className="optimization-item-edit-button" onClick={this.editOptimization}><p>Edit</p></button>
-          <button className="optimization-item-delete-button" onClick={this.deleteOptimization}><p>Delete</p></button>
-        </li>
-      );
-    } else {
-      return (
-        <li className="optimization-index-item">
-          <button className="optimization-item-title-button full" onClick={this.clickOptimization}><p>{this.props.optimization.title}</p></button>
-        </li>
-      );
-    }
-  },
-
   render: function () {
     return (
-      <div>
-        {this.populateItem()}
-      </div>
+      <MenuItem
+        primaryText={this.props.optimization.title}
+        onClick={this.clickOptimization}
+      />
     );
   },
 });

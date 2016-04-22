@@ -7,7 +7,6 @@ var OptimizationActions = require('../actions/optimizationActions');
 
 // style
 var Style = require('../util/styleObj');
-var LeftNav = require('material-ui/lib/left-nav');
 var FlatButton = require('material-ui/lib/flat-button');
 var TextField = require('material-ui/lib/text-field');
 var SelectField = require('material-ui/lib/select-field');
@@ -44,19 +43,15 @@ var SearchIndex = React.createClass({
     OptimizationActions.receiveSearchParam('category', value);
   },
 
-  navigateToRoot: function () {
-    this.history.push('/');
-  },
-
   dateSort: function (e, index, value) {
     OptimizationActions.receiveSearchParam('sort', value);
   },
 
   render: function () {
     return (
-      <LeftNav style={Style.leftNav}>
-        <FlatButton label='Optimyze' onClick={this.navigateToRoot}/>
+      <div>
         <TextField
+          style={Style.searchBar}
           hintText='search by title'
           onChange={this.handleInput}
           value={this.state.searchParams.title}
@@ -90,7 +85,7 @@ var SearchIndex = React.createClass({
             <MenuItem key={9} value={'all'} primaryText='All' />,
           ]}
         </SelectField>
-      </LeftNav>
+      </div>
     );
   },
 });

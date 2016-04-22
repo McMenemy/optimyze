@@ -14,7 +14,7 @@ var App = React.createClass({
     return (
       <div>
         <Header />
-        <div className='app group'>
+        <div className='app'>
           <div className='left-pane'>
             <SearchIndex />
           </div>

@@ -6,13 +6,17 @@
 
 .left-pane {
   display: flex;
-  flex: 1 20%;
+  flex-grow: 1;
+  flex-basis: 20%;
   min-height: 100vh;
+  flex-wrap: wrap;
   background-color: #00C58E;
 }
 
 .right-pane {
   display: flex;
-  flex: 4 80%;
+  flex-grow: 4;
+  flex-basis: 80%;
   min-height: 100vh;
+  flex-wrap: wrap;
 }

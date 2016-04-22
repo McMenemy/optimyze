@@ -5,6 +5,9 @@ var OptimizationIndexItem = require('./optimizationIndexItem');
 var AuthStore = require('../stores/authStore');
 var History = require('react-router').History;
 
+// Style
+var Menu = require('material-ui/lib/menus/menu');
+
 var OptimizationsIndex = React.createClass({
   mixins: [History],
 
@@ -50,9 +53,9 @@ var OptimizationsIndex = React.createClass({
 
   render: function () {
     return (
-      <ul className="optimizations-index group">
+      <Menu>
         {this.createOptimizationList()}
-      </ul>
+      </Menu>
     );
   },
 
