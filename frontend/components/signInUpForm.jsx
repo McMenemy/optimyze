@@ -23,7 +23,7 @@ var SignInUpForm = React.createClass({
   },
 
   successCallback: function (user) {
-    this.history.push('/');
+    this.props.closeModal();
   },
 
   errorCallback: function (errorArray) {
@@ -33,19 +33,15 @@ var SignInUpForm = React.createClass({
 
   handleSubmit: function (event) {
     event.preventDefault();
+    this.setState({ buttonClicked: '', errors: '' });
+
     if (this.state.buttonClicked === 'signin') {
-      delete this.state.buttonClicked;
-      delete this.state.errors;
       var signInParams = { user: this.state };
       AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
     } else if (this.state.buttonClicked === 'signup') {
-      delete this.state.buttonClicked;
-      delete this.state.errors;
       var signUpParams = { user: this.state };
       AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
     } else if (this.state.buttonClicked == 'demoSignin') {
-      delete this.state.buttonClicked;
-      delete this.state.errors;
       var signInParams = { user: { username: 'User42', password: 'password' } };
       AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
     }
