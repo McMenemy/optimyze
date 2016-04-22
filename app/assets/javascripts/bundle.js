@@ -44125,8 +44125,10 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  leftNav: {
-	    position: 'fixed'
+	  navBar: {
+	    zIndex: '9999',
+	    position: 'fixed',
+	    backgroundColor: '#1DE9B6'
 	  }
 	};
 
@@ -46986,6 +46988,7 @@
 	var ToolbarTitle = __webpack_require__(367);
 	var FlatButton = __webpack_require__(344);
 	var Dialog = __webpack_require__(368);
+	var Style = __webpack_require__(343);
 	
 	// components
 	var SignInUpForm = __webpack_require__(370);
@@ -47049,7 +47052,7 @@
 	
 	    return React.createElement(
 	      Toolbar,
-	      null,
+	      { style: Style.navBar },
 	      React.createElement(
 	        ToolbarGroup,
 	        { firstChild: true },

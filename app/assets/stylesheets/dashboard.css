@@ -6,17 +6,21 @@
 
 .left-pane {
   display: flex;
+  position: relative;
   flex-grow: 1;
   flex-basis: 20%;
   min-height: 100vh;
   flex-wrap: wrap;
   background-color: #00C58E;
+  padding-top: 56px;
 }
 
 .right-pane {
   display: flex;
+  position: relative;
   flex-grow: 4;
   flex-basis: 80%;
   min-height: 100vh;
   flex-wrap: wrap;
+  padding-top: 56px;
 }

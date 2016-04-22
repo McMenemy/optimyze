@@ -9,6 +9,7 @@ var ToolbarGroup =  require('material-ui/lib/toolbar/toolbar-group');
 var ToolbarTitle = require('material-ui/lib/toolbar/toolbar-title');
 var FlatButton = require('material-ui/lib/flat-button');
 var Dialog = require('material-ui/lib/dialog');
+var Style = require('../util/styleObj');
 
 // components
 var SignInUpForm = require('../components/signInUpForm');
@@ -69,7 +70,7 @@ var Header = React.createClass({
   render: function () {
 
     return (
-      <Toolbar>
+      <Toolbar style={Style.navBar}>
         <ToolbarGroup firstChild={true}>
           <FlatButton label='Optimyze' />
         </ToolbarGroup>
