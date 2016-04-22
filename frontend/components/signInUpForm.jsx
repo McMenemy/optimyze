@@ -3,6 +3,10 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var AuthActions = require('../actions/authActions');
 var History = require('react-router').History;
 
+// style
+var TextField = require('material-ui/lib/text-field');
+var RaisedButton = require('material-ui/lib/raised-button');
+
 var SignInUpForm = React.createClass({
   mixins: [History, LinkedStateMixin],
 
@@ -49,35 +53,40 @@ var SignInUpForm = React.createClass({
 
   render: function () {
     return (
-      <div className="user-form-container">
+      <div>
         <h1>{this.state.errors.toString()}</h1>
-        <form className="user-form" onSubmit={this.handleSubmit}>
-          <div className="user-form-group">
-            <label>username</label>
-            <input type="text" valueLink={this.linkState('username')} />
-          </div>
-          <div className="user-form-group">
-            <label>password</label>
-            <input type="password" valueLink={this.linkState('password')} />
-          </div>
-          <input
-            onClick={this.signIn}
-            className="whiteButton green-button-overlay user-form-button"
-            name="signin" type="submit" value="sign in"
+        <form onSubmit={this.handleSubmit}>
+          <TextField
+            hintText='username'
+            errorText=''
+            floatingLabelText='Username'
+            valueLink={ this.linkState('username') }
           />
-          <input
+
+          <TextField
+            hintText='password'
+            type='password'
+            errorText=''
+            floatingLabelText='Username'
+            valueLink={ this.linkState('password') }
+          />
+
+          <RaisedButton
+            label='sign up'
+            type='submit'
             onClick={this.signUp}
-            className="whiteButton green-button-overlay user-form-button"
-            name="signup"
-            type="submit"
-            value="sign up"
           />
-          <input
+
+          <RaisedButton
+            label='sign in'
+            type='submit'
+            onClick={this.signIn}
+          />
+
+          <RaisedButton
+            label='demo account'
+            type='submit'
             onClick={this.demoSignIn}
-            className="whiteButton green-button-overlay user-form-button"
-            name="demo account"
-            type="submit"
-            value="demo account"
           />
         </form>
       </div>
