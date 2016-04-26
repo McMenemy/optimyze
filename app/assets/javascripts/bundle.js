@@ -31957,10 +31957,13 @@
 	
 	// style
 	var Style = __webpack_require__(343);
+	var ThemeManager = __webpack_require__(385);
+	var MyRawTheme = __webpack_require__(384);
 	var FlatButton = __webpack_require__(344);
 	var TextField = __webpack_require__(346);
-	var SelectField = __webpack_require__(354);
 	var MenuItem = __webpack_require__(246);
+	var Menu = __webpack_require__(341);
+	var Divider = __webpack_require__(386);
 	
 	var SearchIndex = React.createClass({
 	  displayName: 'SearchIndex',
@@ -31973,7 +31976,6 @@
 	
 	  _onChange: function () {
 	    this.setState({ searchParams: OptimizationStore.allSearchParams() });
-	    console.log(this.state);
 	  },
 	
 	  componentDidMount: function () {
@@ -31986,46 +31988,56 @@
 	    this.searchToken.remove();
 	  },
 	
-	  handleInput: function (e) {
-	    e.preventDefault();
-	    OptimizationActions.receiveSearchParam('title', e.currentTarget.value);
-	  },
-	
-	  clickCategory: function (e, index, value) {
+	  clickCategory: function (value) {
 	    OptimizationActions.receiveSearchParam('category', value);
 	  },
 	
-	  dateSort: function (e, index, value) {
-	    OptimizationActions.receiveSearchParam('sort', value);
+	  // for MUI to change color of menu sele
+	  childContextTypes: {
+	    muiTheme: React.PropTypes.object
+	  },
+	
+	  getChildContext: function () {
+	    return {
+	      muiTheme: ThemeManager.getMuiTheme(MyRawTheme)
+	    };
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement(TextField, {
-	        style: Style.searchBar,
-	        hintText: 'search by title',
-	        onChange: this.handleInput,
-	        value: this.state.searchParams.title
-	      }),
+	      { style: { margin: '0 auto' } },
 	      React.createElement(
-	        SelectField,
-	        {
-	          value: this.state.searchParams.sort,
-	          onChange: this.dateSort,
-	          floatingLabelText: 'Sort By'
-	        },
-	        [React.createElement(MenuItem, { key: 1, value: 'newest', primaryText: 'Newest' }), React.createElement(MenuItem, { key: 2, value: 'oldest', primaryText: 'Oldest' })]
-	      ),
-	      React.createElement(
-	        SelectField,
-	        {
+	        Menu,
+	        { zDepth: 0,
 	          value: this.state.searchParams.category,
-	          onChange: this.clickCategory,
-	          floatingLabelText: 'Category'
+	          style: Style.categoryMenu,
+	          desktop: true
 	        },
-	        [React.createElement(MenuItem, { key: 1, value: 'exercise', primaryText: 'Exercise' }), React.createElement(MenuItem, { key: 2, value: 'food', primaryText: 'Food' }), React.createElement(MenuItem, { key: 3, value: 'household', primaryText: 'Household' }), React.createElement(MenuItem, { key: 4, value: 'sleep', primaryText: 'Sleep' }), React.createElement(MenuItem, { key: 5, value: 'social', primaryText: 'Social' }), React.createElement(MenuItem, { key: 6, value: 'tech', primaryText: 'Tech' }), React.createElement(MenuItem, { key: 7, value: 'transport', primaryText: 'Transport' }), React.createElement(MenuItem, { key: 8, value: 'other', primaryText: 'Other' }), React.createElement(MenuItem, { key: 9, value: 'all', primaryText: 'All' })]
+	        React.createElement(
+	          'p',
+	          null,
+	          'Feeds'
+	        ),
+	        React.createElement(Divider, null),
+	        React.createElement(MenuItem, { value: 'all', onTouchTap: this.clickCategory.bind(null, 'all'),
+	          primaryText: 'All', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'exercise', onTouchTap: this.clickCategory.bind(null, 'exercise'),
+	          primaryText: 'Exercise', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'food', onTouchTap: this.clickCategory.bind(null, 'food'),
+	          primaryText: 'Food', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'household', onTouchTap: this.clickCategory.bind(null, 'household'),
+	          primaryText: 'Household', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'sleep', onTouchTap: this.clickCategory.bind(null, 'sleep'),
+	          primaryText: 'Sleep', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'social', onTouchTap: this.clickCategory.bind(null, 'social'),
+	          primaryText: 'Social', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'tech', onTouchTap: this.clickCategory.bind(null, 'tech'),
+	          primaryText: 'Tech', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'transport', onTouchTap: this.clickCategory.bind(null, 'transport'),
+	          primaryText: 'Transport', className: 'leftMenuDropdown' }),
+	        React.createElement(MenuItem, { value: 'other', onTouchTap: this.clickCategory.bind(null, 'other'),
+	          primaryText: 'Other', className: 'leftMenuDropdown' })
 	      )
 	    );
 	  }
@@ -32041,6 +32053,7 @@
 	var OptimizationStore = __webpack_require__(166);
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationIndexItem = __webpack_require__(245);
+	var RightHeader = __webpack_require__(388);
 	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
 	
@@ -32092,9 +32105,14 @@
 	
 	  render: function () {
 	    return React.createElement(
-	      Menu,
+	      'div',
 	      null,
-	      this.createOptimizationList()
+	      React.createElement(RightHeader, null),
+	      React.createElement(
+	        Menu,
+	        null,
+	        this.createOptimizationList()
+	      )
 	    );
 	  }
 	
@@ -44159,6 +44177,20 @@
 	    color: '#1DE9B6',
 	    fontSize: '24px',
 	    fontWeight: 'bold'
+	  },
+	
+	  searchBar: {},
+	
+	  sortBy: {
+	    width: '80%'
+	  },
+	
+	  dropdownItem: {
+	    color: 'black'
+	  },
+	
+	  categoryMenu: {
+	    textAlign: 'left'
 	  }
 	
 	};
@@ -47020,6 +47052,7 @@
 	var FlatButton = __webpack_require__(344);
 	var Dialog = __webpack_require__(368);
 	var Paper = __webpack_require__(310);
+	var TextField = __webpack_require__(346);
 	var Style = __webpack_require__(343);
 	
 	// components
@@ -47031,7 +47064,7 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    return { open: false };
+	    return { open: false, searchParams: OptimizationStore.allSearchParams() };
 	  },
 	
 	  _onChange: function () {
@@ -47040,10 +47073,12 @@
 	
 	  componentDidMount: function () {
 	    this.authToken = AuthStore.addListener(this._onChange);
+	    this.searchToken = OptimizationStore.addListener(this._onChange);
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.authToken.remove();
+	    this.searchToken.remove();
 	  },
 	
 	  signOut: function () {
@@ -47095,6 +47130,11 @@
 	    this.setState({ open: false });
 	  },
 	
+	  handleInput: function (e) {
+	    e.preventDefault();
+	    OptimizationActions.receiveSearchParam('title', e.currentTarget.value);
+	  },
+	
 	  render: function () {
 	
 	    return React.createElement(
@@ -47107,6 +47147,17 @@
 	          ToolbarGroup,
 	          { firstChild: true },
 	          React.createElement(FlatButton, { label: 'Optimyze', style: Style.logo, hoverColor: 'white' })
+	        ),
+	        React.createElement(
+	          ToolbarGroup,
+	          null,
+	          React.createElement(TextField, {
+	            hintText: 'search optimyze',
+	            onChange: this.handleInput,
+	            value: this.state.searchParams.title,
+	            style: Style.searchBar,
+	            underlineFocusStyle: { borderColor: '#00BFA5' }
+	          })
 	        ),
 	        this.makeHeaderList(),
 	        React.createElement(Dialog, {
@@ -50277,6 +50328,288 @@
 	});
 	
 	module.exports = About;
+
+/***/ },
+/* 384 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Colors = __webpack_require__(274);
+	var ColorManipulator = __webpack_require__(298);
+	var Spacing = __webpack_require__(300);
+	var zIndex = __webpack_require__(301);
+	
+	module.exports = {
+	  spacing: Spacing,
+	  zIndex: zIndex,
+	  fontFamily: 'Roboto, sans-serif',
+	  palette: {
+	    primary1Color: Colors.teal500,
+	    primary2Color: Colors.teal700,
+	    primary3Color: Colors.lightBlack,
+	    accent1Color: Colors.tealA700,
+	    accent2Color: Colors.tealA100,
+	    accent3Color: Colors.grey500,
+	    textColor: Colors.darkBlack,
+	    alternateTextColor: Colors.white,
+	    canvasColor: Colors.white,
+	    borderColor: Colors.grey300,
+	    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
+	    pickerHeaderColor: Colors.cyan500
+	  }
+	};
+
+/***/ },
+/* 385 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactAddonsUpdate = __webpack_require__(272);
+	
+	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
+	
+	var _lodash = __webpack_require__(281);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _getMuiTheme = __webpack_require__(280);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// import deprecatedExport from '../utils/deprecatedExport';
+	
+	exports.default = // deprecatedExport(
+	{
+	  getMuiTheme: _getMuiTheme2.default,
+	  modifyRawThemeSpacing: function modifyRawThemeSpacing(muiTheme, spacing) {
+	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { spacing: { $set: spacing } }));
+	  },
+	  modifyRawThemePalette: function modifyRawThemePalette(muiTheme, palette) {
+	    var newPalette = (0, _lodash2.default)(muiTheme.baseTheme.palette, palette);
+	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { palette: { $set: newPalette } }));
+	  },
+	  modifyRawThemeFontFamily: function modifyRawThemeFontFamily(muiTheme, fontFamily) {
+	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { fontFamily: { $set: fontFamily } }));
+	  }
+	}; // ,
+	//  'material-ui/lib/styles/theme-manager',
+	//  'material-ui/lib/styles/themeManager'
+	//);
+	
+	module.exports = exports['default'];
+
+/***/ },
+/* 386 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _muiThemeable = __webpack_require__(387);
+	
+	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+	
+	var _styles = __webpack_require__(251);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	var propTypes = {
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react2.default.PropTypes.string,
+	
+	  /**
+	   * If true, the `Divider` will be indented `72px`.
+	   */
+	  inset: _react2.default.PropTypes.bool,
+	
+	  /**
+	   * The material-ui theme applied to this component.
+	   * @ignore
+	   */
+	  muiTheme: _react2.default.PropTypes.object.isRequired,
+	
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react2.default.PropTypes.object
+	};
+	
+	var defaultProps = {
+	  inset: false
+	};
+	
+	var Divider = function Divider(props) {
+	  var inset = props.inset;
+	  var muiTheme = props.muiTheme;
+	  var style = props.style;
+	
+	  var other = _objectWithoutProperties(props, ['inset', 'muiTheme', 'style']);
+	
+	  var styles = {
+	    root: {
+	      margin: 0,
+	      marginTop: -1,
+	      marginLeft: inset ? 72 : 0,
+	      height: 1,
+	      border: 'none',
+	      backgroundColor: muiTheme.rawTheme.palette.borderColor
+	    }
+	  };
+	
+	  return _react2.default.createElement('hr', _extends({}, other, { style: (0, _styles.prepareStyles)(muiTheme, (0, _styles.mergeStyles)(styles.root, style)) }));
+	};
+	
+	Divider.displayName = 'Divider';
+	Divider.propTypes = propTypes;
+	Divider.defaultProps = defaultProps;
+	Divider = (0, _muiThemeable2.default)(Divider);
+	
+	exports.default = Divider;
+	module.exports = exports['default'];
+
+/***/ },
+/* 387 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = muiThemeable;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _getMuiTheme = __webpack_require__(280);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function getDisplayName(WrappedComponent) {
+	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+	
+	function muiThemeable(WrappedComponent) {
+	  var MuiComponent = function MuiComponent(props, _ref) {
+	    var _ref$muiTheme = _ref.muiTheme;
+	    var muiTheme = _ref$muiTheme === undefined ? (0, _getMuiTheme2.default)() : _ref$muiTheme;
+	
+	    return _react2.default.createElement(WrappedComponent, _extends({}, props, { muiTheme: muiTheme }));
+	  };
+	
+	  MuiComponent.displayName = getDisplayName(WrappedComponent);
+	  MuiComponent.contextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+	  MuiComponent.childContextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+	
+	  return MuiComponent;
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 388 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	// Style
+	var Style = __webpack_require__(343);
+	var SelectField = __webpack_require__(354);
+	var MenuItem = __webpack_require__(246);
+	var ThemeManager = __webpack_require__(385);
+	var MyRawTheme = __webpack_require__(384);
+	
+	var RightHeader = React.createClass({
+	  displayName: 'RightHeader',
+	
+	
+	  getInitialState: function () {
+	    return { searchParams: OptimizationStore.allSearchParams() };
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ searchParams: OptimizationStore.allSearchParams() });
+	  },
+	
+	  componentDidMount: function () {
+	    this.searchToken = OptimizationStore.addListener(this._onChange);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.searchToken.remove();
+	  },
+	
+	  dateSort: function (e, index, value) {
+	    OptimizationActions.receiveSearchParam('sort', value);
+	  },
+	
+	  // for MUI to change color of selected dropdown menu item
+	  childContextTypes: {
+	    muiTheme: React.PropTypes.object
+	  },
+	
+	  getChildContext: function () {
+	    return {
+	      muiTheme: ThemeManager.getMuiTheme(MyRawTheme)
+	    };
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      SelectField,
+	      {
+	        value: this.state.searchParams.sort,
+	        onChange: this.dateSort,
+	        floatingLabelText: 'Sort By',
+	        style: Style.sortBy,
+	        primaryText: 'Newest'
+	      },
+	      [React.createElement(MenuItem, {
+	        className: 'leftMenuDropdown',
+	        key: 1,
+	        value: 'newest',
+	        primaryText: 'Newest',
+	        style: Style.dropdownItem
+	      }), React.createElement(MenuItem, {
+	        className: 'leftMenuDropdown',
+	        key: 2,
+	        value: 'oldest',
+	        primaryText: 'Oldest',
+	        style: Style.dropdownItem
+	      })]
+	    );
+	  }
+	
+	});
+	
+	module.exports = RightHeader;
 
 /***/ }
 /******/ ]);

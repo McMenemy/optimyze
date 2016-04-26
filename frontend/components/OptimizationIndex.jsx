@@ -2,6 +2,7 @@ var React = require('react');
 var OptimizationStore = require('../stores/optimizations');
 var OptimizationActions = require('../actions/optimizationActions');
 var OptimizationIndexItem = require('./optimizationIndexItem');
+var RightHeader = require('./rightHeader');
 var AuthStore = require('../stores/authStore');
 var History = require('react-router').History;
 
@@ -53,9 +54,12 @@ var OptimizationsIndex = React.createClass({
 
   render: function () {
     return (
-      <Menu>
-        {this.createOptimizationList()}
-      </Menu>
+      <div>
+        <RightHeader />
+        <Menu>
+          {this.createOptimizationList()}
+        </Menu>
+      </div>
     );
   },
 

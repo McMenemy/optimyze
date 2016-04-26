@@ -1,3 +1,8 @@
+/* searchIndex */
+.leftMenuDropdown:hover {
+  background-color: #A7FFEB !important;
+}
+
 /*used in multiple components*/
 .whiteButton {
   background-color: #FFF;

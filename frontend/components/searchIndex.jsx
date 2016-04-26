@@ -7,10 +7,13 @@ var OptimizationActions = require('../actions/optimizationActions');
 
 // style
 var Style = require('../util/styleObj');
+var ThemeManager = require('material-ui/lib/styles/theme-manager');
+var MyRawTheme = require('../util/theme');
 var FlatButton = require('material-ui/lib/flat-button');
 var TextField = require('material-ui/lib/text-field');
-var SelectField = require('material-ui/lib/select-field');
 var MenuItem = require('material-ui/lib/menus/menu-item');
+var Menu = require('material-ui/lib/menus/menu');
+var Divider = require('material-ui/lib/divider');
 
 var SearchIndex = React.createClass({
   mixins: [History],
@@ -21,7 +24,6 @@ var SearchIndex = React.createClass({
 
   _onChange: function () {
     this.setState({ searchParams: OptimizationStore.allSearchParams() });
-    console.log(this.state);
   },
 
   componentDidMount: function () {
@@ -34,57 +36,50 @@ var SearchIndex = React.createClass({
     this.searchToken.remove();
   },
 
-  handleInput: function (e) {
-    e.preventDefault();
-    OptimizationActions.receiveSearchParam('title', e.currentTarget.value);
-  },
-
-  clickCategory: function (e, index, value) {
+  clickCategory: function (value) {
     OptimizationActions.receiveSearchParam('category', value);
   },
 
-  dateSort: function (e, index, value) {
-    OptimizationActions.receiveSearchParam('sort', value);
+  // for MUI to change color of menu sele
+  childContextTypes: {
+    muiTheme: React.PropTypes.object,
+  },
+
+  getChildContext:function () {
+    return {
+      muiTheme: ThemeManager.getMuiTheme(MyRawTheme),
+    };
   },
 
   render: function () {
     return (
-      <div>
-        <TextField
-          style={Style.searchBar}
-          hintText='search by title'
-          onChange={this.handleInput}
-          value={this.state.searchParams.title}
-        />
-
-        <SelectField
-          value={this.state.searchParams.sort}
-          onChange={this.dateSort}
-          floatingLabelText='Sort By'
-        >
-          {[
-            <MenuItem key={1} value={'newest'} primaryText='Newest' />,
-            <MenuItem key={2} value={'oldest'} primaryText='Oldest' />,
-          ]}
-        </SelectField>
-
-        <SelectField
+      <div style={{ margin: '0 auto' }}>
+        <Menu zDepth={0}
           value={this.state.searchParams.category}
-          onChange={this.clickCategory}
-          floatingLabelText='Category'
+          style={Style.categoryMenu}
+          desktop={true}
         >
-          {[
-            <MenuItem key={1} value={'exercise'} primaryText='Exercise' />,
-            <MenuItem key={2} value={'food'} primaryText='Food' />,
-            <MenuItem key={3} value={'household'} primaryText='Household' />,
-            <MenuItem key={4} value={'sleep'} primaryText='Sleep' />,
-            <MenuItem key={5} value={'social'} primaryText='Social' />,
-            <MenuItem key={6} value={'tech'} primaryText='Tech' />,
-            <MenuItem key={7} value={'transport'} primaryText='Transport' />,
-            <MenuItem key={8} value={'other'} primaryText='Other' />,
-            <MenuItem key={9} value={'all'} primaryText='All' />,
-          ]}
-        </SelectField>
+          <p>Feeds</p>
+          <Divider />
+          <MenuItem value={'all'} onTouchTap={this.clickCategory.bind(null, 'all')}
+            primaryText='All' className='leftMenuDropdown' />
+          <MenuItem value={'exercise'} onTouchTap={this.clickCategory.bind(null, 'exercise')}
+            primaryText='Exercise' className='leftMenuDropdown' />
+          <MenuItem value={'food'} onTouchTap={this.clickCategory.bind(null, 'food')}
+            primaryText='Food' className='leftMenuDropdown' />
+          <MenuItem value={'household'} onTouchTap={this.clickCategory.bind(null, 'household')}
+            primaryText='Household' className='leftMenuDropdown' />
+          <MenuItem value={'sleep'} onTouchTap={this.clickCategory.bind(null, 'sleep')}
+            primaryText='Sleep' className='leftMenuDropdown' />
+          <MenuItem value={'social'} onTouchTap={this.clickCategory.bind(null, 'social')}
+            primaryText='Social' className='leftMenuDropdown' />
+          <MenuItem value={'tech'} onTouchTap={this.clickCategory.bind(null, 'tech')}
+            primaryText='Tech' className='leftMenuDropdown' />
+          <MenuItem value={'transport'} onTouchTap={this.clickCategory.bind(null, 'transport')}
+            primaryText='Transport' className='leftMenuDropdown' />
+          <MenuItem value={'other'} onTouchTap={this.clickCategory.bind(null, 'other')}
+            primaryText='Other' className='leftMenuDropdown' />
+        </Menu>
       </div>
     );
   },
