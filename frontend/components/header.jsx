@@ -9,6 +9,7 @@ var ToolbarGroup =  require('material-ui/lib/toolbar/toolbar-group');
 var ToolbarTitle = require('material-ui/lib/toolbar/toolbar-title');
 var FlatButton = require('material-ui/lib/flat-button');
 var Dialog = require('material-ui/lib/dialog');
+var Paper = require('material-ui/lib/paper');
 var Style = require('../util/styleObj');
 
 // components
@@ -45,14 +46,29 @@ var Header = React.createClass({
     if (AuthStore.isSignedIn()) {
       return (
         <ToolbarGroup float='right'>
-          <ToolbarTitle text={'Hi, ' + AuthStore.currentUser().username} />
-          <FlatButton label='Sign Out' onTouchTap={this.signOut} />
+          <ToolbarTitle
+            text={'Hi, ' + AuthStore.currentUser().username}
+            style={Style.navBarText}
+          />
+          <FlatButton
+            label='Sign Out'
+            onTouchTap={this.signOut}
+            style={Style.navBarButton}
+            hoverColor='#A7FFEB'
+            rippleColor='#1DE9B6'
+          />
         </ToolbarGroup>
     );
     } else {
       return (
           <ToolbarGroup float='right'>
-            <FlatButton label='Sign In/Up' onTouchTap={this.handleSignInUpOpen} />
+            <FlatButton
+              label='Sign In/Up'
+              onTouchTap={this.handleSignInUpOpen}
+              style={Style.navBarButton}
+              hoverColor='#A7FFEB'
+              rippleColor='#1DE9B6'
+            />
           </ToolbarGroup>
         );
     }
@@ -70,20 +86,22 @@ var Header = React.createClass({
   render: function () {
 
     return (
-      <Toolbar style={Style.navBar}>
-        <ToolbarGroup firstChild={true}>
-          <FlatButton label='Optimyze' />
-        </ToolbarGroup>
-        {this.makeHeaderList()}
+      <Paper style={Style.navBarContainer}>
+        <Toolbar style={Style.navBar}>
+          <ToolbarGroup firstChild={true}>
+            <FlatButton label='Optimyze' style={Style.logo} hoverColor='white' />
+          </ToolbarGroup>
+          {this.makeHeaderList()}
 
-        <Dialog
-          actions={<SignInUpForm closeModal={this.handleSignInUpClose} />}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleSignInUpClose}
-        >
-        </Dialog>
-      </Toolbar>
+          <Dialog
+            actions={<SignInUpForm closeModal={this.handleSignInUpClose} />}
+            modal={false}
+            open={this.state.open}
+            onRequestClose={this.handleSignInUpClose}
+            >
+          </Dialog>
+        </Toolbar>
+      </Paper>
     );
   },
 
