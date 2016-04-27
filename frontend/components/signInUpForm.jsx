@@ -4,6 +4,7 @@ var AuthActions = require('../actions/authActions');
 var History = require('react-router').History;
 
 // style
+var Style = require('../util/styleObj');
 var TextField = require('material-ui/lib/text-field');
 var RaisedButton = require('material-ui/lib/raised-button');
 
@@ -11,7 +12,7 @@ var SignInUpForm = React.createClass({
   mixins: [History, LinkedStateMixin],
 
   getInitialState: function () {
-    return { username: '', password: '', buttonClicked: '', errors: '' };
+    return { username: '', password: '', buttonClicked: '', errors: '', passwordConfirm: '' };
   },
 
   demoSignIn: function () {
@@ -43,50 +44,98 @@ var SignInUpForm = React.createClass({
       var signInParams = { user: this.state };
       AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
     } else if (this.state.buttonClicked === 'signup') {
-      var signUpParams = { user: this.state };
-      AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+      if (this.state.passwordConfirm != this.state.password) {
+        this.setState({ errors: 'passwords do not match' });
+      } else {
+        var signUpParams = { user: this.state };
+        AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+      }
     } else if (this.state.buttonClicked == 'demoSignin') {
       var signInParams = { user: { username: 'User42', password: 'password' } };
       AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
     }
   },
 
+  renderConfirmPassword: function () {
+    if (this.props.authPath == 'signUp') {
+      return (
+        <TextField
+          style={Style.authField}
+          hintText='confirm password'
+          type='password'
+          errorText=''
+          floatingLabelText='Confirm Password'
+          valueLink={ this.linkState('passwordConfirm') }
+          underlineFocusStyle={{ borderColor: '#00BFA5' }}
+        />
+      );
+    }
+  },
+
+  renderCorrectButton: function () {
+    if (this.props.authPath == 'signUp') {
+      return (
+        <RaisedButton
+          style={Style.authButton}
+          label='sign up'
+          type='submit'
+          onClick={this.signUp}
+          style={Style.authButton}
+          backgroundColor='#00BFA5'
+          labelStyle={Style.authButtonText}
+          />
+      );
+    } else if (this.props.authPath == 'signIn') {
+      return (
+        <RaisedButton
+          style={Style.authButton}
+          label='sign in'
+          type='submit'
+          onClick={this.signIn}
+          style={Style.authButton}
+          backgroundColor='#00BFA5'
+          labelStyle={Style.authButtonText}
+          />
+      );
+    }
+  },
+
   render: function () {
     return (
-      <div>
+      <div style={Style.authContainer}>
         <h1>{this.state.errors.toString()}</h1>
         <form onSubmit={this.handleSubmit}>
           <TextField
+            style={Style.authField}
             hintText='username'
             errorText=''
             floatingLabelText='Username'
             valueLink={ this.linkState('username') }
+            underlineFocusStyle={{ borderColor: '#00BFA5' }}
           />
 
           <TextField
+            style={Style.authField}
             hintText='password'
             type='password'
             errorText=''
-            floatingLabelText='Username'
+            floatingLabelText='Password'
             valueLink={ this.linkState('password') }
+            underlineFocusStyle={{ borderColor: '#00BFA5' }}
           />
 
-          <RaisedButton
-            label='sign up'
-            type='submit'
-            onClick={this.signUp}
-          />
+        {this.renderConfirmPassword()}
+
+        {this.renderCorrectButton()}
 
           <RaisedButton
-            label='sign in'
-            type='submit'
-            onClick={this.signIn}
-          />
-
-          <RaisedButton
+            style={Style.authButton}
             label='demo account'
             type='submit'
             onClick={this.demoSignIn}
+            style={Style.authButton}
+            backgroundColor='#00BFA5'
+            labelStyle={Style.authButtonText}
           />
         </form>
       </div>

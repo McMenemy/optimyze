@@ -31992,7 +31992,7 @@
 	    OptimizationActions.receiveSearchParam('category', value);
 	  },
 	
-	  // for MUI to change color of menu sele
+	  // for MUI to change color of menu select
 	  childContextTypes: {
 	    muiTheme: React.PropTypes.object
 	  },
@@ -44273,6 +44273,26 @@
 	  mainMenuDescription: {
 	    padding: '0% 3% 1% 3%',
 	    cursor: 'pointer'
+	  },
+	
+	  authContainer: {
+	    textAlign: 'center'
+	  },
+	
+	  authButton: {
+	    margin: '3%'
+	  },
+	
+	  authButtonText: {
+	    textTransform: 'capitalize',
+	    color: 'white'
+	  },
+	
+	  authField: {
+	    width: '80%',
+	    padding: '3%',
+	    display: 'block',
+	    textAlign: 'left'
 	  }
 	
 	};
@@ -46801,7 +46821,7 @@
 	    primary3Color: Colors.lightBlack,
 	    accent1Color: Colors.tealA700,
 	    accent2Color: Colors.tealA100,
-	    accent3Color: Colors.grey500,
+	    accent3Color: Colors.teal500,
 	    textColor: Colors.darkBlack,
 	    alternateTextColor: Colors.white,
 	    canvasColor: Colors.white,
@@ -47428,7 +47448,7 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    return { open: false, searchParams: OptimizationStore.allSearchParams() };
+	    return { open: false, authPath: '', searchParams: OptimizationStore.allSearchParams() };
 	  },
 	
 	  _onChange: function () {
@@ -47475,8 +47495,15 @@
 	        ToolbarGroup,
 	        { float: 'right' },
 	        React.createElement(FlatButton, {
-	          label: 'Sign In/Up',
-	          onTouchTap: this.handleSignInUpOpen,
+	          label: 'Sign In',
+	          onTouchTap: this.handleSignInUpOpen.bind(null, 'signIn'),
+	          style: Style.navBarButton,
+	          hoverColor: '#A7FFEB',
+	          rippleColor: '#1DE9B6'
+	        }),
+	        React.createElement(FlatButton, {
+	          label: 'Sign Up',
+	          onTouchTap: this.handleSignInUpOpen.bind(null, 'signUp'),
 	          style: Style.navBarButton,
 	          hoverColor: '#A7FFEB',
 	          rippleColor: '#1DE9B6'
@@ -47485,12 +47512,12 @@
 	    }
 	  },
 	
-	  handleSignInUpOpen: function () {
-	    this.setState({ open: true });
+	  handleSignInUpOpen: function (path) {
+	    this.setState({ open: true, authPath: path });
 	  },
 	
 	  handleSignInUpClose: function () {
-	    this.setState({ open: false });
+	    this.setState({ open: false, authPath: '' });
 	  },
 	
 	  handleInput: function (e) {
@@ -47530,7 +47557,10 @@
 	        ),
 	        this.makeHeaderList(),
 	        React.createElement(Dialog, {
-	          actions: React.createElement(SignInUpForm, { closeModal: this.handleSignInUpClose }),
+	          actions: React.createElement(SignInUpForm, {
+	            closeModal: this.handleSignInUpClose,
+	            authPath: this.state.authPath
+	          }),
 	          modal: false,
 	          open: this.state.open,
 	          onRequestClose: this.handleSignInUpClose
@@ -48881,6 +48911,7 @@
 	var History = __webpack_require__(186).History;
 	
 	// style
+	var Style = __webpack_require__(343);
 	var TextField = __webpack_require__(348);
 	var RaisedButton = __webpack_require__(380);
 	
@@ -48890,7 +48921,7 @@
 	  mixins: [History, LinkedStateMixin],
 	
 	  getInitialState: function () {
-	    return { username: '', password: '', buttonClicked: '', errors: '' };
+	    return { username: '', password: '', buttonClicked: '', errors: '', passwordConfirm: '' };
 	  },
 	
 	  demoSignIn: function () {
@@ -48922,18 +48953,60 @@
 	      var signInParams = { user: this.state };
 	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
 	    } else if (this.state.buttonClicked === 'signup') {
-	      var signUpParams = { user: this.state };
-	      AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+	      if (this.state.passwordConfirm != this.state.password) {
+	        this.setState({ errors: 'passwords do not match' });
+	      } else {
+	        var signUpParams = { user: this.state };
+	        AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+	      }
 	    } else if (this.state.buttonClicked == 'demoSignin') {
 	      var signInParams = { user: { username: 'User42', password: 'password' } };
 	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
 	    }
 	  },
 	
+	  renderConfirmPassword: function () {
+	    if (this.props.authPath == 'signUp') {
+	      return React.createElement(TextField, {
+	        style: Style.authField,
+	        hintText: 'confirm password',
+	        type: 'password',
+	        errorText: '',
+	        floatingLabelText: 'Confirm Password',
+	        valueLink: this.linkState('passwordConfirm'),
+	        underlineFocusStyle: { borderColor: '#00BFA5' }
+	      });
+	    }
+	  },
+	
+	  renderCorrectButton: function () {
+	    if (this.props.authPath == 'signUp') {
+	      return React.createElement(RaisedButton, {
+	        style: Style.authButton,
+	        label: 'sign up',
+	        type: 'submit',
+	        onClick: this.signUp,
+	        style: Style.authButton,
+	        backgroundColor: '#00BFA5',
+	        labelStyle: Style.authButtonText
+	      });
+	    } else if (this.props.authPath == 'signIn') {
+	      return React.createElement(RaisedButton, {
+	        style: Style.authButton,
+	        label: 'sign in',
+	        type: 'submit',
+	        onClick: this.signIn,
+	        style: Style.authButton,
+	        backgroundColor: '#00BFA5',
+	        labelStyle: Style.authButtonText
+	      });
+	    }
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { style: Style.authContainer },
 	      React.createElement(
 	        'h1',
 	        null,
@@ -48943,32 +49016,32 @@
 	        'form',
 	        { onSubmit: this.handleSubmit },
 	        React.createElement(TextField, {
+	          style: Style.authField,
 	          hintText: 'username',
 	          errorText: '',
 	          floatingLabelText: 'Username',
-	          valueLink: this.linkState('username')
+	          valueLink: this.linkState('username'),
+	          underlineFocusStyle: { borderColor: '#00BFA5' }
 	        }),
 	        React.createElement(TextField, {
+	          style: Style.authField,
 	          hintText: 'password',
 	          type: 'password',
 	          errorText: '',
-	          floatingLabelText: 'Username',
-	          valueLink: this.linkState('password')
+	          floatingLabelText: 'Password',
+	          valueLink: this.linkState('password'),
+	          underlineFocusStyle: { borderColor: '#00BFA5' }
 	        }),
+	        this.renderConfirmPassword(),
+	        this.renderCorrectButton(),
 	        React.createElement(RaisedButton, {
-	          label: 'sign up',
-	          type: 'submit',
-	          onClick: this.signUp
-	        }),
-	        React.createElement(RaisedButton, {
-	          label: 'sign in',
-	          type: 'submit',
-	          onClick: this.signIn
-	        }),
-	        React.createElement(RaisedButton, {
+	          style: Style.authButton,
 	          label: 'demo account',
 	          type: 'submit',
-	          onClick: this.demoSignIn
+	          onClick: this.demoSignIn,
+	          style: Style.authButton,
+	          backgroundColor: '#00BFA5',
+	          labelStyle: Style.authButtonText
 	        })
 	      )
 	    );

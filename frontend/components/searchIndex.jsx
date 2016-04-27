@@ -40,7 +40,7 @@ var SearchIndex = React.createClass({
     OptimizationActions.receiveSearchParam('category', value);
   },
 
-  // for MUI to change color of menu sele
+  // for MUI to change color of menu select
   childContextTypes: {
     muiTheme: React.PropTypes.object,
   },

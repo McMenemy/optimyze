@@ -69,4 +69,24 @@ module.exports = {
     cursor: 'pointer',
   },
 
+  authContainer: {
+    textAlign: 'center',
+  },
+
+  authButton: {
+    margin: '3%',
+  },
+
+  authButtonText: {
+    textTransform: 'capitalize',
+    color: 'white',
+  },
+
+  authField: {
+    width: '80%',
+    padding: '3%',
+    display: 'block',
+    textAlign: 'left',
+  },
+
 };

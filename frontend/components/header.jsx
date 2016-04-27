@@ -20,7 +20,7 @@ var Header = React.createClass({
   mixins: [History],
 
   getInitialState: function () {
-    return { open: false, searchParams: OptimizationStore.allSearchParams() };
+    return { open: false, authPath: '', searchParams: OptimizationStore.allSearchParams() };
   },
 
   _onChange: function () {
@@ -66,8 +66,15 @@ var Header = React.createClass({
       return (
           <ToolbarGroup float='right'>
             <FlatButton
-              label='Sign In/Up'
-              onTouchTap={this.handleSignInUpOpen}
+              label='Sign In'
+              onTouchTap={this.handleSignInUpOpen.bind(null, 'signIn')}
+              style={Style.navBarButton}
+              hoverColor='#A7FFEB'
+              rippleColor='#1DE9B6'
+            />
+            <FlatButton
+              label='Sign Up'
+              onTouchTap={this.handleSignInUpOpen.bind(null, 'signUp')}
               style={Style.navBarButton}
               hoverColor='#A7FFEB'
               rippleColor='#1DE9B6'
@@ -77,12 +84,12 @@ var Header = React.createClass({
     }
   },
 
-  handleSignInUpOpen: function () {
-    this.setState({ open: true });
+  handleSignInUpOpen: function (path) {
+    this.setState({ open: true, authPath: path });
   },
 
   handleSignInUpClose: function () {
-    this.setState({ open: false });
+    this.setState({ open: false, authPath: '' });
   },
 
   handleInput: function (e) {
@@ -118,7 +125,10 @@ var Header = React.createClass({
           {this.makeHeaderList()}
 
           <Dialog
-            actions={<SignInUpForm closeModal={this.handleSignInUpClose} />}
+            actions={<SignInUpForm
+                        closeModal={this.handleSignInUpClose}
+                        authPath={this.state.authPath}
+                    />}
             modal={false}
             open={this.state.open}
             onRequestClose={this.handleSignInUpClose}

@@ -13,7 +13,7 @@ module.exports = {
     primary3Color: Colors.lightBlack,
     accent1Color: Colors.tealA700,
     accent2Color: Colors.tealA100,
-    accent3Color: Colors.grey500,
+    accent3Color: Colors.teal500,
     textColor: Colors.darkBlack,
     alternateTextColor: Colors.white,
     canvasColor: Colors.white,
