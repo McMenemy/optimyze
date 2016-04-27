@@ -7,7 +7,9 @@ var AuthStore = require('../stores/authStore');
 var History = require('react-router').History;
 
 // Style
+var Style = require('../util/styleObj');
 var Menu = require('material-ui/lib/menus/menu');
+var Paper = require('material-ui/lib/menus/menu');
 
 var OptimizationsIndex = React.createClass({
   mixins: [History],
@@ -54,11 +56,11 @@ var OptimizationsIndex = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div style={{ width:'100%' }}>
         <RightHeader />
-        <Menu>
+        <Paper style={Style.mainMenu} zDepth={0}>
           {this.createOptimizationList()}
-        </Menu>
+        </Paper>
       </div>
     );
   },

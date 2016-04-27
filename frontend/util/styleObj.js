@@ -1,7 +1,8 @@
 // colors teal:
-// 100 #A7FFEB
-// 400 #1DE9B6
-// 700 #00BFA5
+// 100A #A7FFEB
+// 400A #1DE9B6
+// 700A #00BFA5
+// 50 #E0F2F1
 
 module.exports = {
   navBarContainer: {
@@ -48,6 +49,24 @@ module.exports = {
 
   categoryMenu: {
     textAlign: 'left',
+  },
+
+  mainMenu: {
+    display: 'flex',
+    width: '90%',
+  },
+
+  mainMenuTitle: {
+    paddingLeft: '3%',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    paddingTop: '1%',
+    cursor: 'pointer',
+  },
+
+  mainMenuDescription: {
+    padding: '0% 3% 1% 3%',
+    cursor: 'pointer',
   },
 
 };

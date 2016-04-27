@@ -59,13 +59,13 @@
 	// Components
 	var App = __webpack_require__(242);
 	var OptimizationIndex = __webpack_require__(244);
-	var OptimizationDetail = __webpack_require__(376);
-	var OptimizationNewForm = __webpack_require__(379);
-	var OptimizationEditForm = __webpack_require__(380);
-	var Auth = __webpack_require__(381);
-	var Splash = __webpack_require__(382);
-	var Header = __webpack_require__(363);
-	var About = __webpack_require__(383);
+	var OptimizationDetail = __webpack_require__(381);
+	var OptimizationNewForm = __webpack_require__(384);
+	var OptimizationEditForm = __webpack_require__(385);
+	var Auth = __webpack_require__(386);
+	var Splash = __webpack_require__(387);
+	var Header = __webpack_require__(368);
+	var About = __webpack_require__(388);
 	
 	// for testing
 	window.ApiUtil = ApiUtil;
@@ -31907,9 +31907,9 @@
 
 	var React = __webpack_require__(1);
 	var SearchIndex = __webpack_require__(243);
-	var Header = __webpack_require__(363);
+	var Header = __webpack_require__(368);
 	var AuthStore = __webpack_require__(184);
-	var AuthActions = __webpack_require__(364);
+	var AuthActions = __webpack_require__(369);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -31957,13 +31957,13 @@
 	
 	// style
 	var Style = __webpack_require__(343);
-	var ThemeManager = __webpack_require__(385);
-	var MyRawTheme = __webpack_require__(384);
-	var FlatButton = __webpack_require__(344);
-	var TextField = __webpack_require__(346);
+	var ThemeManager = __webpack_require__(362);
+	var MyRawTheme = __webpack_require__(363);
+	var FlatButton = __webpack_require__(364);
+	var TextField = __webpack_require__(348);
 	var MenuItem = __webpack_require__(246);
 	var Menu = __webpack_require__(341);
-	var Divider = __webpack_require__(386);
+	var Divider = __webpack_require__(366);
 	
 	var SearchIndex = React.createClass({
 	  displayName: 'SearchIndex',
@@ -32053,12 +32053,14 @@
 	var OptimizationStore = __webpack_require__(166);
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationIndexItem = __webpack_require__(245);
-	var RightHeader = __webpack_require__(388);
+	var RightHeader = __webpack_require__(344);
 	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
 	
 	// Style
+	var Style = __webpack_require__(343);
 	var Menu = __webpack_require__(341);
+	var Paper = __webpack_require__(341);
 	
 	var OptimizationsIndex = React.createClass({
 	  displayName: 'OptimizationsIndex',
@@ -32106,11 +32108,11 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { style: { width: '100%' } },
 	      React.createElement(RightHeader, null),
 	      React.createElement(
-	        Menu,
-	        null,
+	        Paper,
+	        { style: Style.mainMenu, zDepth: 0 },
 	        this.createOptimizationList()
 	      )
 	    );
@@ -32131,11 +32133,16 @@
 	// Style
 	var MenuItem = __webpack_require__(246);
 	var Style = __webpack_require__(343);
+	var Divider = __webpack_require__(366);
 	
 	var OptimizationIndexItem = React.createClass({
 	  displayName: 'OptimizationIndexItem',
 	
 	  mixins: [History],
+	
+	  getInitialState: function () {
+	    return { shouldCutoff: true };
+	  },
 	
 	  clickOptimization: function () {
 	    this.history.push('optimizations/' + this.props.optimization.id);
@@ -32149,11 +32156,45 @@
 	    OptimizationActions.retrieveDeletedOptimization(this.props);
 	  },
 	
+	  expandDescription: function () {
+	    this.setState({ shouldCutoff: false });
+	  },
+	
+	  makeDescription: function () {
+	    var description = this.props.optimization.description;
+	    var cuttoff = 330;
+	    if (this.state.shouldCutoff && description.length > cuttoff) {
+	      return React.createElement(
+	        'p',
+	        { style: Style.mainMenuDescription },
+	        description.slice(0, cuttoff) + '... ',
+	        React.createElement(
+	          'a',
+	          { className: 'moreLink', onTouchTap: this.expandDescription },
+	          '(more)'
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'p',
+	        { style: Style.mainMenuDescription },
+	        description
+	      );
+	    }
+	  },
+	
 	  render: function () {
-	    return React.createElement(MenuItem, {
-	      primaryText: this.props.optimization.title,
-	      onClick: this.clickOptimization
-	    });
+	    return React.createElement(
+	      'div',
+	      { onClick: this.clickOptimization },
+	      React.createElement(
+	        'p',
+	        { style: Style.mainMenuTitle, className: 'mainMenuTitle' },
+	        this.props.optimization.title
+	      ),
+	      this.makeDescription(),
+	      React.createElement(Divider, null)
+	    );
 	  }
 	});
 	
@@ -44143,9 +44184,10 @@
 /***/ function(module, exports) {
 
 	// colors teal:
-	// 100 #A7FFEB
-	// 400 #1DE9B6
-	// 700 #00BFA5
+	// 100A #A7FFEB
+	// 400A #1DE9B6
+	// 700A #00BFA5
+	// 50 #E0F2F1
 	
 	module.exports = {
 	  navBarContainer: {
@@ -44191,12 +44233,146 @@
 	
 	  categoryMenu: {
 	    textAlign: 'left'
+	  },
+	
+	  mainMenu: {
+	    display: 'flex',
+	    width: '90%'
+	  },
+	
+	  mainMenuTitle: {
+	    paddingLeft: '3%',
+	    fontSize: '18px',
+	    fontWeight: 'bold',
+	    paddingTop: '1%',
+	    cursor: 'pointer'
+	  },
+	
+	  mainMenuDescription: {
+	    padding: '0% 3% 1% 3%',
+	    cursor: 'pointer'
 	  }
 	
 	};
 
 /***/ },
 /* 344 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	// Style
+	var Style = __webpack_require__(343);
+	var SelectField = __webpack_require__(345);
+	var MenuItem = __webpack_require__(246);
+	var ThemeManager = __webpack_require__(362);
+	var MyRawTheme = __webpack_require__(363);
+	
+	var RightHeader = React.createClass({
+	  displayName: 'RightHeader',
+	
+	
+	  getInitialState: function () {
+	    return { searchParams: OptimizationStore.allSearchParams() };
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ searchParams: OptimizationStore.allSearchParams() });
+	  },
+	
+	  componentDidMount: function () {
+	    this.searchToken = OptimizationStore.addListener(this._onChange);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.searchToken.remove();
+	  },
+	
+	  dateSort: function (e, index, value) {
+	    OptimizationActions.receiveSearchParam('sort', value);
+	  },
+	
+	  // for MUI to change color of selected dropdown menu item
+	  childContextTypes: {
+	    muiTheme: React.PropTypes.object
+	  },
+	
+	  getChildContext: function () {
+	    return {
+	      muiTheme: ThemeManager.getMuiTheme(MyRawTheme)
+	    };
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      SelectField,
+	      {
+	        value: this.state.searchParams.sort,
+	        onChange: this.dateSort,
+	        floatingLabelText: 'Sort By',
+	        style: Style.sortBy,
+	        primaryText: 'Newest'
+	      },
+	      [React.createElement(MenuItem, {
+	        className: 'leftMenuDropdown',
+	        key: 1,
+	        value: 'newest',
+	        primaryText: 'Newest',
+	        style: Style.dropdownItem
+	      }), React.createElement(MenuItem, {
+	        className: 'leftMenuDropdown',
+	        key: 2,
+	        value: 'oldest',
+	        primaryText: 'Oldest',
+	        style: Style.dropdownItem
+	      })]
+	    );
+	  }
+	
+	});
+	
+	module.exports = RightHeader;
+
+/***/ },
+/* 345 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _SelectField = __webpack_require__(346);
+	
+	var _SelectField2 = _interopRequireDefault(_SelectField);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _SelectField2.default;
+	module.exports = exports['default'];
+
+/***/ },
+/* 346 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _SelectField = __webpack_require__(347);
+	
+	var _SelectField2 = _interopRequireDefault(_SelectField);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _SelectField2.default;
+	module.exports = exports['default'];
+
+/***/ },
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44211,151 +44387,163 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _contextPure = __webpack_require__(333);
+	var _stylePropable = __webpack_require__(250);
 	
-	var _contextPure2 = _interopRequireDefault(_contextPure);
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
 	
-	var _transitions = __webpack_require__(311);
+	var _textField = __webpack_require__(348);
 	
-	var _transitions2 = _interopRequireDefault(_transitions);
+	var _textField2 = _interopRequireDefault(_textField);
 	
-	var _children = __webpack_require__(320);
+	var _DropDownMenu = __webpack_require__(356);
 	
-	var _children2 = _interopRequireDefault(_children);
-	
-	var _colorManipulator = __webpack_require__(298);
-	
-	var _colorManipulator2 = _interopRequireDefault(_colorManipulator);
-	
-	var _styles = __webpack_require__(251);
-	
-	var _typography = __webpack_require__(318);
-	
-	var _typography2 = _interopRequireDefault(_typography);
-	
-	var _enhancedButton = __webpack_require__(319);
-	
-	var _enhancedButton2 = _interopRequireDefault(_enhancedButton);
-	
-	var _flatButtonLabel = __webpack_require__(345);
-	
-	var _flatButtonLabel2 = _interopRequireDefault(_flatButtonLabel);
+	var _DropDownMenu2 = _interopRequireDefault(_DropDownMenu);
 	
 	var _getMuiTheme = __webpack_require__(280);
 	
 	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	var _contextPure = __webpack_require__(333);
+	
+	var _contextPure2 = _interopRequireDefault(_contextPure);
+	
+	var _deprecatedPropType = __webpack_require__(361);
+	
+	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
-	function validateLabel(props, propName, componentName) {
-	  if (!props.children && !props.label) {
-	    return new Error('Required prop label or children was not ' + 'specified in ' + componentName + '.');
-	  }
-	}
-	
-	var FlatButton = _react2.default.createClass({
-	  displayName: 'FlatButton',
+	var SelectField = _react2.default.createClass({
+	  displayName: 'SelectField',
 	
 	  propTypes: {
 	    /**
-	     * Color of button when mouse is not hovering over it.
+	     * The width will automatically be set according to the
+	     * items inside the menu. To control this width in css
+	     * instead, set this prop to `false`.
 	     */
-	    backgroundColor: _react2.default.PropTypes.string,
+	    autoWidth: _react2.default.PropTypes.bool,
 	
 	    /**
-	     * This is what will be displayed inside the button.
-	     * If a label is specified, the text within the label prop will
-	     * be displayed. Otherwise, the component will expect children
-	     * which will then be displayed. (In our example,
-	     * we are nesting an `<input type="file" />` and a `span`
-	     * that acts as our label to be displayed.) This only
-	     * applies to flat and raised buttons.
+	     * The `MenuItem` elements to populate the `Menu` with.
+	     * If the MenuItems have the prop `label` that value will
+	     * be used to render the representation of that
+	     * item within the field.
 	     */
 	    children: _react2.default.PropTypes.node,
 	
 	    /**
-	     * Disables the button if set to true.
+	     * Disables the select field if set to true.
 	     */
 	    disabled: _react2.default.PropTypes.bool,
 	
 	    /**
-	     * Color of button when mouse hovers over.
+	     * The style object to use to override error styles.
 	     */
-	    hoverColor: _react2.default.PropTypes.string,
+	    errorStyle: _react2.default.PropTypes.object,
 	
 	    /**
-	     * URL to link to when button clicked if `linkButton` is set to true.
+	     * The error content to display.
 	     */
-	    href: _react2.default.PropTypes.string,
+	    errorText: _react2.default.PropTypes.node,
 	
 	    /**
-	     * Use this property to display an icon.
+	     * The style object to use to override floating label styles.
 	     */
-	    icon: _react2.default.PropTypes.node,
+	    floatingLabelStyle: _react2.default.PropTypes.object,
 	
 	    /**
-	     * Label for the button.
+	     * The content to use for the floating label element.
 	     */
-	    label: validateLabel,
+	    floatingLabelText: _react2.default.PropTypes.node,
 	
 	    /**
-	     * Place label before or after the passed children.
+	     * If true, the field receives the property width 100%.
 	     */
-	    labelPosition: _react2.default.PropTypes.oneOf(['before', 'after']),
+	    fullWidth: _react2.default.PropTypes.bool,
 	
 	    /**
-	     * Override the inline-styles of the button's label element.
+	     * The style object to use to override hint styles.
+	     */
+	    hintStyle: _react2.default.PropTypes.object,
+	
+	    /**
+	     * The hint content to display.
+	     */
+	    hintText: _react2.default.PropTypes.node,
+	
+	    /**
+	     * Overrides the styles of the icon element.
+	     */
+	    iconStyle: _react2.default.PropTypes.object,
+	
+	    /**
+	     * `SelectField` will use text as default value,
+	     * with this property you can choose another name.
+	     */
+	    labelMember: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.string, 'to promote composability.'),
+	
+	    /**
+	     * Overrides the styles of label when the `SelectField` is inactive.
 	     */
 	    labelStyle: _react2.default.PropTypes.object,
 	
 	    /**
-	     * Enables use of `href` property to provide a URL to link to if set to true.
+	     * JSON data representing all menu items in the dropdown.
 	     */
-	    linkButton: _react2.default.PropTypes.bool,
+	    menuItems: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.array, 'to promote composability.'),
 	
 	    /**
-	     * Called when element is focused by the keyboard.
+	     * Callback function that is fired when the `SelectField` loses focus.
 	     */
-	    onKeyboardFocus: _react2.default.PropTypes.func,
+	    onBlur: _react2.default.PropTypes.func,
 	
 	    /**
-	     * Called when the mouse enters the element.
+	     * Callback function that is fired when the value changes.
 	     */
-	    onMouseEnter: _react2.default.PropTypes.func,
+	    onChange: _react2.default.PropTypes.func,
 	
 	    /**
-	     * Called when the mouse leaves the element.
+	     * Callback function that is fired when the `SelectField` gains focus.
 	     */
-	    onMouseLeave: _react2.default.PropTypes.func,
+	    onFocus: _react2.default.PropTypes.func,
 	
 	    /**
-	     * Called when a touch event is started inside the element.
+	     * The style object to use to override the `DropDownMenu`.
 	     */
-	    onTouchStart: _react2.default.PropTypes.func,
+	    selectFieldRoot: _react2.default.PropTypes.object, // Must be changed!
 	
 	    /**
-	     * If true, colors button according to
-	     * primaryTextColor from the Theme.
+	     * Index of the item selected.
 	     */
-	    primary: _react2.default.PropTypes.bool,
-	
-	    /**
-	     * Color for the ripple after button is clicked.
-	     */
-	    rippleColor: _react2.default.PropTypes.string,
-	
-	    /**
-	     * If true, colors button according to secondaryTextColor from the theme.
-	     * The primary prop has precendent if set to true.
-	     */
-	    secondary: _react2.default.PropTypes.bool,
+	    selectedIndex: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.number, 'with menuItems.'),
 	
 	    /**
 	     * Override the inline-styles of the root element.
 	     */
-	    style: _react2.default.PropTypes.object
+	    style: _react2.default.PropTypes.object,
+	
+	    /**
+	     * Override the inline-styles of the underline element when disabled.
+	     */
+	    underlineDisabledStyle: _react2.default.PropTypes.object,
+	
+	    /**
+	     * Override the inline-styles of the underline element when focused.
+	     */
+	    underlineFocusStyle: _react2.default.PropTypes.object,
+	
+	    /**
+	     * Overrides the styles of the underline element.
+	     */
+	    underlineStyle: _react2.default.PropTypes.object,
+	
+	    /**
+	     * The value that is currently selected.
+	     */
+	    value: _react2.default.PropTypes.any
 	  },
 	
 	  contextTypes: {
@@ -44367,48 +44555,23 @@
 	    muiTheme: _react2.default.PropTypes.object
 	  },
 	
-	  mixins: [_contextPure2.default],
+	  mixins: [_stylePropable2.default, _contextPure2.default],
 	
 	  statics: {
-	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
-	      var buttonTheme = muiTheme.button;
-	      var flatButtonTheme = muiTheme.flatButton;
-	
-	      return {
-	        buttonColor: flatButtonTheme.color,
-	        buttonFilterColor: flatButtonTheme.buttonFilterColor,
-	        buttonHeight: buttonTheme.height,
-	        buttonMinWidth: buttonTheme.minWidth,
-	        disabledTextColor: flatButtonTheme.disabledTextColor,
-	        primaryTextColor: flatButtonTheme.primaryTextColor,
-	        secondaryTextColor: flatButtonTheme.secondaryTextColor,
-	        textColor: flatButtonTheme.textColor,
-	        textTransform: flatButtonTheme.textTransform ? flatButtonTheme.textTransform : buttonTheme.textTransform ? buttonTheme.textTransform : 'uppercase'
-	      };
-	    },
 	    getChildrenClasses: function getChildrenClasses() {
-	      return [_enhancedButton2.default, _flatButtonLabel2.default];
+	      return [_textField2.default, _DropDownMenu2.default];
 	    }
 	  },
 	
 	  getDefaultProps: function getDefaultProps() {
 	    return {
+	      autoWidth: false,
 	      disabled: false,
-	      labelStyle: {},
-	      labelPosition: 'after',
-	      onKeyboardFocus: function onKeyboardFocus() {},
-	      onMouseEnter: function onMouseEnter() {},
-	      onMouseLeave: function onMouseLeave() {},
-	      onTouchStart: function onTouchStart() {},
-	      primary: false,
-	      secondary: false
+	      fullWidth: false
 	    };
 	  },
 	  getInitialState: function getInitialState() {
 	    return {
-	      hovered: false,
-	      isKeyboardFocused: false,
-	      touch: false,
 	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
 	    };
 	  },
@@ -44424,277 +44587,128 @@
 	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
 	    this.setState({ muiTheme: newMuiTheme });
 	  },
-	  _handleKeyboardFocus: function _handleKeyboardFocus(e, isKeyboardFocused) {
-	    this.setState({ isKeyboardFocused: isKeyboardFocused });
-	    this.props.onKeyboardFocus(e, isKeyboardFocused);
-	  },
-	  _handleMouseEnter: function _handleMouseEnter(e) {
-	    //Cancel hover styles for touch devices
-	    if (!this.state.touch) this.setState({ hovered: true });
-	    this.props.onMouseEnter(e);
-	  },
-	  _handleMouseLeave: function _handleMouseLeave(e) {
-	    this.setState({ hovered: false });
-	    this.props.onMouseLeave(e);
-	  },
-	  _handleTouchStart: function _handleTouchStart(e) {
-	    this.setState({ touch: true });
-	    this.props.onTouchStart(e);
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var children = _props.children;
-	    var disabled = _props.disabled;
-	    var hoverColor = _props.hoverColor;
-	    var backgroundColor = _props.backgroundColor;
-	    var icon = _props.icon;
-	    var label = _props.label;
-	    var labelStyle = _props.labelStyle;
-	    var labelPosition = _props.labelPosition;
-	    var primary = _props.primary;
-	    var rippleColor = _props.rippleColor;
-	    var secondary = _props.secondary;
-	    var style = _props.style;
+	  getStyles: function getStyles() {
+	    var floatingLabelText = this.props.floatingLabelText;
 	
-	    var other = _objectWithoutProperties(_props, ['children', 'disabled', 'hoverColor', 'backgroundColor', 'icon', 'label', 'labelStyle', 'labelPosition', 'primary', 'rippleColor', 'secondary', 'style']);
-	
-	    var _constructor$getRelev = this.constructor.getRelevantContextKeys(this.state.muiTheme);
-	
-	    var buttonColor = _constructor$getRelev.buttonColor;
-	    var buttonHeight = _constructor$getRelev.buttonHeight;
-	    var buttonMinWidth = _constructor$getRelev.buttonMinWidth;
-	    var disabledTextColor = _constructor$getRelev.disabledTextColor;
-	    var buttonFilterColor = _constructor$getRelev.buttonFilterColor;
-	    var primaryTextColor = _constructor$getRelev.primaryTextColor;
-	    var secondaryTextColor = _constructor$getRelev.secondaryTextColor;
-	    var textColor = _constructor$getRelev.textColor;
-	    var textTransform = _constructor$getRelev.textTransform;
-	
-	    var defaultTextColor = disabled ? disabledTextColor : primary ? primaryTextColor : secondary ? secondaryTextColor : textColor;
-	
-	    var defaultHoverColor = _colorManipulator2.default.fade(buttonFilterColor, 0.2);
-	    var defaultRippleColor = buttonFilterColor;
-	    var buttonHoverColor = hoverColor || defaultHoverColor;
-	    var buttonRippleColor = rippleColor || defaultRippleColor;
-	    var buttonBackgroundColor = backgroundColor || buttonColor;
-	    var hovered = (this.state.hovered || this.state.isKeyboardFocused) && !disabled;
-	
-	    var mergedRootStyles = (0, _styles.mergeStyles)({
-	      color: defaultTextColor,
-	      transition: _transitions2.default.easeOut(),
-	      fontSize: _typography2.default.fontStyleButtonFontSize,
-	      letterSpacing: 0,
-	      textTransform: textTransform,
-	      fontWeight: _typography2.default.fontWeightMedium,
-	      borderRadius: 2,
-	      userSelect: 'none',
-	      position: 'relative',
-	      overflow: 'hidden',
-	      backgroundColor: hovered ? buttonHoverColor : buttonBackgroundColor,
-	      lineHeight: buttonHeight + 'px',
-	      minWidth: buttonMinWidth,
-	      padding: 0,
-	      margin: 0
-	    }, style);
-	
-	    var iconCloned = undefined;
-	    var labelStyleIcon = {};
-	
-	    if (icon) {
-	      iconCloned = _react2.default.cloneElement(icon, {
-	        color: mergedRootStyles.color,
-	        style: {
-	          verticalAlign: 'middle',
-	          marginLeft: labelPosition === 'before' ? 0 : 12,
-	          marginRight: labelPosition === 'before' ? 12 : 0
-	        }
-	      });
-	
-	      if (labelPosition === 'before') {
-	        labelStyleIcon.paddingRight = 8;
-	      } else {
-	        labelStyleIcon.paddingLeft = 8;
+	    return {
+	      label: {
+	        paddingLeft: 0,
+	        top: floatingLabelText ? 6 : -4
+	      },
+	      icon: {
+	        right: 0,
+	        top: floatingLabelText ? 22 : 14
+	      },
+	      hideDropDownUnderline: {
+	        borderTop: 'none'
 	      }
-	    }
-	
-	    var labelElement = label ? _react2.default.createElement(_flatButtonLabel2.default, { label: label, style: (0, _styles.mergeStyles)(labelStyleIcon, labelStyle) }) : undefined;
-	
-	    // Place label before or after children.
-	    var childrenFragment = labelPosition === 'before' ? {
-	      labelElement: labelElement,
-	      iconCloned: iconCloned,
-	      children: children
-	    } : {
-	      children: children,
-	      iconCloned: iconCloned,
-	      labelElement: labelElement
-	    };
-	    var enhancedButtonChildren = _children2.default.create(childrenFragment);
-	
-	    return _react2.default.createElement(
-	      _enhancedButton2.default,
-	      _extends({}, other, {
-	        disabled: disabled,
-	        focusRippleColor: buttonRippleColor,
-	        focusRippleOpacity: 0.3,
-	        onKeyboardFocus: this._handleKeyboardFocus,
-	        onMouseLeave: this._handleMouseLeave,
-	        onMouseEnter: this._handleMouseEnter,
-	        onTouchStart: this._handleTouchStart,
-	        style: mergedRootStyles,
-	        touchRippleColor: buttonRippleColor,
-	        touchRippleOpacity: 0.3
-	      }),
-	      enhancedButtonChildren
-	    );
-	  }
-	});
-	
-	exports.default = FlatButton;
-	module.exports = exports['default'];
-
-/***/ },
-/* 345 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _contextPure = __webpack_require__(333);
-	
-	var _contextPure2 = _interopRequireDefault(_contextPure);
-	
-	var _stylePropable = __webpack_require__(250);
-	
-	var _stylePropable2 = _interopRequireDefault(_stylePropable);
-	
-	var _getMuiTheme = __webpack_require__(280);
-	
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var FlatButtonLabel = _react2.default.createClass({
-	  displayName: 'FlatButtonLabel',
-	
-	  propTypes: {
-	    label: _react2.default.PropTypes.node,
-	
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object
-	  },
-	
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-	
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-	
-	  mixins: [_contextPure2.default, _stylePropable2.default],
-	
-	  statics: {
-	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
-	      return {
-	        spacingDesktopGutterLess: muiTheme.rawTheme.spacing.desktopGutterLess
-	      };
-	    }
-	  },
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
 	    };
 	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-	
-	  //to update theme inside state whenever a new theme is passed down
-	  //from the parent / owner using context
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({ muiTheme: newMuiTheme });
-	  },
-	
 	  render: function render() {
+	    var styles = this.getStyles();
 	    var _props = this.props;
-	    var label = _props.label;
+	    var autoWidth = _props.autoWidth;
+	    var children = _props.children;
 	    var style = _props.style;
+	    var labelStyle = _props.labelStyle;
+	    var iconStyle = _props.iconStyle;
+	    var underlineDisabledStyle = _props.underlineDisabledStyle;
+	    var underlineFocusStyle = _props.underlineFocusStyle;
+	    var underlineStyle = _props.underlineStyle;
+	    var errorStyle = _props.errorStyle;
+	    var selectFieldRoot = _props.selectFieldRoot;
+	    var disabled = _props.disabled;
+	    var floatingLabelText = _props.floatingLabelText;
+	    var floatingLabelStyle = _props.floatingLabelStyle;
+	    var hintStyle = _props.hintStyle;
+	    var hintText = _props.hintText;
+	    var fullWidth = _props.fullWidth;
+	    var errorText = _props.errorText;
+	    var onFocus = _props.onFocus;
+	    var onBlur = _props.onBlur;
+	    var onChange = _props.onChange;
+	    var value = _props.value;
 	
-	    var contextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
-	
-	    var mergedRootStyles = this.mergeStyles({
-	      position: 'relative',
-	      paddingLeft: contextKeys.spacingDesktopGutterLess,
-	      paddingRight: contextKeys.spacingDesktopGutterLess
-	    }, style);
+	    var other = _objectWithoutProperties(_props, ['autoWidth', 'children', 'style', 'labelStyle', 'iconStyle', 'underlineDisabledStyle', 'underlineFocusStyle', 'underlineStyle', 'errorStyle', 'selectFieldRoot', 'disabled', 'floatingLabelText', 'floatingLabelStyle', 'hintStyle', 'hintText', 'fullWidth', 'errorText', 'onFocus', 'onBlur', 'onChange', 'value']);
 	
 	    return _react2.default.createElement(
-	      'span',
-	      { style: this.prepareStyles(mergedRootStyles) },
-	      label
+	      _textField2.default,
+	      {
+	        style: style,
+	        floatingLabelText: floatingLabelText,
+	        floatingLabelStyle: floatingLabelStyle,
+	        hintStyle: hintStyle,
+	        hintText: !hintText && !floatingLabelText ? ' ' : hintText,
+	        fullWidth: fullWidth,
+	        errorText: errorText,
+	        underlineStyle: underlineStyle,
+	        errorStyle: errorStyle,
+	        onFocus: onFocus,
+	        onBlur: onBlur,
+	        underlineDisabledStyle: underlineDisabledStyle,
+	        underlineFocusStyle: underlineFocusStyle
+	      },
+	      _react2.default.createElement(
+	        _DropDownMenu2.default,
+	        _extends({
+	          disabled: disabled,
+	          style: selectFieldRoot,
+	          labelStyle: this.mergeStyles(styles.label, labelStyle),
+	          iconStyle: this.mergeStyles(styles.icon, iconStyle),
+	          underlineStyle: styles.hideDropDownUnderline,
+	          autoWidth: autoWidth,
+	          value: value,
+	          onChange: onChange
+	        }, other),
+	        children
+	      )
 	    );
 	  }
-	
 	});
 	
-	exports.default = FlatButtonLabel;
-	module.exports = exports['default'];
-
-/***/ },
-/* 346 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _TextField = __webpack_require__(347);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = _TextField2.default;
-	module.exports = exports['default'];
-
-/***/ },
-/* 347 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _TextField = __webpack_require__(348);
-	
-	var _TextField2 = _interopRequireDefault(_TextField);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = _TextField2.default;
+	exports.default = SelectField;
 	module.exports = exports['default'];
 
 /***/ },
 /* 348 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _TextField = __webpack_require__(349);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _TextField2.default;
+	module.exports = exports['default'];
+
+/***/ },
+/* 349 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _TextField = __webpack_require__(350);
+	
+	var _TextField2 = _interopRequireDefault(_TextField);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _TextField2.default;
+	module.exports = exports['default'];
+
+/***/ },
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -44725,11 +44739,11 @@
 	
 	var _transitions2 = _interopRequireDefault(_transitions);
 	
-	var _uniqueId = __webpack_require__(349);
+	var _uniqueId = __webpack_require__(351);
 	
 	var _uniqueId2 = _interopRequireDefault(_uniqueId);
 	
-	var _enhancedTextarea = __webpack_require__(350);
+	var _enhancedTextarea = __webpack_require__(352);
 	
 	var _enhancedTextarea2 = _interopRequireDefault(_enhancedTextarea);
 	
@@ -44741,15 +44755,15 @@
 	
 	var _contextPure2 = _interopRequireDefault(_contextPure);
 	
-	var _TextFieldHint = __webpack_require__(351);
+	var _TextFieldHint = __webpack_require__(353);
 	
 	var _TextFieldHint2 = _interopRequireDefault(_TextFieldHint);
 	
-	var _TextFieldLabel = __webpack_require__(352);
+	var _TextFieldLabel = __webpack_require__(354);
 	
 	var _TextFieldLabel2 = _interopRequireDefault(_TextFieldLabel);
 	
-	var _TextFieldUnderline = __webpack_require__(353);
+	var _TextFieldUnderline = __webpack_require__(355);
 	
 	var _TextFieldUnderline2 = _interopRequireDefault(_TextFieldUnderline);
 	
@@ -45260,7 +45274,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 349 */
+/* 351 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -45278,7 +45292,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 350 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45484,7 +45498,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 351 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45562,7 +45576,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 352 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45674,7 +45688,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 353 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45812,352 +45826,16 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 354 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _SelectField = __webpack_require__(355);
-	
-	var _SelectField2 = _interopRequireDefault(_SelectField);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = _SelectField2.default;
-	module.exports = exports['default'];
-
-/***/ },
-/* 355 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _SelectField = __webpack_require__(356);
-	
-	var _SelectField2 = _interopRequireDefault(_SelectField);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = _SelectField2.default;
-	module.exports = exports['default'];
-
-/***/ },
 /* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _stylePropable = __webpack_require__(250);
-	
-	var _stylePropable2 = _interopRequireDefault(_stylePropable);
-	
-	var _textField = __webpack_require__(346);
-	
-	var _textField2 = _interopRequireDefault(_textField);
 	
 	var _DropDownMenu = __webpack_require__(357);
-	
-	var _DropDownMenu2 = _interopRequireDefault(_DropDownMenu);
-	
-	var _getMuiTheme = __webpack_require__(280);
-	
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-	
-	var _contextPure = __webpack_require__(333);
-	
-	var _contextPure2 = _interopRequireDefault(_contextPure);
-	
-	var _deprecatedPropType = __webpack_require__(362);
-	
-	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-	
-	var SelectField = _react2.default.createClass({
-	  displayName: 'SelectField',
-	
-	  propTypes: {
-	    /**
-	     * The width will automatically be set according to the
-	     * items inside the menu. To control this width in css
-	     * instead, set this prop to `false`.
-	     */
-	    autoWidth: _react2.default.PropTypes.bool,
-	
-	    /**
-	     * The `MenuItem` elements to populate the `Menu` with.
-	     * If the MenuItems have the prop `label` that value will
-	     * be used to render the representation of that
-	     * item within the field.
-	     */
-	    children: _react2.default.PropTypes.node,
-	
-	    /**
-	     * Disables the select field if set to true.
-	     */
-	    disabled: _react2.default.PropTypes.bool,
-	
-	    /**
-	     * The style object to use to override error styles.
-	     */
-	    errorStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * The error content to display.
-	     */
-	    errorText: _react2.default.PropTypes.node,
-	
-	    /**
-	     * The style object to use to override floating label styles.
-	     */
-	    floatingLabelStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * The content to use for the floating label element.
-	     */
-	    floatingLabelText: _react2.default.PropTypes.node,
-	
-	    /**
-	     * If true, the field receives the property width 100%.
-	     */
-	    fullWidth: _react2.default.PropTypes.bool,
-	
-	    /**
-	     * The style object to use to override hint styles.
-	     */
-	    hintStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * The hint content to display.
-	     */
-	    hintText: _react2.default.PropTypes.node,
-	
-	    /**
-	     * Overrides the styles of the icon element.
-	     */
-	    iconStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * `SelectField` will use text as default value,
-	     * with this property you can choose another name.
-	     */
-	    labelMember: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.string, 'to promote composability.'),
-	
-	    /**
-	     * Overrides the styles of label when the `SelectField` is inactive.
-	     */
-	    labelStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * JSON data representing all menu items in the dropdown.
-	     */
-	    menuItems: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.array, 'to promote composability.'),
-	
-	    /**
-	     * Callback function that is fired when the `SelectField` loses focus.
-	     */
-	    onBlur: _react2.default.PropTypes.func,
-	
-	    /**
-	     * Callback function that is fired when the value changes.
-	     */
-	    onChange: _react2.default.PropTypes.func,
-	
-	    /**
-	     * Callback function that is fired when the `SelectField` gains focus.
-	     */
-	    onFocus: _react2.default.PropTypes.func,
-	
-	    /**
-	     * The style object to use to override the `DropDownMenu`.
-	     */
-	    selectFieldRoot: _react2.default.PropTypes.object, // Must be changed!
-	
-	    /**
-	     * Index of the item selected.
-	     */
-	    selectedIndex: (0, _deprecatedPropType2.default)(_react2.default.PropTypes.number, 'with menuItems.'),
-	
-	    /**
-	     * Override the inline-styles of the root element.
-	     */
-	    style: _react2.default.PropTypes.object,
-	
-	    /**
-	     * Override the inline-styles of the underline element when disabled.
-	     */
-	    underlineDisabledStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * Override the inline-styles of the underline element when focused.
-	     */
-	    underlineFocusStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * Overrides the styles of the underline element.
-	     */
-	    underlineStyle: _react2.default.PropTypes.object,
-	
-	    /**
-	     * The value that is currently selected.
-	     */
-	    value: _react2.default.PropTypes.any
-	  },
-	
-	  contextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-	
-	  //for passing default theme context to children
-	  childContextTypes: {
-	    muiTheme: _react2.default.PropTypes.object
-	  },
-	
-	  mixins: [_stylePropable2.default, _contextPure2.default],
-	
-	  statics: {
-	    getChildrenClasses: function getChildrenClasses() {
-	      return [_textField2.default, _DropDownMenu2.default];
-	    }
-	  },
-	
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      autoWidth: false,
-	      disabled: false,
-	      fullWidth: false
-	    };
-	  },
-	  getInitialState: function getInitialState() {
-	    return {
-	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
-	    };
-	  },
-	  getChildContext: function getChildContext() {
-	    return {
-	      muiTheme: this.state.muiTheme
-	    };
-	  },
-	
-	  //to update theme inside state whenever a new theme is passed down
-	  //from the parent / owner using context
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
-	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-	    this.setState({ muiTheme: newMuiTheme });
-	  },
-	  getStyles: function getStyles() {
-	    var floatingLabelText = this.props.floatingLabelText;
-	
-	    return {
-	      label: {
-	        paddingLeft: 0,
-	        top: floatingLabelText ? 6 : -4
-	      },
-	      icon: {
-	        right: 0,
-	        top: floatingLabelText ? 22 : 14
-	      },
-	      hideDropDownUnderline: {
-	        borderTop: 'none'
-	      }
-	    };
-	  },
-	  render: function render() {
-	    var styles = this.getStyles();
-	    var _props = this.props;
-	    var autoWidth = _props.autoWidth;
-	    var children = _props.children;
-	    var style = _props.style;
-	    var labelStyle = _props.labelStyle;
-	    var iconStyle = _props.iconStyle;
-	    var underlineDisabledStyle = _props.underlineDisabledStyle;
-	    var underlineFocusStyle = _props.underlineFocusStyle;
-	    var underlineStyle = _props.underlineStyle;
-	    var errorStyle = _props.errorStyle;
-	    var selectFieldRoot = _props.selectFieldRoot;
-	    var disabled = _props.disabled;
-	    var floatingLabelText = _props.floatingLabelText;
-	    var floatingLabelStyle = _props.floatingLabelStyle;
-	    var hintStyle = _props.hintStyle;
-	    var hintText = _props.hintText;
-	    var fullWidth = _props.fullWidth;
-	    var errorText = _props.errorText;
-	    var onFocus = _props.onFocus;
-	    var onBlur = _props.onBlur;
-	    var onChange = _props.onChange;
-	    var value = _props.value;
-	
-	    var other = _objectWithoutProperties(_props, ['autoWidth', 'children', 'style', 'labelStyle', 'iconStyle', 'underlineDisabledStyle', 'underlineFocusStyle', 'underlineStyle', 'errorStyle', 'selectFieldRoot', 'disabled', 'floatingLabelText', 'floatingLabelStyle', 'hintStyle', 'hintText', 'fullWidth', 'errorText', 'onFocus', 'onBlur', 'onChange', 'value']);
-	
-	    return _react2.default.createElement(
-	      _textField2.default,
-	      {
-	        style: style,
-	        floatingLabelText: floatingLabelText,
-	        floatingLabelStyle: floatingLabelStyle,
-	        hintStyle: hintStyle,
-	        hintText: !hintText && !floatingLabelText ? ' ' : hintText,
-	        fullWidth: fullWidth,
-	        errorText: errorText,
-	        underlineStyle: underlineStyle,
-	        errorStyle: errorStyle,
-	        onFocus: onFocus,
-	        onBlur: onBlur,
-	        underlineDisabledStyle: underlineDisabledStyle,
-	        underlineFocusStyle: underlineFocusStyle
-	      },
-	      _react2.default.createElement(
-	        _DropDownMenu2.default,
-	        _extends({
-	          disabled: disabled,
-	          style: selectFieldRoot,
-	          labelStyle: this.mergeStyles(styles.label, labelStyle),
-	          iconStyle: this.mergeStyles(styles.icon, iconStyle),
-	          underlineStyle: styles.hideDropDownUnderline,
-	          autoWidth: autoWidth,
-	          value: value,
-	          onChange: onChange
-	        }, other),
-	        children
-	      )
-	    );
-	  }
-	});
-	
-	exports.default = SelectField;
-	module.exports = exports['default'];
-
-/***/ },
-/* 357 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _DropDownMenu = __webpack_require__(358);
 	
 	var _DropDownMenu2 = _interopRequireDefault(_DropDownMenu);
 	
@@ -46167,7 +45845,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 358 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -46198,7 +45876,7 @@
 	
 	var _menuItem2 = _interopRequireDefault(_menuItem);
 	
-	var _clearfix = __webpack_require__(359);
+	var _clearfix = __webpack_require__(358);
 	
 	var _clearfix2 = _interopRequireDefault(_clearfix);
 	
@@ -46210,7 +45888,7 @@
 	
 	var _popover2 = _interopRequireDefault(_popover);
 	
-	var _popoverAnimationFromTop = __webpack_require__(361);
+	var _popoverAnimationFromTop = __webpack_require__(360);
 	
 	var _popoverAnimationFromTop2 = _interopRequireDefault(_popoverAnimationFromTop);
 	
@@ -46220,7 +45898,7 @@
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _deprecatedPropType = __webpack_require__(362);
+	var _deprecatedPropType = __webpack_require__(361);
 	
 	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
 	
@@ -46645,7 +46323,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 359 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46660,7 +46338,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _beforeAfterWrapper = __webpack_require__(360);
+	var _beforeAfterWrapper = __webpack_require__(359);
 	
 	var _beforeAfterWrapper2 = _interopRequireDefault(_beforeAfterWrapper);
 	
@@ -46712,7 +46390,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 360 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46866,7 +46544,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 361 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47008,7 +46686,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 362 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -47037,26 +46715,690 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
+/* 362 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactAddonsUpdate = __webpack_require__(272);
+	
+	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
+	
+	var _lodash = __webpack_require__(281);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _getMuiTheme = __webpack_require__(280);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// import deprecatedExport from '../utils/deprecatedExport';
+	
+	exports.default = // deprecatedExport(
+	{
+	  getMuiTheme: _getMuiTheme2.default,
+	  modifyRawThemeSpacing: function modifyRawThemeSpacing(muiTheme, spacing) {
+	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { spacing: { $set: spacing } }));
+	  },
+	  modifyRawThemePalette: function modifyRawThemePalette(muiTheme, palette) {
+	    var newPalette = (0, _lodash2.default)(muiTheme.baseTheme.palette, palette);
+	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { palette: { $set: newPalette } }));
+	  },
+	  modifyRawThemeFontFamily: function modifyRawThemeFontFamily(muiTheme, fontFamily) {
+	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { fontFamily: { $set: fontFamily } }));
+	  }
+	}; // ,
+	//  'material-ui/lib/styles/theme-manager',
+	//  'material-ui/lib/styles/themeManager'
+	//);
+	
+	module.exports = exports['default'];
+
+/***/ },
 /* 363 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Colors = __webpack_require__(274);
+	var ColorManipulator = __webpack_require__(298);
+	var Spacing = __webpack_require__(300);
+	var zIndex = __webpack_require__(301);
+	
+	module.exports = {
+	  spacing: Spacing,
+	  zIndex: zIndex,
+	  fontFamily: 'Roboto, sans-serif',
+	  palette: {
+	    primary1Color: Colors.teal500,
+	    primary2Color: Colors.teal700,
+	    primary3Color: Colors.lightBlack,
+	    accent1Color: Colors.tealA700,
+	    accent2Color: Colors.tealA100,
+	    accent3Color: Colors.grey500,
+	    textColor: Colors.darkBlack,
+	    alternateTextColor: Colors.white,
+	    canvasColor: Colors.white,
+	    borderColor: Colors.grey300,
+	    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
+	    pickerHeaderColor: Colors.cyan500
+	  }
+	};
+
+/***/ },
+/* 364 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _contextPure = __webpack_require__(333);
+	
+	var _contextPure2 = _interopRequireDefault(_contextPure);
+	
+	var _transitions = __webpack_require__(311);
+	
+	var _transitions2 = _interopRequireDefault(_transitions);
+	
+	var _children = __webpack_require__(320);
+	
+	var _children2 = _interopRequireDefault(_children);
+	
+	var _colorManipulator = __webpack_require__(298);
+	
+	var _colorManipulator2 = _interopRequireDefault(_colorManipulator);
+	
+	var _styles = __webpack_require__(251);
+	
+	var _typography = __webpack_require__(318);
+	
+	var _typography2 = _interopRequireDefault(_typography);
+	
+	var _enhancedButton = __webpack_require__(319);
+	
+	var _enhancedButton2 = _interopRequireDefault(_enhancedButton);
+	
+	var _flatButtonLabel = __webpack_require__(365);
+	
+	var _flatButtonLabel2 = _interopRequireDefault(_flatButtonLabel);
+	
+	var _getMuiTheme = __webpack_require__(280);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	function validateLabel(props, propName, componentName) {
+	  if (!props.children && !props.label) {
+	    return new Error('Required prop label or children was not ' + 'specified in ' + componentName + '.');
+	  }
+	}
+	
+	var FlatButton = _react2.default.createClass({
+	  displayName: 'FlatButton',
+	
+	  propTypes: {
+	    /**
+	     * Color of button when mouse is not hovering over it.
+	     */
+	    backgroundColor: _react2.default.PropTypes.string,
+	
+	    /**
+	     * This is what will be displayed inside the button.
+	     * If a label is specified, the text within the label prop will
+	     * be displayed. Otherwise, the component will expect children
+	     * which will then be displayed. (In our example,
+	     * we are nesting an `<input type="file" />` and a `span`
+	     * that acts as our label to be displayed.) This only
+	     * applies to flat and raised buttons.
+	     */
+	    children: _react2.default.PropTypes.node,
+	
+	    /**
+	     * Disables the button if set to true.
+	     */
+	    disabled: _react2.default.PropTypes.bool,
+	
+	    /**
+	     * Color of button when mouse hovers over.
+	     */
+	    hoverColor: _react2.default.PropTypes.string,
+	
+	    /**
+	     * URL to link to when button clicked if `linkButton` is set to true.
+	     */
+	    href: _react2.default.PropTypes.string,
+	
+	    /**
+	     * Use this property to display an icon.
+	     */
+	    icon: _react2.default.PropTypes.node,
+	
+	    /**
+	     * Label for the button.
+	     */
+	    label: validateLabel,
+	
+	    /**
+	     * Place label before or after the passed children.
+	     */
+	    labelPosition: _react2.default.PropTypes.oneOf(['before', 'after']),
+	
+	    /**
+	     * Override the inline-styles of the button's label element.
+	     */
+	    labelStyle: _react2.default.PropTypes.object,
+	
+	    /**
+	     * Enables use of `href` property to provide a URL to link to if set to true.
+	     */
+	    linkButton: _react2.default.PropTypes.bool,
+	
+	    /**
+	     * Called when element is focused by the keyboard.
+	     */
+	    onKeyboardFocus: _react2.default.PropTypes.func,
+	
+	    /**
+	     * Called when the mouse enters the element.
+	     */
+	    onMouseEnter: _react2.default.PropTypes.func,
+	
+	    /**
+	     * Called when the mouse leaves the element.
+	     */
+	    onMouseLeave: _react2.default.PropTypes.func,
+	
+	    /**
+	     * Called when a touch event is started inside the element.
+	     */
+	    onTouchStart: _react2.default.PropTypes.func,
+	
+	    /**
+	     * If true, colors button according to
+	     * primaryTextColor from the Theme.
+	     */
+	    primary: _react2.default.PropTypes.bool,
+	
+	    /**
+	     * Color for the ripple after button is clicked.
+	     */
+	    rippleColor: _react2.default.PropTypes.string,
+	
+	    /**
+	     * If true, colors button according to secondaryTextColor from the theme.
+	     * The primary prop has precendent if set to true.
+	     */
+	    secondary: _react2.default.PropTypes.bool,
+	
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object
+	  },
+	
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+	
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+	
+	  mixins: [_contextPure2.default],
+	
+	  statics: {
+	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+	      var buttonTheme = muiTheme.button;
+	      var flatButtonTheme = muiTheme.flatButton;
+	
+	      return {
+	        buttonColor: flatButtonTheme.color,
+	        buttonFilterColor: flatButtonTheme.buttonFilterColor,
+	        buttonHeight: buttonTheme.height,
+	        buttonMinWidth: buttonTheme.minWidth,
+	        disabledTextColor: flatButtonTheme.disabledTextColor,
+	        primaryTextColor: flatButtonTheme.primaryTextColor,
+	        secondaryTextColor: flatButtonTheme.secondaryTextColor,
+	        textColor: flatButtonTheme.textColor,
+	        textTransform: flatButtonTheme.textTransform ? flatButtonTheme.textTransform : buttonTheme.textTransform ? buttonTheme.textTransform : 'uppercase'
+	      };
+	    },
+	    getChildrenClasses: function getChildrenClasses() {
+	      return [_enhancedButton2.default, _flatButtonLabel2.default];
+	    }
+	  },
+	
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      disabled: false,
+	      labelStyle: {},
+	      labelPosition: 'after',
+	      onKeyboardFocus: function onKeyboardFocus() {},
+	      onMouseEnter: function onMouseEnter() {},
+	      onMouseLeave: function onMouseLeave() {},
+	      onTouchStart: function onTouchStart() {},
+	      primary: false,
+	      secondary: false
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      hovered: false,
+	      isKeyboardFocused: false,
+	      touch: false,
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+	
+	  //to update theme inside state whenever a new theme is passed down
+	  //from the parent / owner using context
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+	  _handleKeyboardFocus: function _handleKeyboardFocus(e, isKeyboardFocused) {
+	    this.setState({ isKeyboardFocused: isKeyboardFocused });
+	    this.props.onKeyboardFocus(e, isKeyboardFocused);
+	  },
+	  _handleMouseEnter: function _handleMouseEnter(e) {
+	    //Cancel hover styles for touch devices
+	    if (!this.state.touch) this.setState({ hovered: true });
+	    this.props.onMouseEnter(e);
+	  },
+	  _handleMouseLeave: function _handleMouseLeave(e) {
+	    this.setState({ hovered: false });
+	    this.props.onMouseLeave(e);
+	  },
+	  _handleTouchStart: function _handleTouchStart(e) {
+	    this.setState({ touch: true });
+	    this.props.onTouchStart(e);
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var children = _props.children;
+	    var disabled = _props.disabled;
+	    var hoverColor = _props.hoverColor;
+	    var backgroundColor = _props.backgroundColor;
+	    var icon = _props.icon;
+	    var label = _props.label;
+	    var labelStyle = _props.labelStyle;
+	    var labelPosition = _props.labelPosition;
+	    var primary = _props.primary;
+	    var rippleColor = _props.rippleColor;
+	    var secondary = _props.secondary;
+	    var style = _props.style;
+	
+	    var other = _objectWithoutProperties(_props, ['children', 'disabled', 'hoverColor', 'backgroundColor', 'icon', 'label', 'labelStyle', 'labelPosition', 'primary', 'rippleColor', 'secondary', 'style']);
+	
+	    var _constructor$getRelev = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+	
+	    var buttonColor = _constructor$getRelev.buttonColor;
+	    var buttonHeight = _constructor$getRelev.buttonHeight;
+	    var buttonMinWidth = _constructor$getRelev.buttonMinWidth;
+	    var disabledTextColor = _constructor$getRelev.disabledTextColor;
+	    var buttonFilterColor = _constructor$getRelev.buttonFilterColor;
+	    var primaryTextColor = _constructor$getRelev.primaryTextColor;
+	    var secondaryTextColor = _constructor$getRelev.secondaryTextColor;
+	    var textColor = _constructor$getRelev.textColor;
+	    var textTransform = _constructor$getRelev.textTransform;
+	
+	    var defaultTextColor = disabled ? disabledTextColor : primary ? primaryTextColor : secondary ? secondaryTextColor : textColor;
+	
+	    var defaultHoverColor = _colorManipulator2.default.fade(buttonFilterColor, 0.2);
+	    var defaultRippleColor = buttonFilterColor;
+	    var buttonHoverColor = hoverColor || defaultHoverColor;
+	    var buttonRippleColor = rippleColor || defaultRippleColor;
+	    var buttonBackgroundColor = backgroundColor || buttonColor;
+	    var hovered = (this.state.hovered || this.state.isKeyboardFocused) && !disabled;
+	
+	    var mergedRootStyles = (0, _styles.mergeStyles)({
+	      color: defaultTextColor,
+	      transition: _transitions2.default.easeOut(),
+	      fontSize: _typography2.default.fontStyleButtonFontSize,
+	      letterSpacing: 0,
+	      textTransform: textTransform,
+	      fontWeight: _typography2.default.fontWeightMedium,
+	      borderRadius: 2,
+	      userSelect: 'none',
+	      position: 'relative',
+	      overflow: 'hidden',
+	      backgroundColor: hovered ? buttonHoverColor : buttonBackgroundColor,
+	      lineHeight: buttonHeight + 'px',
+	      minWidth: buttonMinWidth,
+	      padding: 0,
+	      margin: 0
+	    }, style);
+	
+	    var iconCloned = undefined;
+	    var labelStyleIcon = {};
+	
+	    if (icon) {
+	      iconCloned = _react2.default.cloneElement(icon, {
+	        color: mergedRootStyles.color,
+	        style: {
+	          verticalAlign: 'middle',
+	          marginLeft: labelPosition === 'before' ? 0 : 12,
+	          marginRight: labelPosition === 'before' ? 12 : 0
+	        }
+	      });
+	
+	      if (labelPosition === 'before') {
+	        labelStyleIcon.paddingRight = 8;
+	      } else {
+	        labelStyleIcon.paddingLeft = 8;
+	      }
+	    }
+	
+	    var labelElement = label ? _react2.default.createElement(_flatButtonLabel2.default, { label: label, style: (0, _styles.mergeStyles)(labelStyleIcon, labelStyle) }) : undefined;
+	
+	    // Place label before or after children.
+	    var childrenFragment = labelPosition === 'before' ? {
+	      labelElement: labelElement,
+	      iconCloned: iconCloned,
+	      children: children
+	    } : {
+	      children: children,
+	      iconCloned: iconCloned,
+	      labelElement: labelElement
+	    };
+	    var enhancedButtonChildren = _children2.default.create(childrenFragment);
+	
+	    return _react2.default.createElement(
+	      _enhancedButton2.default,
+	      _extends({}, other, {
+	        disabled: disabled,
+	        focusRippleColor: buttonRippleColor,
+	        focusRippleOpacity: 0.3,
+	        onKeyboardFocus: this._handleKeyboardFocus,
+	        onMouseLeave: this._handleMouseLeave,
+	        onMouseEnter: this._handleMouseEnter,
+	        onTouchStart: this._handleTouchStart,
+	        style: mergedRootStyles,
+	        touchRippleColor: buttonRippleColor,
+	        touchRippleOpacity: 0.3
+	      }),
+	      enhancedButtonChildren
+	    );
+	  }
+	});
+	
+	exports.default = FlatButton;
+	module.exports = exports['default'];
+
+/***/ },
+/* 365 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _contextPure = __webpack_require__(333);
+	
+	var _contextPure2 = _interopRequireDefault(_contextPure);
+	
+	var _stylePropable = __webpack_require__(250);
+	
+	var _stylePropable2 = _interopRequireDefault(_stylePropable);
+	
+	var _getMuiTheme = __webpack_require__(280);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var FlatButtonLabel = _react2.default.createClass({
+	  displayName: 'FlatButtonLabel',
+	
+	  propTypes: {
+	    label: _react2.default.PropTypes.node,
+	
+	    /**
+	     * Override the inline-styles of the root element.
+	     */
+	    style: _react2.default.PropTypes.object
+	  },
+	
+	  contextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+	
+	  //for passing default theme context to children
+	  childContextTypes: {
+	    muiTheme: _react2.default.PropTypes.object
+	  },
+	
+	  mixins: [_contextPure2.default, _stylePropable2.default],
+	
+	  statics: {
+	    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+	      return {
+	        spacingDesktopGutterLess: muiTheme.rawTheme.spacing.desktopGutterLess
+	      };
+	    }
+	  },
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      muiTheme: this.context.muiTheme || (0, _getMuiTheme2.default)()
+	    };
+	  },
+	  getChildContext: function getChildContext() {
+	    return {
+	      muiTheme: this.state.muiTheme
+	    };
+	  },
+	
+	  //to update theme inside state whenever a new theme is passed down
+	  //from the parent / owner using context
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+	    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+	    this.setState({ muiTheme: newMuiTheme });
+	  },
+	
+	  render: function render() {
+	    var _props = this.props;
+	    var label = _props.label;
+	    var style = _props.style;
+	
+	    var contextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+	
+	    var mergedRootStyles = this.mergeStyles({
+	      position: 'relative',
+	      paddingLeft: contextKeys.spacingDesktopGutterLess,
+	      paddingRight: contextKeys.spacingDesktopGutterLess
+	    }, style);
+	
+	    return _react2.default.createElement(
+	      'span',
+	      { style: this.prepareStyles(mergedRootStyles) },
+	      label
+	    );
+	  }
+	
+	});
+	
+	exports.default = FlatButtonLabel;
+	module.exports = exports['default'];
+
+/***/ },
+/* 366 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _muiThemeable = __webpack_require__(367);
+	
+	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+	
+	var _styles = __webpack_require__(251);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	var propTypes = {
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react2.default.PropTypes.string,
+	
+	  /**
+	   * If true, the `Divider` will be indented `72px`.
+	   */
+	  inset: _react2.default.PropTypes.bool,
+	
+	  /**
+	   * The material-ui theme applied to this component.
+	   * @ignore
+	   */
+	  muiTheme: _react2.default.PropTypes.object.isRequired,
+	
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react2.default.PropTypes.object
+	};
+	
+	var defaultProps = {
+	  inset: false
+	};
+	
+	var Divider = function Divider(props) {
+	  var inset = props.inset;
+	  var muiTheme = props.muiTheme;
+	  var style = props.style;
+	
+	  var other = _objectWithoutProperties(props, ['inset', 'muiTheme', 'style']);
+	
+	  var styles = {
+	    root: {
+	      margin: 0,
+	      marginTop: -1,
+	      marginLeft: inset ? 72 : 0,
+	      height: 1,
+	      border: 'none',
+	      backgroundColor: muiTheme.rawTheme.palette.borderColor
+	    }
+	  };
+	
+	  return _react2.default.createElement('hr', _extends({}, other, { style: (0, _styles.prepareStyles)(muiTheme, (0, _styles.mergeStyles)(styles.root, style)) }));
+	};
+	
+	Divider.displayName = 'Divider';
+	Divider.propTypes = propTypes;
+	Divider.defaultProps = defaultProps;
+	Divider = (0, _muiThemeable2.default)(Divider);
+	
+	exports.default = Divider;
+	module.exports = exports['default'];
+
+/***/ },
+/* 367 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = muiThemeable;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _getMuiTheme = __webpack_require__(280);
+	
+	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function getDisplayName(WrappedComponent) {
+	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+	
+	function muiThemeable(WrappedComponent) {
+	  var MuiComponent = function MuiComponent(props, _ref) {
+	    var _ref$muiTheme = _ref.muiTheme;
+	    var muiTheme = _ref$muiTheme === undefined ? (0, _getMuiTheme2.default)() : _ref$muiTheme;
+	
+	    return _react2.default.createElement(WrappedComponent, _extends({}, props, { muiTheme: muiTheme }));
+	  };
+	
+	  MuiComponent.displayName = getDisplayName(WrappedComponent);
+	  MuiComponent.contextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+	  MuiComponent.childContextTypes = {
+	    muiTheme: _react2.default.PropTypes.object
+	  };
+	
+	  return MuiComponent;
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var AuthStore = __webpack_require__(184);
-	var AuthActions = __webpack_require__(364);
+	var AuthActions = __webpack_require__(369);
 	var History = __webpack_require__(186).History;
 	
 	// style
-	var Toolbar = __webpack_require__(365);
-	var ToolbarGroup = __webpack_require__(366);
-	var ToolbarTitle = __webpack_require__(367);
-	var FlatButton = __webpack_require__(344);
-	var Dialog = __webpack_require__(368);
+	var Toolbar = __webpack_require__(370);
+	var ToolbarGroup = __webpack_require__(371);
+	var ToolbarTitle = __webpack_require__(372);
+	var FlatButton = __webpack_require__(364);
+	var Dialog = __webpack_require__(373);
 	var Paper = __webpack_require__(310);
-	var TextField = __webpack_require__(346);
+	var TextField = __webpack_require__(348);
 	var Style = __webpack_require__(343);
 	
 	// components
-	var SignInUpForm = __webpack_require__(370);
+	var SignInUpForm = __webpack_require__(375);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -47146,7 +47488,13 @@
 	        React.createElement(
 	          ToolbarGroup,
 	          { firstChild: true },
-	          React.createElement(FlatButton, { label: 'Optimyze', style: Style.logo, hoverColor: 'white' })
+	          React.createElement(FlatButton, {
+	            label: 'Optimyze',
+	            style: Style.logo,
+	            hoverColor: 'white',
+	            rippleColor: 'white',
+	            onTouchTap: this.navigateToRoot
+	          })
 	        ),
 	        React.createElement(
 	          ToolbarGroup,
@@ -47175,7 +47523,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 364 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(159);
@@ -47218,7 +47566,7 @@
 	module.exports = AuthActions;
 
 /***/ },
-/* 365 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47342,7 +47690,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 366 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47588,7 +47936,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 367 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47702,7 +48050,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 368 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -47737,11 +48085,11 @@
 	
 	var _stylePropable2 = _interopRequireDefault(_stylePropable);
 	
-	var _flatButton = __webpack_require__(344);
+	var _flatButton = __webpack_require__(364);
 	
 	var _flatButton2 = _interopRequireDefault(_flatButton);
 	
-	var _overlay = __webpack_require__(369);
+	var _overlay = __webpack_require__(374);
 	
 	var _overlay2 = _interopRequireDefault(_overlay);
 	
@@ -47761,7 +48109,7 @@
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _deprecatedPropType = __webpack_require__(362);
+	var _deprecatedPropType = __webpack_require__(361);
 	
 	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
 	
@@ -48358,7 +48706,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 369 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48503,17 +48851,17 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 370 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(371);
-	var AuthActions = __webpack_require__(364);
+	var LinkedStateMixin = __webpack_require__(376);
+	var AuthActions = __webpack_require__(369);
 	var History = __webpack_require__(186).History;
 	
 	// style
-	var TextField = __webpack_require__(346);
-	var RaisedButton = __webpack_require__(375);
+	var TextField = __webpack_require__(348);
+	var RaisedButton = __webpack_require__(380);
 	
 	var SignInUpForm = React.createClass({
 	  displayName: 'SignInUpForm',
@@ -48610,13 +48958,13 @@
 	module.exports = SignInUpForm;
 
 /***/ },
-/* 371 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(372);
+	module.exports = __webpack_require__(377);
 
 /***/ },
-/* 372 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -48633,8 +48981,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(373);
-	var ReactStateSetters = __webpack_require__(374);
+	var ReactLink = __webpack_require__(378);
+	var ReactStateSetters = __webpack_require__(379);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -48657,7 +49005,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 373 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -48731,7 +49079,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 374 */
+/* 379 */
 /***/ function(module, exports) {
 
 	/**
@@ -48840,7 +49188,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 375 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49288,14 +49636,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 376 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationStore = __webpack_require__(166);
 	var OptimizationActions = __webpack_require__(164);
-	var ReactHighcharts = __webpack_require__(377);
-	var TimeFormat = __webpack_require__(378);
+	var ReactHighcharts = __webpack_require__(382);
+	var TimeFormat = __webpack_require__(383);
 	
 	var OptimizationDetail = React.createClass({
 	  displayName: 'OptimizationDetail',
@@ -49490,7 +49838,7 @@
 	module.exports = OptimizationDetail;
 
 /***/ },
-/* 377 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	!function(t,e){ true?module.exports=e(__webpack_require__(1)):"function"==typeof define&&define.amd?define(["react"],e):"object"==typeof exports?exports["bundle/ReactHighcharts"]=e(require("react")):t["bundle/ReactHighcharts"]=e(t.react)}(this,function(t){return function(t){function e(n){if(i[n])return i[n].exports;var s=i[n]={exports:{},id:n,loaded:!1};return t[n].call(s.exports,s,s.exports,e),s.loaded=!0,s.exports}var i={};return e.m=t,e.c=i,e.p="",e(0)}([function(t,e,i){(function(e){"use strict";"undefined"==typeof e.Highcharts&&(e.Highcharts=i(6)),t.exports=i(3)}).call(e,function(){return this}())},function(e,i){e.exports=t},function(t,e,i){"use strict";var n=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var i=arguments[e];for(var n in i)Object.prototype.hasOwnProperty.call(i,n)&&(t[n]=i[n])}return t};if("undefined"==typeof Highcharts)throw Error("Starting with version 3 of react-highcharts, Highcharts is not bundled by default.  please include highcharts. ");!function(e){if(!e&&(e=i(1),!e))throw Error("react-highcharts does not include React");t.exports=function(t,i){var s="Highcharts"+i,o=e.createClass({displayName:s,propTypes:{config:e.PropTypes.object.isRequired,isPureConfig:e.PropTypes.bool},renderChart:function(e){if(!e)throw new Error("Config must be specified for the "+s+" component");var o=e.chart;this.chart=new t[i](n({},e,{chart:n({},o,{renderTo:this.refs.chart})}))},shouldComponentUpdate:function(t){return this.props.isPureConfig&&this.props.config===t.config||this.renderChart(t.config),!0},getChart:function(){if(!this.chart)throw new Error("getChart() should not be called before the component is mounted");return this.chart},componentDidMount:function(){this.renderChart(this.props.config)},render:function(){var t=this.props;return t=n({},t,{ref:"chart"}),e.createElement("div",t)}});return o.Highcharts=t,o}}("undefined"!=typeof React&&React)},function(t,e,i){"use strict";var n=i(2);t.exports=n(Highcharts,"Chart")},,,function(t,e){!function(e,i){"object"==typeof t&&t.exports?t.exports=e.document?i(e):i:e.Highcharts=i(e)}("undefined"!=typeof window?window:this,function(t){function e(e,i){var n="Highcharts error #"+e+": www.highcharts.com/errors/"+e;if(i)throw Error(n);t.console&&console.log(n)}function i(t,e,i){this.options=e,this.elem=t,this.prop=i}function n(){var t,e,i=arguments,n={},s=function(t,e){var i,n;"object"!=typeof t&&(t={});for(n in e)e.hasOwnProperty(n)&&(i=e[n],t[n]=i&&"object"==typeof i&&"[object Array]"!==Object.prototype.toString.call(i)&&"renderTo"!==n&&"number"!=typeof i.nodeType?s(t[n]||{},i):e[n]);return t};for(i[0]===!0&&(n=i[1],i=Array.prototype.slice.call(i,2)),e=i.length,t=0;e>t;t++)n=s(n,i[t]);return n}function s(t,e){return parseInt(t,e||10)}function o(t){return"string"==typeof t}function r(t){return t&&"object"==typeof t}function a(t){return"[object Array]"===Object.prototype.toString.call(t)}function h(t){return"number"==typeof t}function l(t){return ht.log(t)/ht.LN10}function c(t){return ht.pow(10,t)}function d(t,e){for(var i=t.length;i--;)if(t[i]===e){t.splice(i,1);break}}function p(t){return t!==E&&null!==t}function u(t,e,i){var n,s;if(o(e))p(i)?t.setAttribute(e,i):t&&t.getAttribute&&(s=t.getAttribute(e));else if(p(e)&&r(e))for(n in e)t.setAttribute(n,e[n]);return s}function f(t){return a(t)?t:[t]}function g(t,e,i){return e?setTimeout(t,e,i):void t.call(0,i)}function m(t,e){kt&&!Pt&&e&&e.opacity!==E&&(e.filter="alpha(opacity="+100*e.opacity+")"),$t(t.style,e)}function y(t,e,i,n,s){return t=at.createElement(t),e&&$t(t,e),s&&m(t,{padding:0,border:"none",margin:0}),i&&m(t,i),n&&n.appendChild(t),t}function v(t,e){var i=function(){};return i.prototype=new t,$t(i.prototype,e),i}function x(t,e){return Array((e||2)+1-String(t).length).join(0)+t}function b(t){return 6e4*(_&&_(t)||j||0)}function k(t,e){for(var i,n,s,o,r,a="{",h=!1,l=[];-1!==(a=t.indexOf(a));){if(i=t.slice(0,a),h){for(n=i.split(":"),s=n.shift().split("."),r=s.length,i=e,o=0;r>o;o++)i=i[s[o]];n.length&&(n=n.join(":"),s=/\.([0-9])/,o=G.lang,r=void 0,/f$/.test(n)?(r=(r=n.match(s))?r[1]:-1,null!==i&&(i=rt.numberFormat(i,r,o.decimalPoint,n.indexOf(",")>-1?o.thousandsSep:""))):i=F(n,i))}l.push(i),t=t.slice(a+1),a=(h=!h)?"}":"{"}return l.push(t),l.join("")}function w(t){return ht.pow(10,ct(ht.log(t)/ht.LN10))}function S(t,e,i,n,s){var o,r=t,i=Jt(i,1);for(o=t/i,e||(e=[1,2,2.5,5,10],n===!1&&(1===i?e=[1,2,5,10]:.1>=i&&(e=[1/i]))),n=0;n<e.length&&(r=e[n],!(s&&r*i>=t||!s&&o<=(e[n]+(e[n+1]||e[n]))/2));n++);return r*=i}function T(t,e){var i,n,s=t.length;for(n=0;s>n;n++)t[n].safeI=n;for(t.sort(function(t,n){return i=e(t,n),0===i?t.safeI-n.safeI:i}),n=0;s>n;n++)delete t[n].safeI}function A(t){for(var e=t.length,i=t[0];e--;)t[e]<i&&(i=t[e]);return i}function C(t){for(var e=t.length,i=t[0];e--;)t[e]>i&&(i=t[e]);return i}function P(t,e){for(var i in t)t[i]&&t[i]!==e&&t[i].destroy&&t[i].destroy(),delete t[i]}function L(t){W||(W=y(Bt)),t&&W.appendChild(t),W.innerHTML=""}function M(t,e){return parseFloat(t.toPrecision(e||14))}function I(t,e){e.renderer.globalAnimation=Jt(t,e.animation)}function O(){var e=G.global,i=e.useUTC,n=i?"getUTC":"get",s=i?"setUTC":"set";N=e.Date||t.Date,j=i&&e.timezoneOffset,_=i&&e.getTimezoneOffset,V=function(t,e,n,s,o,r){var a;return i?(a=N.UTC.apply(0,arguments),a+=b(a)):a=new N(t,e,Jt(n,1),Jt(s,0),Jt(o,0),Jt(r,0)).getTime(),a},U=n+"Minutes",K=n+"Hours",Z=n+"Day",q=n+"Date",$=n+"Month",J=n+"FullYear",Q=s+"Milliseconds",tt=s+"Seconds",et=s+"Minutes",it=s+"Hours",nt=s+"Date",st=s+"Month",ot=s+"FullYear"}function D(t){return this instanceof D?void this.init(t):new D(t)}function z(){}function R(t,e,i,n){this.axis=t,this.pos=e,this.type=i||"",this.isNew=!0,!i&&!n&&this.addLabel()}function B(t,e,i,n,s){var o=t.chart.inverted;this.axis=t,this.isNegative=i,this.options=e,this.x=n,this.total=null,this.points={},this.stack=s,this.rightCliff=this.leftCliff=0,this.alignOptions={align:e.align||(o?i?"left":"right":"center"),verticalAlign:e.verticalAlign||(o?"middle":i?"bottom":"top"),y:Jt(e.y,o?4:i?14:-6),x:Jt(e.x,o?i?-6:6:0)},this.textAlign=e.textAlign||(o?i?"right":"left":"center")}var E,H,X,W,G,F,Y,N,V,j,_,U,K,Z,q,$,J,Q,tt,et,it,nt,st,ot,rt,at=t.document,ht=Math,lt=ht.round,ct=ht.floor,dt=ht.ceil,pt=ht.max,ut=ht.min,ft=ht.abs,gt=ht.cos,mt=ht.sin,yt=ht.PI,vt=2*yt/360,xt=t.navigator&&t.navigator.userAgent||"",bt=t.opera,kt=/(msie|trident|edge)/i.test(xt)&&!bt,wt=at&&8===at.documentMode,St=!kt&&/AppleWebKit/.test(xt),Tt=/Firefox/.test(xt),At=/(Mobile|Android|Windows Phone)/.test(xt),Ct="http://www.w3.org/2000/svg",Pt=at&&at.createElementNS&&!!at.createElementNS(Ct,"svg").createSVGRect,Lt=Tt&&parseInt(xt.split("Firefox/")[1],10)<4,Mt=at&&!Pt&&!kt&&!!at.createElement("canvas").getContext,It={},Ot=0,Dt=function(){},zt=[],Rt=0,Bt="div",Et=/^[0-9]+$/,Ht=["plotTop","marginRight","marginBottom","plotLeft"],Xt={};rt=t.Highcharts?e(16,!0):{win:t},rt.seriesTypes=Xt;var Wt,Gt,Ft,Yt,Nt,Vt,jt,_t,Ut,Kt,Zt,qt=[];i.prototype={dSetter:function(){var t,e=this.paths[0],i=this.paths[1],n=[],s=this.now,o=e.length;if(1===s)n=this.toD;else if(o===i.length&&1>s)for(;o--;)t=parseFloat(e[o]),n[o]=isNaN(t)?e[o]:s*parseFloat(i[o]-t)+t;else n=i;this.elem.attr("d",n)},update:function(){var t=this.elem,e=this.prop,i=this.now,n=this.options.step;this[e+"Setter"]?this[e+"Setter"]():t.attr?t.element&&t.attr(e,i):t.style[e]=i+this.unit,n&&n.call(t,i,this)},run:function(t,e,i){var n,s=this,o=function(t){return o.stopped?!1:s.step(t)};this.startTime=+new N,this.start=t,this.end=e,this.unit=i,this.now=this.start,this.pos=0,o.elem=this.elem,o()&&1===qt.push(o)&&(o.timerId=setInterval(function(){for(n=0;n<qt.length;n++)qt[n]()||qt.splice(n--,1);qt.length||clearInterval(o.timerId)},13))},step:function(t){var e,i=+new N,n=this.options;e=this.elem;var s,o=n.complete,r=n.duration,a=n.curAnim;if(e.attr&&!e.element)e=!1;else if(t||i>=r+this.startTime){this.now=this.end,this.pos=1,this.update(),t=a[this.prop]=!0;for(s in a)a[s]!==!0&&(t=!1);t&&o&&o.call(e),e=!1}else this.pos=n.easing((i-this.startTime)/r),this.now=this.start+(this.end-this.start)*this.pos,this.update(),e=!0;return e},initPath:function(t,e,i){var n,e=e||"",s=t.shift,o=e.indexOf("C")>-1,r=o?7:3,e=e.split(" "),i=[].concat(i),a=t.isArea,h=a?2:1,l=function(t){for(n=t.length;n--;)("M"===t[n]||"L"===t[n])&&t.splice(n+1,0,t[n+1],t[n+2],t[n+1],t[n+2])};if(o&&(l(e),l(i)),s<=i.length/r&&e.length===i.length)for(;s--;)i=i.slice(0,r).concat(i),a&&(i=i.concat(i.slice(i.length-r)));if(t.shift=0,e.length)for(t=i.length;e.length<t;)s=e.slice().splice(e.length/h-r,r*h),o&&(s[r-6]=s[r-2],s[r-5]=s[r-1]),[].splice.apply(e,[e.length/h,0].concat(s));return[e,i]}};var $t=rt.extend=function(t,e){var i;t||(t={});for(i in e)t[i]=e[i];return t},Jt=rt.pick=function(){var t,e,i=arguments,n=i.length;for(t=0;n>t;t++)if(e=i[t],e!==E&&null!==e)return e},Qt=rt.wrap=function(t,e,i){var n=t[e];t[e]=function(){var t=Array.prototype.slice.call(arguments);return t.unshift(n),i.apply(this,t)}};F=function(t,e,i){if(!p(e)||isNaN(e))return G.lang.invalidDate||"";var n,t=Jt(t,"%Y-%m-%d %H:%M:%S"),s=new N(e-b(e)),o=s[K](),r=s[Z](),a=s[q](),h=s[$](),l=s[J](),c=G.lang,d=c.weekdays,s=$t({a:d[r].substr(0,3),A:d[r],d:x(a),e:a,w:r,b:c.shortMonths[h],B:c.months[h],m:x(h+1),y:l.toString().substr(2,2),Y:l,H:x(o),k:o,I:x(o%12||12),l:o%12||12,M:x(s[U]()),p:12>o?"AM":"PM",P:12>o?"am":"pm",S:x(s.getSeconds()),L:x(lt(e%1e3),3)},rt.dateFormats);for(n in s)for(;-1!==t.indexOf("%"+n);)t=t.replace("%"+n,"function"==typeof s[n]?s[n](e):s[n]);return i?t.substr(0,1).toUpperCase()+t.substr(1):t},Y={millisecond:1,second:1e3,minute:6e4,hour:36e5,day:864e5,week:6048e5,month:24192e5,year:314496e5},rt.numberFormat=function(t,e,i,n){var o,r,t=+t||0,a=G.lang,h=(t.toString().split(".")[1]||"").length,l=Math.abs(t);return-1===e?e=Math.min(h,20):isNaN(e)&&(e=2),o=String(s(l.toFixed(e))),r=o.length>3?o.length%3:0,i=Jt(i,a.decimalPoint),n=Jt(n,a.thousandsSep),t=0>t?"-":"",t+=r?o.substr(0,r)+n:"",t+=o.substr(r).replace(/(\d{3})(?=\d)/g,"$1"+n),+e&&(n=Math.abs(l-o+Math.pow(10,-Math.max(e,h)-1)),t+=i+n.toFixed(e).slice(2)),t},Math.easeInOutSine=function(t){return-.5*(Math.cos(Math.PI*t)-1)},Wt=function(e,i){var n;return"width"===i?Math.min(e.offsetWidth,e.scrollWidth)-Wt(e,"padding-left")-Wt(e,"padding-right"):"height"===i?Math.min(e.offsetHeight,e.scrollHeight)-Wt(e,"padding-top")-Wt(e,"padding-bottom"):(n=t.getComputedStyle(e,void 0))&&s(n.getPropertyValue(i))},Gt=function(t,e){return e.indexOf?e.indexOf(t):[].indexOf.call(e,t)},Yt=function(t,e){return[].filter.call(t,e)},Vt=function(t,e){for(var i=[],n=0,s=t.length;s>n;n++)i[n]=e.call(t[n],t[n],n,t);return i},Nt=function(e){var i=at.documentElement,e=e.getBoundingClientRect();return{top:e.top+(t.pageYOffset||i.scrollTop)-(i.clientTop||0),left:e.left+(t.pageXOffset||i.scrollLeft)-(i.clientLeft||0)}},Zt=function(t){for(var e=qt.length;e--;)qt[e].elem===t&&(qt[e].stopped=!0)},Ft=function(t,e){return Array.prototype.forEach.call(t,e)},jt=function(e,i,n){function s(i){i.target=i.srcElement||t,n.call(e,i)}var o=e.hcEvents=e.hcEvents||{};e.addEventListener?e.addEventListener(i,n,!1):e.attachEvent&&(e.hcEventsIE||(e.hcEventsIE={}),e.hcEventsIE[n.toString()]=s,e.attachEvent("on"+i,s)),o[i]||(o[i]=[]),o[i].push(n)},_t=function(t,e,i){function n(e,i){t.removeEventListener?t.removeEventListener(e,i,!1):t.attachEvent&&(i=t.hcEventsIE[i.toString()],t.detachEvent("on"+e,i))}function s(){var i,s,o;if(t.nodeName)for(o in e?(i={},i[e]=!0):i=a,i)if(a[o])for(s=a[o].length;s--;)n(o,a[o][s])}var o,r,a=t.hcEvents;a&&(e?(o=a[e]||[],i?(r=Gt(i,o),r>-1&&(o.splice(r,1),a[e]=o),n(e,i)):(s(),a[e]=[])):(s(),t.hcEvents={}))},Ut=function(t,e,i,n){var s;s=t.hcEvents;var o,r,a,h,i=i||{};if(at.createEvent&&(t.dispatchEvent||t.fireEvent))s=at.createEvent("Events"),s.initEvent(e,!0,!0),s.target=t,$t(s,i),t.dispatchEvent?t.dispatchEvent(s):t.fireEvent(e,s);else if(s)for(s=s[e]||[],o=s.length,a=function(){i.defaultPrevented=!0},r=0;o>r;r++){if(h=s[r],i.stopped)return;i.preventDefault=a,i.target=t,i.type||(i.type=e),h.call(t,i)===!1&&i.preventDefault()}n&&!i.defaultPrevented&&n(i)},Kt=function(t,e,s){var o,a,l,c,d="";r(s)||(o=arguments,s={duration:o[2],easing:o[3],complete:o[4]}),h(s.duration)||(s.duration=400),s.easing=Math[s.easing]||Math.easeInOutSine,s.curAnim=n(e);for(c in e)l=new i(t,s,c),a=null,"d"===c?(l.paths=l.initPath(t,t.d,e.d),l.toD=e.d,o=0,a=1):t.attr?o=t.attr(c):(o=parseFloat(Wt(t,c))||0,"opacity"!==c&&(d="px")),a||(a=e[c]),a.match&&a.match("px")&&(a=a.replace(/px/g,"")),l.run(o,a,d)},t.jQuery&&(t.jQuery.fn.highcharts=function(){var t=[].slice.call(arguments);return this[0]?t[0]?(new(rt[o(t[0])?t.shift():"Chart"])(this[0],t[0],t[1]),this):zt[u(this[0],"data-highcharts-chart")]:void 0}),at&&!at.defaultView&&(Wt=function(t,e){var i;return i={width:"clientWidth",height:"clientHeight"}[e],t.style[e]?s(t.style[e]):("opacity"===e&&(e="filter"),i?(t.style.zoom=1,t[i]-2*Wt(t,"padding")):(i=t.currentStyle[e.replace(/\-(\w)/g,function(t,e){return e.toUpperCase()})],"filter"===e&&(i=i.replace(/alpha\(opacity=([0-9]+)\)/,function(t,e){return e/100})),""===i?1:s(i)))}),Array.prototype.forEach||(Ft=function(t,e){for(var i=0,n=t.length;n>i;i++)if(e.call(t[i],t[i],i,t)===!1)return i}),Array.prototype.indexOf||(Gt=function(t,e){var i,n=0;if(e)for(i=e.length;i>n;n++)if(e[n]===t)return n;return-1}),Array.prototype.filter||(Yt=function(t,e){for(var i=[],n=0,s=t.length;s>n;n++)e(t[n],n)&&i.push(t[n]);return i}),rt.Fx=i,rt.inArray=Gt,rt.each=Ft,rt.grep=Yt,rt.offset=Nt,rt.map=Vt,rt.addEvent=jt,rt.removeEvent=_t,rt.fireEvent=Ut,rt.animate=Kt,rt.stop=Zt,G={colors:"#7cb5ec,#434348,#90ed7d,#f7a35c,#8085e9,#f15c80,#e4d354,#2b908f,#f45b5b,#91e8e1".split(","),symbols:["circle","diamond","square","triangle","triangle-down"],lang:{loading:"Loading...",months:"January,February,March,April,May,June,July,August,September,October,November,December".split(","),shortMonths:"Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec".split(","),weekdays:"Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday".split(","),decimalPoint:".",numericSymbols:"k,M,G,T,P,E".split(","),resetZoom:"Reset zoom",resetZoomTitle:"Reset zoom level 1:1",thousandsSep:" "},global:{useUTC:!0,canvasToolsURL:"http://code.highcharts.com/modules/canvas-tools.js",VMLRadialGradientURL:"http://code.highcharts.com/4.2.3/gfx/vml-radial-gradient.png"},chart:{borderColor:"#4572A7",borderRadius:0,defaultSeriesType:"line",ignoreHiddenSeries:!0,spacing:[10,10,15,10],backgroundColor:"#FFFFFF",plotBorderColor:"#C0C0C0",resetZoomButton:{theme:{zIndex:20},position:{align:"right",x:-10,y:10}}},title:{text:"Chart title",align:"center",margin:15,style:{color:"#333333",fontSize:"18px"}},subtitle:{text:"",align:"center",style:{color:"#555555"}},plotOptions:{line:{allowPointSelect:!1,showCheckbox:!1,animation:{duration:1e3},events:{},lineWidth:2,marker:{lineWidth:0,radius:4,lineColor:"#FFFFFF",states:{hover:{enabled:!0,lineWidthPlus:1,radiusPlus:2},select:{fillColor:"#FFFFFF",lineColor:"#000000",lineWidth:2}}},point:{events:{}},dataLabels:{align:"center",formatter:function(){return null===this.y?"":rt.numberFormat(this.y,-1)},style:{color:"contrast",fontSize:"11px",fontWeight:"bold",textShadow:"0 0 6px contrast, 0 0 3px contrast"},verticalAlign:"bottom",x:0,y:0,padding:5},cropThreshold:300,pointRange:0,softThreshold:!0,states:{hover:{lineWidthPlus:1,marker:{},halo:{size:10,opacity:.25}},select:{marker:{}}},stickyTracking:!0,turboThreshold:1e3}},labels:{style:{position:"absolute",color:"#3E576F"}},legend:{enabled:!0,align:"center",layout:"horizontal",labelFormatter:function(){return this.name},borderColor:"#909090",borderRadius:0,navigation:{activeColor:"#274b6d",inactiveColor:"#CCC"},shadow:!1,itemStyle:{color:"#333333",fontSize:"12px",fontWeight:"bold"},itemHoverStyle:{color:"#000"},itemHiddenStyle:{color:"#CCC"},itemCheckboxStyle:{position:"absolute",width:"13px",height:"13px"},symbolPadding:5,verticalAlign:"bottom",x:0,y:0,title:{style:{fontWeight:"bold"}}},loading:{labelStyle:{fontWeight:"bold",position:"relative",top:"45%"},style:{position:"absolute",backgroundColor:"white",opacity:.5,textAlign:"center"}},tooltip:{enabled:!0,animation:Pt,backgroundColor:"rgba(249, 249, 249, .85)",borderWidth:1,borderRadius:3,dateTimeLabelFormats:{millisecond:"%A, %b %e, %H:%M:%S.%L",second:"%A, %b %e, %H:%M:%S",minute:"%A, %b %e, %H:%M",hour:"%A, %b %e, %H:%M",day:"%A, %b %e, %Y",week:"Week from %A, %b %e, %Y",month:"%B %Y",year:"%Y"},footerFormat:"",headerFormat:'<span style="font-size: 10px">{point.key}</span><br/>',pointFormat:'<span style="color:{point.color}">●</span> {series.name}: <b>{point.y}</b><br/>',shadow:!0,snap:At?25:10,style:{color:"#333333",cursor:"default",fontSize:"12px",padding:"8px",pointerEvents:"none",whiteSpace:"nowrap"}},credits:{enabled:!0,text:"Highcharts.com",href:"http://www.highcharts.com",position:{align:"right",x:-10,verticalAlign:"bottom",y:-5},style:{cursor:"pointer",color:"#909090",fontSize:"9px"}}};var te=G.plotOptions,ee=te.line;O(),D.prototype={parsers:[{regex:/rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]?(?:\.[0-9]+)?)\s*\)/,parse:function(t){return[s(t[1]),s(t[2]),s(t[3]),parseFloat(t[4],10)]}},{regex:/#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/,parse:function(t){return[s(t[1],16),s(t[2],16),s(t[3],16),1]}},{regex:/rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/,parse:function(t){return[s(t[1]),s(t[2]),s(t[3]),1]}}],init:function(t){var e,i,n,s;if((this.input=t)&&t.stops)this.stops=Vt(t.stops,function(t){return new D(t[1])});else for(n=this.parsers.length;n--&&!i;)s=this.parsers[n],(e=s.regex.exec(t))&&(i=s.parse(e));this.rgba=i||[]},get:function(t){var e,i=this.input,s=this.rgba;return this.stops?(e=n(i),e.stops=[].concat(e.stops),Ft(this.stops,function(i,n){e.stops[n]=[e.stops[n][0],i.get(t)]})):e=s&&!isNaN(s[0])?"rgb"===t||!t&&1===s[3]?"rgb("+s[0]+","+s[1]+","+s[2]+")":"a"===t?s[3]:"rgba("+s.join(",")+")":i,e},brighten:function(t){var e,i=this.rgba;if(this.stops)Ft(this.stops,function(e){e.brighten(t)});else if(h(t)&&0!==t)for(e=0;3>e;e++)i[e]+=s(255*t),i[e]<0&&(i[e]=0),i[e]>255&&(i[e]=255);return this},setOpacity:function(t){return this.rgba[3]=t,this}},z.prototype={opacity:1,textProps:"direction,fontSize,fontWeight,fontFamily,fontStyle,color,lineHeight,width,textDecoration,textOverflow,textShadow".split(","),init:function(t,e){this.element="span"===e?y(e):at.createElementNS(Ct,e),this.renderer=t},animate:function(t,e,i){return e=Jt(e,this.renderer.globalAnimation,!0),Zt(this),e?(e=n(e,{}),i&&(e.complete=i),Kt(this,t,e)):this.attr(t,null,i),this},colorGradient:function(t,e,i){var s,o,r,h,l,c,d,u,f,g,m,y,v=this.renderer,x=[];if(t.linearGradient?o="linearGradient":t.radialGradient&&(o="radialGradient"),o){r=t[o],l=v.gradients,d=t.stops,g=i.radialReference,a(r)&&(t[o]=r={x1:r[0],y1:r[1],x2:r[2],y2:r[3],gradientUnits:"userSpaceOnUse"}),"radialGradient"===o&&g&&!p(r.gradientUnits)&&(h=r,r=n(r,v.getRadialAttr(g,h),{gradientUnits:"userSpaceOnUse"}));for(m in r)"id"!==m&&x.push(m,r[m]);for(m in d)x.push(d[m]);x=x.join(","),l[x]?g=l[x].attr("id"):(r.id=g="highcharts-"+Ot++,l[x]=c=v.createElement(o).attr(r).add(v.defs),c.radAttr=h,c.stops=[],Ft(d,function(t){0===t[1].indexOf("rgba")?(s=D(t[1]),u=s.get("rgb"),f=s.get("a")):(u=t[1],f=1),t=v.createElement("stop").attr({offset:t[0],"stop-color":u,"stop-opacity":f}).add(c),c.stops.push(t)})),y="url("+v.url+"#"+g+")",i.setAttribute(e,y),i.gradient=x,t.toString=function(){return y}}},applyTextShadow:function(t){var e,i=this.element,n=-1!==t.indexOf("contrast"),o={},r=this.renderer.forExport,a=r||i.style.textShadow!==E&&!kt;n&&(o.textShadow=t=t.replace(/contrast/g,this.renderer.getContrast(i.style.fill))),(St||r)&&(o.textRendering="geometricPrecision"),a?this.css(o):(this.fakeTS=!0,this.ySetter=this.xSetter,e=[].slice.call(i.getElementsByTagName("tspan")),Ft(t.split(/\s?,\s?/g),function(t){var n,o,r=i.firstChild,t=t.split(" ");n=t[t.length-1],(o=t[t.length-2])&&Ft(e,function(t,e){var a;0===e&&(t.setAttribute("x",i.getAttribute("x")),e=i.getAttribute("y"),t.setAttribute("y",e||0),null===e&&i.setAttribute("y",0)),a=t.cloneNode(1),u(a,{"class":"highcharts-text-shadow",fill:n,stroke:n,"stroke-opacity":1/pt(s(o),3),"stroke-width":o,"stroke-linejoin":"round"}),i.insertBefore(a,r)})}))},attr:function(t,e,i){var n,s,o,r=this.element,a=this;if("string"==typeof t&&e!==E&&(n=t,t={},t[n]=e),"string"==typeof t)a=(this[t+"Getter"]||this._defaultGetter).call(this,t,r);else{for(n in t)e=t[n],o=!1,this.symbolName&&/^(x|y|width|height|r|start|end|innerR|anchorX|anchorY)/.test(n)&&(s||(this.symbolAttr(t),s=!0),o=!0),!this.rotation||"x"!==n&&"y"!==n||(this.doTransform=!0),o||(o=this[n+"Setter"]||this._defaultSetter,o.call(this,e,n,r),this.shadows&&/^(width|height|visibility|x|y|d|transform|cx|cy|r)$/.test(n)&&this.updateShadows(n,e,o));this.doTransform&&(this.updateTransform(),this.doTransform=!1)}return i&&i(),a},updateShadows:function(t,e,i){for(var n=this.shadows,s=n.length;s--;)i.call(null,"height"===t?Math.max(e-(n[s].cutHeight||0),0):"d"===t?this.d:e,t,n[s])},addClass:function(t){var e=this.element,i=u(e,"class")||"";return-1===i.indexOf(t)&&u(e,"class",i+" "+t),this},symbolAttr:function(t){var e=this;Ft("x,y,r,start,end,width,height,innerR,anchorX,anchorY".split(","),function(i){e[i]=Jt(t[i],e[i])}),e.attr({d:e.renderer.symbols[e.symbolName](e.x,e.y,e.width,e.height,e)})},clip:function(t){return this.attr("clip-path",t?"url("+this.renderer.url+"#"+t.id+")":"none")},crisp:function(t){var e,i,n={},s=this.strokeWidth||0;i=lt(s)%2/2,t.x=ct(t.x||this.x||0)+i,t.y=ct(t.y||this.y||0)+i,t.width=ct((t.width||this.width||0)-2*i),t.height=ct((t.height||this.height||0)-2*i),t.strokeWidth=s;for(e in t)this[e]!==t[e]&&(this[e]=n[e]=t[e]);return n},css:function(t){var e,i,n=this.styles,o={},r=this.element,a="";if(e=!n,t&&t.color&&(t.fill=t.color),n)for(i in t)t[i]!==n[i]&&(o[i]=t[i],e=!0);if(e){if(e=this.textWidth=t&&t.width&&"text"===r.nodeName.toLowerCase()&&s(t.width)||this.textWidth,n&&(t=$t(n,o)),this.styles=t,e&&(Mt||!Pt&&this.renderer.forExport)&&delete t.width,kt&&!Pt)m(this.element,t);else{n=function(t,e){return"-"+e.toLowerCase()};for(i in t)a+=i.replace(/([A-Z])/g,n)+":"+t[i]+";";u(r,"style",a)}e&&this.added&&this.renderer.buildText(this)}return this},on:function(t,e){var i=this,n=i.element;return X&&"click"===t?(n.ontouchstart=function(t){i.touchEventFired=N.now(),t.preventDefault(),e.call(n,t)},n.onclick=function(t){(-1===xt.indexOf("Android")||N.now()-(i.touchEventFired||0)>1100)&&e.call(n,t)}):n["on"+t]=e,this},setRadialReference:function(t){var e=this.renderer.gradients[this.element.gradient];return this.element.radialReference=t,e&&e.radAttr&&e.animate(this.renderer.getRadialAttr(t,e.radAttr)),this},translate:function(t,e){return this.attr({translateX:t,translateY:e})},invert:function(){return this.inverted=!0,this.updateTransform(),this},updateTransform:function(){var t=this.translateX||0,e=this.translateY||0,i=this.scaleX,n=this.scaleY,s=this.inverted,o=this.rotation,r=this.element;s&&(t+=this.attr("width"),e+=this.attr("height")),t=["translate("+t+","+e+")"],s?t.push("rotate(90) scale(-1,1)"):o&&t.push("rotate("+o+" "+(r.getAttribute("x")||0)+" "+(r.getAttribute("y")||0)+")"),(p(i)||p(n))&&t.push("scale("+Jt(i,1)+" "+Jt(n,1)+")"),t.length&&r.setAttribute("transform",t.join(" "))},toFront:function(){var t=this.element;return t.parentNode.appendChild(t),this},align:function(t,e,i){var n,s,r,a,h={};return s=this.renderer,r=s.alignedObjects,t?(this.alignOptions=t,this.alignByTranslate=e,(!i||o(i))&&(this.alignTo=n=i||"renderer",d(r,this),r.push(this),i=null)):(t=this.alignOptions,e=this.alignByTranslate,n=this.alignTo),i=Jt(i,s[n],s),n=t.align,s=t.verticalAlign,r=(i.x||0)+(t.x||0),a=(i.y||0)+(t.y||0),("right"===n||"center"===n)&&(r+=(i.width-(t.width||0))/{right:1,center:2}[n]),h[e?"translateX":"x"]=lt(r),("bottom"===s||"middle"===s)&&(a+=(i.height-(t.height||0))/({bottom:1,middle:2}[s]||1)),h[e?"translateY":"y"]=lt(a),this[this.placed?"animate":"attr"](h),this.placed=!0,this.alignAttr=h,this},getBBox:function(t,e){var i,n,s,o,r=this.renderer,a=this.element,h=this.styles;n=this.textStr;var l,c,d,p=a.style,u=r.cache,f=r.cacheKeys;if(s=Jt(e,this.rotation),o=s*vt,n!==E&&(d=["",s||0,h&&h.fontSize,a.style.width].join(","),d=""===n||Et.test(n)?"num:"+n.toString().length+d:n+d),d&&!t&&(i=u[d]),!i){if(a.namespaceURI===Ct||r.forExport){try{c=this.fakeTS&&function(t){Ft(a.querySelectorAll(".highcharts-text-shadow"),function(e){e.style.display=t})},Tt&&p.textShadow?(l=p.textShadow,p.textShadow=""):c&&c("none"),i=a.getBBox?$t({},a.getBBox()):{width:a.offsetWidth,height:a.offsetHeight},l?p.textShadow=l:c&&c("")}catch(g){}(!i||i.width<0)&&(i={width:0,height:0})}else i=this.htmlGetBBox();if(r.isSVG&&(r=i.width,n=i.height,kt&&h&&"11px"===h.fontSize&&"16.9"===n.toPrecision(3)&&(i.height=n=14),s&&(i.width=ft(n*mt(o))+ft(r*gt(o)),i.height=ft(n*gt(o))+ft(r*mt(o)))),d){for(;f.length>250;)delete u[f.shift()];u[d]||f.push(d),u[d]=i}}return i},show:function(t){return this.attr({visibility:t?"inherit":"visible"})},hide:function(){return this.attr({visibility:"hidden"})},fadeOut:function(t){var e=this;e.animate({opacity:0},{duration:t||150,complete:function(){e.attr({y:-9999})}})},add:function(t){var e,i=this.renderer,n=this.element;return t&&(this.parentGroup=t),this.parentInverted=t&&t.inverted,void 0!==this.textStr&&i.buildText(this),this.added=!0,(!t||t.handleZ||this.zIndex)&&(e=this.zIndexSetter()),e||(t?t.element:i.box).appendChild(n),this.onAdd&&this.onAdd(),this},safeRemoveChild:function(t){var e=t.parentNode;e&&e.removeChild(t)},destroy:function(){var t,e,i=this,n=i.element||{},s=i.shadows,o=i.renderer.isSVG&&"SPAN"===n.nodeName&&i.parentGroup;if(n.onclick=n.onmouseout=n.onmouseover=n.onmousemove=n.point=null,Zt(i),i.clipPath&&(i.clipPath=i.clipPath.destroy()),i.stops){for(e=0;e<i.stops.length;e++)i.stops[e]=i.stops[e].destroy();i.stops=null}for(i.safeRemoveChild(n),s&&Ft(s,function(t){i.safeRemoveChild(t)});o&&o.div&&0===o.div.childNodes.length;)n=o.parentGroup,i.safeRemoveChild(o.div),delete o.div,o=n;i.alignTo&&d(i.renderer.alignedObjects,i);for(t in i)delete i[t];return null},shadow:function(t,e,i){var n,s,o,r,a,h,l=[],c=this.element;if(t){for(r=Jt(t.width,3),a=(t.opacity||.15)/r,h=this.parentInverted?"(-1,-1)":"("+Jt(t.offsetX,1)+", "+Jt(t.offsetY,1)+")",n=1;r>=n;n++)s=c.cloneNode(0),o=2*r+1-2*n,u(s,{isShadow:"true",stroke:t.color||"black","stroke-opacity":a*n,"stroke-width":o,transform:"translate"+h,fill:"none"}),i&&(u(s,"height",pt(u(s,"height")-o,0)),s.cutHeight=o),e?e.element.appendChild(s):c.parentNode.insertBefore(s,c),l.push(s);this.shadows=l}return this},xGetter:function(t){return"circle"===this.element.nodeName&&(t={x:"cx",y:"cy"}[t]||t),this._defaultGetter(t)},_defaultGetter:function(t){return t=Jt(this[t],this.element?this.element.getAttribute(t):null,0),/^[\-0-9\.]+$/.test(t)&&(t=parseFloat(t)),t},dSetter:function(t,e,i){t&&t.join&&(t=t.join(" ")),/(NaN| {2}|^$)/.test(t)&&(t="M 0 0"),i.setAttribute(e,t),this[e]=t},dashstyleSetter:function(t){var e;if(t=t&&t.toLowerCase()){for(t=t.replace("shortdashdotdot","3,1,1,1,1,1,").replace("shortdashdot","3,1,1,1").replace("shortdot","1,1,").replace("shortdash","3,1,").replace("longdash","8,3,").replace(/dot/g,"1,3,").replace("dash","4,3,").replace(/,$/,"").split(","),e=t.length;e--;)t[e]=s(t[e])*this["stroke-width"];t=t.join(",").replace("NaN","none"),this.element.setAttribute("stroke-dasharray",t)}},alignSetter:function(t){this.element.setAttribute("text-anchor",{left:"start",center:"middle",right:"end"}[t])},opacitySetter:function(t,e,i){this[e]=t,i.setAttribute(e,t)},titleSetter:function(t){var e=this.element.getElementsByTagName("title")[0];e||(e=at.createElementNS(Ct,"title"),this.element.appendChild(e)),e.appendChild(at.createTextNode(String(Jt(t),"").replace(/<[^>]*>/g,"")))},textSetter:function(t){t!==this.textStr&&(delete this.bBox,this.textStr=t,this.added&&this.renderer.buildText(this))},fillSetter:function(t,e,i){"string"==typeof t?i.setAttribute(e,t):t&&this.colorGradient(t,e,i)},visibilitySetter:function(t,e,i){"inherit"===t?i.removeAttribute(e):i.setAttribute(e,t)},zIndexSetter:function(t,e){var i,n,o,r=this.renderer,a=this.parentGroup,r=(a||r).element||r.box,h=this.element;i=this.added;var l;if(p(t)&&(h.setAttribute(e,t),t=+t,this[e]===t&&(i=!1),this[e]=t),i){for((t=this.zIndex)&&a&&(a.handleZ=!0),a=r.childNodes,l=0;l<a.length&&!o;l++)i=a[l],n=u(i,"zIndex"),i!==h&&(s(n)>t||!p(t)&&p(n))&&(r.insertBefore(h,i),o=!0);o||r.appendChild(h)}return o},_defaultSetter:function(t,e,i){i.setAttribute(e,t)}},z.prototype.yGetter=z.prototype.xGetter,z.prototype.translateXSetter=z.prototype.translateYSetter=z.prototype.rotationSetter=z.prototype.verticalAlignSetter=z.prototype.scaleXSetter=z.prototype.scaleYSetter=function(t,e){this[e]=t,this.doTransform=!0},z.prototype["stroke-widthSetter"]=z.prototype.strokeSetter=function(t,e,i){this[e]=t,this.stroke&&this["stroke-width"]?(this.strokeWidth=this["stroke-width"],z.prototype.fillSetter.call(this,this.stroke,"stroke",i),i.setAttribute("stroke-width",this["stroke-width"]),this.hasStroke=!0):"stroke-width"===e&&0===t&&this.hasStroke&&(i.removeAttribute("stroke"),this.hasStroke=!1)};var ie=function(){this.init.apply(this,arguments)};ie.prototype={Element:z,init:function(e,i,n,s,o,r){var a,s=this.createElement("svg").attr({version:"1.1"}).css(this.getStyle(s));a=s.element,e.appendChild(a),-1===e.innerHTML.indexOf("xmlns")&&u(a,"xmlns",Ct),this.isSVG=!0,this.box=a,this.boxWrapper=s,this.alignedObjects=[],this.url=(Tt||St)&&at.getElementsByTagName("base").length?t.location.href.replace(/#.*?$/,"").replace(/([\('\)])/g,"\\$1").replace(/ /g,"%20"):"",this.createElement("desc").add().element.appendChild(at.createTextNode("Created with Highcharts 4.2.3")),this.defs=this.createElement("defs").add(),this.allowHTML=r,this.forExport=o,this.gradients={},this.cache={},this.cacheKeys=[],this.imgCount=0,this.setSize(i,n,!1);var h;Tt&&e.getBoundingClientRect&&(this.subPixelFix=i=function(){m(e,{left:0,top:0}),h=e.getBoundingClientRect(),m(e,{left:dt(h.left)-h.left+"px",top:dt(h.top)-h.top+"px"})},i(),jt(t,"resize",i))},getStyle:function(t){return this.style=$t({fontFamily:'"Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif',fontSize:"12px"},t)},isHidden:function(){return!this.boxWrapper.getBBox().width},destroy:function(){var e=this.defs;return this.box=null,this.boxWrapper=this.boxWrapper.destroy(),P(this.gradients||{}),this.gradients=null,e&&(this.defs=e.destroy()),this.subPixelFix&&_t(t,"resize",this.subPixelFix),this.alignedObjects=null},createElement:function(t){var e=new this.Element;return e.init(this,t),e},draw:function(){},getRadialAttr:function(t,e){return{cx:t[0]-t[2]/2+e.cx*t[2],cy:t[1]-t[2]/2+e.cy*t[2],r:e.r*t[2]}},buildText:function(t){for(var e,i,n=t.element,o=this,r=o.forExport,a=Jt(t.textStr,"").toString(),h=-1!==a.indexOf("<"),l=n.childNodes,c=u(n,"x"),d=t.styles,p=t.textWidth,f=d&&d.lineHeight,g=d&&d.textShadow,y=d&&"ellipsis"===d.textOverflow,v=l.length,x=p&&!t.added&&this.box,b=function(t){return f?s(f):o.fontMetrics(/(px|em)$/.test(t&&t.style.fontSize)?t.style.fontSize:d&&d.fontSize||o.style.fontSize||12,t).h},k=function(t){return t.replace(/&lt;/g,"<").replace(/&gt;/g,">")};v--;)n.removeChild(l[v]);h||g||y||-1!==a.indexOf(" ")?(e=/<.*style="([^"]+)".*>/,i=/<.*href="(http[^"]+)".*>/,x&&x.appendChild(n),a=h?a.replace(/<(b|strong)>/g,'<span style="font-weight:bold">').replace(/<(i|em)>/g,'<span style="font-style:italic">').replace(/<a/g,"<span").replace(/<\/(b|strong|i|em|a)>/g,"</span>").split(/<br.*?>/g):[a],""===a[a.length-1]&&a.pop(),Ft(a,function(s,a){var h,l=0,s=s.replace(/<span/g,"|||<span").replace(/<\/span>/g,"</span>|||");h=s.split("|||"),Ft(h,function(s){if(""!==s||1===h.length){var f,g={},v=at.createElementNS(Ct,"tspan");if(e.test(s)&&(f=s.match(e)[1].replace(/(;| |^)color([ :])/,"$1fill$2"),u(v,"style",f)),i.test(s)&&!r&&(u(v,"onclick",'location.href="'+s.match(i)[1]+'"'),
@@ -49501,7 +49849,7 @@
 	r=f.justify?k[0]+(l?-1:1)*(w+b):d.getX(a===S-w-b||a===S+w+b?t:a,l),n._attr={visibility:h,align:o[6]},n._pos={x:r+f.x+({left:g,right:-g}[o[6]]||0),y:a+f.y-10},n.connX=r,n.connY=a,null===this.options.size&&(s=n.width,g>r-s?P[3]=pt(lt(s-r+g),P[3]):r+s>y-g&&(P[1]=pt(lt(r+s-y+g),P[1])),0>a-p/2?P[0]=pt(lt(-a+p/2),P[0]):a+p/2>v&&(P[2]=pt(lt(a+p/2-v),P[2])))}}(0===C(P)||this.verifyDataLabelOverflow(P))&&(this.placeDataLabels(),T&&m&&Ft(this.points,function(t){e=t.connector,o=t.labelPos,(n=t.dataLabel)&&n._pos&&t.visible?(h=n._attr.visibility,r=n.connX,a=n.connY,i=x?["M",r+("left"===o[6]?5:-5),a,"C",r,a,2*o[2]-o[4],2*o[3]-o[5],o[2],o[3],"L",o[4],o[5]]:["M",r+("left"===o[6]?5:-5),a,"L",o[2],o[3],"L",o[4],o[5]],e?(e.animate({d:i}),e.attr("visibility",h)):t.connector=e=d.chart.renderer.path(i).attr({"stroke-width":m,stroke:f.connectorColor||t.color||"#606060",visibility:h}).add(d.dataLabelsGroup)):e&&(t.connector=e.destroy())}))}},Xt.pie.prototype.placeDataLabels=function(){Ft(this.points,function(t){var e=t.dataLabel;e&&t.visible&&((t=e._pos)?(e.attr(e._attr),e[e.moved?"animate":"attr"](t),e.moved=!0):e&&e.attr({y:-9999}))})},Xt.pie.prototype.alignDataLabel=Dt,Xt.pie.prototype.verifyDataLabelOverflow=function(t){var e,i=this.center,n=this.options,s=n.center,o=n.minSize||80,r=o;return null!==s[0]?r=pt(i[2]-pt(t[1],t[3]),o):(r=pt(i[2]-t[1]-t[3],o),i[0]+=(t[3]-t[1])/2),null!==s[1]?r=pt(ut(r,i[2]-pt(t[0],t[2])),o):(r=pt(ut(r,i[2]-t[0]-t[2]),o),i[1]+=(t[0]-t[2])/2),r<i[2]?(i[2]=r,i[3]=Math.min(/%$/.test(n.innerSize||0)?r*parseFloat(n.innerSize||0)/100:parseFloat(n.innerSize||0),r),this.translate(i),this.drawDataLabels&&this.drawDataLabels()):e=!0,e}),Xt.column&&(Xt.column.prototype.alignDataLabel=function(t,e,i,s,o){var r=this.chart.inverted,a=t.series,h=t.dlBox||t.shapeArgs,l=Jt(t.below,t.plotY>Jt(this.translatedThreshold,a.yAxis.len)),c=Jt(i.inside,!!this.options.stacking);h&&(s=n(h),s.y<0&&(s.height+=s.y,s.y=0),h=s.y+s.height-a.yAxis.len,h>0&&(s.height-=h),r&&(s={x:a.yAxis.len-s.y-s.height,y:a.xAxis.len-s.x-s.width,width:s.height,height:s.width}),c||(r?(s.x+=l?0:s.width,s.width=0):(s.y+=l?s.height:0,s.height=0))),i.align=Jt(i.align,!r||c?"center":l?"right":"left"),i.verticalAlign=Jt(i.verticalAlign,r||c?"middle":l?"top":"bottom"),ye.prototype.alignDataLabel.call(this,t,e,i,s,o)}),function(t){var e=t.Chart,i=t.each,n=t.pick,s=t.addEvent;e.prototype.callbacks.push(function(t){function e(){var e=[];i(t.series,function(t){var s=t.options.dataLabels,o=t.dataLabelCollections||["dataLabel"];(s.enabled||t._hasPointLabels)&&!s.allowOverlap&&t.visible&&i(o,function(s){i(t.points,function(t){t[s]&&(t[s].labelrank=n(t.labelrank,t.shapeArgs&&t.shapeArgs.height),e.push(t[s]))})})}),t.hideOverlappingLabels(e)}e(),s(t,"redraw",e)}),e.prototype.hideOverlappingLabels=function(t){var e,n,s,o,r,a,h,l,c,d=t.length;for(n=0;d>n;n++)(e=t[n])&&(e.oldOpacity=e.opacity,e.newOpacity=1);for(t.sort(function(t,e){return(e.labelrank||0)-(t.labelrank||0)}),n=0;d>n;n++)for(s=t[n],e=n+1;d>e;++e)o=t[e],s&&o&&s.placed&&o.placed&&0!==s.newOpacity&&0!==o.newOpacity&&(r=s.alignAttr,a=o.alignAttr,h=s.parentGroup,l=o.parentGroup,c=2*(s.box?0:s.padding),r=!(a.x+l.translateX>r.x+h.translateX+(s.width-c)||a.x+l.translateX+(o.width-c)<r.x+h.translateX||a.y+l.translateY>r.y+h.translateY+(s.height-c)||a.y+l.translateY+(o.height-c)<r.y+h.translateY))&&((s.labelrank<o.labelrank?s:o).newOpacity=0);i(t,function(t){var e,i;t&&(i=t.newOpacity,t.oldOpacity!==i&&t.placed&&(i?t.show(!0):e=function(){t.hide()},t.alignAttr.opacity=i,t[t.isOld?"animate":"attr"](t.alignAttr,null,e)),t.isOld=!0)})}}(rt),ee=rt.TrackerMixin={drawTrackerPoint:function(){var t=this,e=t.chart,i=e.pointer,n=t.options.cursor,s=n&&{cursor:n},o=function(t){for(var i,n=t.target;n&&!i;)i=n.point,n=n.parentNode;i!==E&&i!==e.hoverPoint&&i.onMouseOver(t)};Ft(t.points,function(t){t.graphic&&(t.graphic.element.point=t),t.dataLabel&&(t.dataLabel.element.point=t)}),t._hasTracking||(Ft(t.trackerGroups,function(e){t[e]&&(t[e].addClass("highcharts-tracker").on("mouseover",o).on("mouseout",function(t){i.onTrackerMouseOut(t)}).css(s),X)&&t[e].on("touchstart",o)}),t._hasTracking=!0)},drawTrackerGraph:function(){var t=this,e=t.options,i=e.trackByArea,n=[].concat(i?t.areaPath:t.graphPath),s=n.length,o=t.chart,r=o.pointer,a=o.renderer,h=o.options.tooltip.snap,l=t.tracker,c=e.cursor,d=c&&{cursor:c},p=function(){o.hoverSeries!==t&&t.onMouseOver()},u="rgba(192,192,192,"+(Pt?1e-4:.002)+")";if(s&&!i)for(c=s+1;c--;)"M"===n[c]&&n.splice(c+1,0,n[c+1]-h,n[c+2],"L"),(c&&"M"===n[c]||c===s)&&n.splice(c,0,"L",n[c-2]+h,n[c-1]);l?l.attr({d:n}):(t.tracker=a.path(n).attr({"stroke-linejoin":"round",visibility:t.visible?"visible":"hidden",stroke:u,fill:i?u:"none","stroke-width":e.lineWidth+(i?0:2*h),zIndex:2}).add(t.group),Ft([t.tracker,t.markerGroup],function(t){t.addClass("highcharts-tracker").on("mouseover",p).on("mouseout",function(t){r.onTrackerMouseOut(t)}).css(d),X&&t.on("touchstart",p)}))}},Xt.column&&(ve.prototype.drawTracker=ee.drawTrackerPoint),Xt.pie&&(Xt.pie.prototype.drawTracker=ee.drawTrackerPoint),Xt.scatter&&(xe.prototype.drawTracker=ee.drawTrackerPoint),$t(fe.prototype,{setItemEvents:function(t,e,i,n,s){var o=this;(i?e:t.legendGroup).on("mouseover",function(){t.setState("hover"),e.css(o.options.itemHoverStyle)}).on("mouseout",function(){e.css(t.visible?n:s),t.setState()}).on("click",function(e){var i=function(){t.setVisible&&t.setVisible()},e={browserEvent:e};t.firePointEvent?t.firePointEvent("legendItemClick",e,i):Ut(t,"legendItemClick",e,i)})},createCheckboxForItem:function(t){t.checkbox=y("input",{type:"checkbox",checked:t.selected,defaultChecked:t.selected},this.options.itemCheckboxStyle,this.chart.container),jt(t.checkbox,"click",function(e){Ut(t.series||t,"checkboxClick",{checked:e.target.checked,item:t},function(){t.select()})})}}),G.legend.itemStyle.cursor="pointer",$t(ge.prototype,{showResetZoom:function(){var t=this,e=G.lang,i=t.options.chart.resetZoomButton,n=i.theme,s=n.states,o="chart"===i.relativeTo?null:"plotBox";this.resetZoomButton=t.renderer.button(e.resetZoom,null,null,function(){t.zoomOut()},n,s&&s.hover).attr({align:i.position.align,title:e.resetZoomTitle}).add().align(i.position,!1,o)},zoomOut:function(){var t=this;Ut(t,"selection",{resetSelection:!0},function(){t.zoom()})},zoom:function(t){var e,i,n=this.pointer,s=!1;!t||t.resetSelection?Ft(this.axes,function(t){e=t.zoom()}):Ft(t.xAxis.concat(t.yAxis),function(t){var i=t.axis,o=i.isXAxis;(n[o?"zoomX":"zoomY"]||n[o?"pinchX":"pinchY"])&&(e=i.zoom(t.min,t.max),i.displayBtn&&(s=!0))}),i=this.resetZoomButton,s&&!i?this.showResetZoom():!s&&r(i)&&(this.resetZoomButton=i.destroy()),e&&this.redraw(Jt(this.options.chart.animation,t&&t.animation,this.pointCount<100))},pan:function(t,e){var i,n=this,s=n.hoverPoints;s&&Ft(s,function(t){t.setState()}),Ft("xy"===e?[1,0]:[1],function(e){var e=n[e?"xAxis":"yAxis"][0],s=e.horiz,o=t[s?"chartX":"chartY"],s=s?"mouseDownX":"mouseDownY",r=n[s],a=(e.pointRange||0)/2,h=e.getExtremes(),l=e.toValue(r-o,!0)+a,a=e.toValue(r+e.len-o,!0)-a,r=r>o;e.series.length&&(r||l>ut(h.dataMin,h.min))&&(!r||a<pt(h.dataMax,h.max))&&(e.setExtremes(l,a,!1,!1,{trigger:"pan"}),i=!0),n[s]=o}),i&&n.redraw(!1),m(n.container,{cursor:"move"})}}),$t(me.prototype,{select:function(t,e){var i=this,n=i.series,s=n.chart,t=Jt(t,!i.selected);i.firePointEvent(t?"select":"unselect",{accumulate:e},function(){i.selected=i.options.selected=t,n.options.data[Gt(i,n.data)]=i.options,i.setState(t&&"select"),e||Ft(s.getSelectedPoints(),function(t){t.selected&&t!==i&&(t.selected=t.options.selected=!1,n.options.data[Gt(t,n.data)]=t.options,t.setState(""),t.firePointEvent("unselect"))})})},onMouseOver:function(t,e){var i=this.series,n=i.chart,s=n.tooltip,o=n.hoverPoint;n.hoverSeries!==i&&i.onMouseOver(),o&&o!==this&&o.onMouseOut(),this.series&&(this.firePointEvent("mouseOver"),s&&(!s.shared||i.noSharedTooltip)&&s.refresh(this,t),this.setState("hover"),!e)&&(n.hoverPoint=this)},onMouseOut:function(){var t=this.series.chart,e=t.hoverPoints;this.firePointEvent("mouseOut"),e&&-1!==Gt(this,e)||(this.setState(),t.hoverPoint=null)},importEvents:function(){if(!this.hasImportedEvents){var t,e=n(this.series.options.point,this.options).events;this.events=e;for(t in e)jt(this,t,e[t]);this.hasImportedEvents=!0}},setState:function(t,e){var i,s=ct(this.plotX),o=this.plotY,r=this.series,a=r.options.states,h=te[r.type].marker&&r.options.marker,l=h&&!h.enabled,c=h&&h.states[t],d=c&&c.enabled===!1,p=r.stateMarkerGraphic,u=this.marker||{},f=r.chart,g=r.halo,t=t||"";i=this.pointAttr[t]||r.pointAttr[t],t===this.state&&!e||this.selected&&"select"!==t||a[t]&&a[t].enabled===!1||t&&(d||l&&c.enabled===!1)||t&&u.states&&u.states[t]&&u.states[t].enabled===!1||(this.graphic?(h=h&&this.graphic.symbolName&&i.r,this.graphic.attr(n(i,h?{x:s-h,y:o-h,width:2*h,height:2*h}:{})),p&&p.hide()):(t&&c&&(h=c.radius,u=u.symbol||r.symbol,p&&p.currentSymbol!==u&&(p=p.destroy()),p?p[e?"animate":"attr"]({x:s-h,y:o-h}):u&&(r.stateMarkerGraphic=p=f.renderer.symbol(u,s-h,o-h,2*h,2*h).attr(i).add(r.markerGroup),p.currentSymbol=u)),p&&(p[t&&f.isInsidePlot(s,o,f.inverted)?"show":"hide"](),p.element.point=this)),(s=a[t]&&a[t].halo)&&s.size?(g||(r.halo=g=f.renderer.path().add(f.seriesGroup)),g.attr($t({fill:this.color||r.color,"fill-opacity":s.opacity,zIndex:-1},s.attributes))[e?"animate":"attr"]({d:this.haloPath(s.size)})):g&&g.attr({d:[]}),this.state=t)},haloPath:function(t){var e=this.series,i=e.chart,n=e.getPlotBox(),s=i.inverted,o=Math.floor(this.plotX);return i.renderer.symbols.circle(n.translateX+(s?e.yAxis.len-this.plotY:o)-t,n.translateY+(s?e.xAxis.len-o:this.plotY)-t,2*t,2*t)}}),$t(ye.prototype,{onMouseOver:function(){var t=this.chart,e=t.hoverSeries;e&&e!==this&&e.onMouseOut(),this.options.events.mouseOver&&Ut(this,"mouseOver"),this.setState("hover"),t.hoverSeries=this},onMouseOut:function(){var t=this.options,e=this.chart,i=e.tooltip,n=e.hoverPoint;e.hoverSeries=null,n&&n.onMouseOut(),this&&t.events.mouseOut&&Ut(this,"mouseOut"),i&&!t.stickyTracking&&(!i.shared||this.noSharedTooltip)&&i.hide(),this.setState()},setState:function(t){var e=this.options,i=this.graph,n=e.states,s=e.lineWidth,e=0,t=t||"";if(this.state!==t&&(this.state=t,!(n[t]&&n[t].enabled===!1)&&(t&&(s=n[t].lineWidth||s+(n[t].lineWidthPlus||0)),i&&!i.dashstyle)))for(t={"stroke-width":s},i.attr(t);this["zoneGraph"+e];)this["zoneGraph"+e].attr(t),e+=1},setVisible:function(t,e){var i,n=this,s=n.chart,o=n.legendItem,r=s.options.chart.ignoreHiddenSeries,a=n.visible;i=(n.visible=t=n.userOptions.visible=t===E?!a:t)?"show":"hide",Ft(["group","dataLabelsGroup","markerGroup","tracker"],function(t){n[t]&&n[t][i]()}),(s.hoverSeries===n||(s.hoverPoint&&s.hoverPoint.series)===n)&&n.onMouseOut(),o&&s.legend.colorizeItem(n,t),n.isDirty=!0,n.options.stacking&&Ft(s.series,function(t){t.options.stacking&&t.visible&&(t.isDirty=!0)}),Ft(n.linkedSeries,function(e){e.setVisible(t,!1)}),r&&(s.isDirtyBox=!0),e!==!1&&s.redraw(),Ut(n,i)},show:function(){this.setVisible(!0)},hide:function(){this.setVisible(!1)},select:function(t){this.selected=t=t===E?!this.selected:t,this.checkbox&&(this.checkbox.checked=t),Ut(this,t?"select":"unselect")},drawTracker:ee.drawTrackerGraph}),$t(rt,{Color:D,Point:me,Tick:R,Renderer:H,SVGElement:z,SVGRenderer:ie,arrayMin:A,arrayMax:C,charts:zt,dateFormat:F,error:e,format:k,pathAnim:void 0,getOptions:function(){return G},hasBidiBug:Lt,isTouchDevice:At,setOptions:function(t){return G=n(!0,G,t),O(),G},addEvent:jt,removeEvent:_t,createElement:y,discardElement:L,css:m,each:Ft,map:Vt,merge:n,splat:f,stableSort:T,extendClass:v,pInt:s,svg:Pt,canvas:Mt,vml:!Pt&&!Mt,product:"Highcharts",version:"4.2.3"}),rt})}])});
 
 /***/ },
-/* 378 */
+/* 383 */
 /***/ function(module, exports) {
 
 	var timeFormat = {
@@ -49601,15 +49949,15 @@
 	module.exports = timeFormat;
 
 /***/ },
-/* 379 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(371);
+	var LinkedStateMixin = __webpack_require__(376);
 	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
-	var TimeFormat = __webpack_require__(378);
+	var TimeFormat = __webpack_require__(383);
 	
 	var OptimizationNewForm = React.createClass({
 	  displayName: 'OptimizationNewForm',
@@ -49881,14 +50229,14 @@
 	module.exports = OptimizationNewForm;
 
 /***/ },
-/* 380 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(371);
+	var LinkedStateMixin = __webpack_require__(376);
 	var History = __webpack_require__(186).History;
-	var TimeFormat = __webpack_require__(378);
+	var TimeFormat = __webpack_require__(383);
 	
 	var OptimizationEditForm = React.createClass({
 	  displayName: 'OptimizationEditForm',
@@ -50150,11 +50498,11 @@
 	module.exports = OptimizationEditForm;
 
 /***/ },
-/* 381 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SignInUpForm = __webpack_require__(370);
+	var SignInUpForm = __webpack_require__(375);
 	
 	var Auth = React.createClass({
 	  displayName: 'Auth',
@@ -50177,12 +50525,12 @@
 	module.exports = Auth;
 
 /***/ },
-/* 382 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(186).History;
-	var About = __webpack_require__(383);
+	var About = __webpack_require__(388);
 	
 	var Splash = React.createClass({
 	  displayName: 'Splash',
@@ -50243,7 +50591,7 @@
 	module.exports = Splash;
 
 /***/ },
-/* 383 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -50328,288 +50676,6 @@
 	});
 	
 	module.exports = About;
-
-/***/ },
-/* 384 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Colors = __webpack_require__(274);
-	var ColorManipulator = __webpack_require__(298);
-	var Spacing = __webpack_require__(300);
-	var zIndex = __webpack_require__(301);
-	
-	module.exports = {
-	  spacing: Spacing,
-	  zIndex: zIndex,
-	  fontFamily: 'Roboto, sans-serif',
-	  palette: {
-	    primary1Color: Colors.teal500,
-	    primary2Color: Colors.teal700,
-	    primary3Color: Colors.lightBlack,
-	    accent1Color: Colors.tealA700,
-	    accent2Color: Colors.tealA100,
-	    accent3Color: Colors.grey500,
-	    textColor: Colors.darkBlack,
-	    alternateTextColor: Colors.white,
-	    canvasColor: Colors.white,
-	    borderColor: Colors.grey300,
-	    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
-	    pickerHeaderColor: Colors.cyan500
-	  }
-	};
-
-/***/ },
-/* 385 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _reactAddonsUpdate = __webpack_require__(272);
-	
-	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
-	
-	var _lodash = __webpack_require__(281);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
-	var _getMuiTheme = __webpack_require__(280);
-	
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	// import deprecatedExport from '../utils/deprecatedExport';
-	
-	exports.default = // deprecatedExport(
-	{
-	  getMuiTheme: _getMuiTheme2.default,
-	  modifyRawThemeSpacing: function modifyRawThemeSpacing(muiTheme, spacing) {
-	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { spacing: { $set: spacing } }));
-	  },
-	  modifyRawThemePalette: function modifyRawThemePalette(muiTheme, palette) {
-	    var newPalette = (0, _lodash2.default)(muiTheme.baseTheme.palette, palette);
-	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { palette: { $set: newPalette } }));
-	  },
-	  modifyRawThemeFontFamily: function modifyRawThemeFontFamily(muiTheme, fontFamily) {
-	    return (0, _getMuiTheme2.default)((0, _reactAddonsUpdate2.default)(muiTheme.baseTheme, { fontFamily: { $set: fontFamily } }));
-	  }
-	}; // ,
-	//  'material-ui/lib/styles/theme-manager',
-	//  'material-ui/lib/styles/themeManager'
-	//);
-	
-	module.exports = exports['default'];
-
-/***/ },
-/* 386 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _muiThemeable = __webpack_require__(387);
-	
-	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
-	
-	var _styles = __webpack_require__(251);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-	
-	var propTypes = {
-	  /**
-	   * The css class name of the root element.
-	   */
-	  className: _react2.default.PropTypes.string,
-	
-	  /**
-	   * If true, the `Divider` will be indented `72px`.
-	   */
-	  inset: _react2.default.PropTypes.bool,
-	
-	  /**
-	   * The material-ui theme applied to this component.
-	   * @ignore
-	   */
-	  muiTheme: _react2.default.PropTypes.object.isRequired,
-	
-	  /**
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react2.default.PropTypes.object
-	};
-	
-	var defaultProps = {
-	  inset: false
-	};
-	
-	var Divider = function Divider(props) {
-	  var inset = props.inset;
-	  var muiTheme = props.muiTheme;
-	  var style = props.style;
-	
-	  var other = _objectWithoutProperties(props, ['inset', 'muiTheme', 'style']);
-	
-	  var styles = {
-	    root: {
-	      margin: 0,
-	      marginTop: -1,
-	      marginLeft: inset ? 72 : 0,
-	      height: 1,
-	      border: 'none',
-	      backgroundColor: muiTheme.rawTheme.palette.borderColor
-	    }
-	  };
-	
-	  return _react2.default.createElement('hr', _extends({}, other, { style: (0, _styles.prepareStyles)(muiTheme, (0, _styles.mergeStyles)(styles.root, style)) }));
-	};
-	
-	Divider.displayName = 'Divider';
-	Divider.propTypes = propTypes;
-	Divider.defaultProps = defaultProps;
-	Divider = (0, _muiThemeable2.default)(Divider);
-	
-	exports.default = Divider;
-	module.exports = exports['default'];
-
-/***/ },
-/* 387 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = muiThemeable;
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _getMuiTheme = __webpack_require__(280);
-	
-	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function getDisplayName(WrappedComponent) {
-	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-	}
-	
-	function muiThemeable(WrappedComponent) {
-	  var MuiComponent = function MuiComponent(props, _ref) {
-	    var _ref$muiTheme = _ref.muiTheme;
-	    var muiTheme = _ref$muiTheme === undefined ? (0, _getMuiTheme2.default)() : _ref$muiTheme;
-	
-	    return _react2.default.createElement(WrappedComponent, _extends({}, props, { muiTheme: muiTheme }));
-	  };
-	
-	  MuiComponent.displayName = getDisplayName(WrappedComponent);
-	  MuiComponent.contextTypes = {
-	    muiTheme: _react2.default.PropTypes.object
-	  };
-	  MuiComponent.childContextTypes = {
-	    muiTheme: _react2.default.PropTypes.object
-	  };
-	
-	  return MuiComponent;
-	}
-	module.exports = exports['default'];
-
-/***/ },
-/* 388 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	// Style
-	var Style = __webpack_require__(343);
-	var SelectField = __webpack_require__(354);
-	var MenuItem = __webpack_require__(246);
-	var ThemeManager = __webpack_require__(385);
-	var MyRawTheme = __webpack_require__(384);
-	
-	var RightHeader = React.createClass({
-	  displayName: 'RightHeader',
-	
-	
-	  getInitialState: function () {
-	    return { searchParams: OptimizationStore.allSearchParams() };
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ searchParams: OptimizationStore.allSearchParams() });
-	  },
-	
-	  componentDidMount: function () {
-	    this.searchToken = OptimizationStore.addListener(this._onChange);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.searchToken.remove();
-	  },
-	
-	  dateSort: function (e, index, value) {
-	    OptimizationActions.receiveSearchParam('sort', value);
-	  },
-	
-	  // for MUI to change color of selected dropdown menu item
-	  childContextTypes: {
-	    muiTheme: React.PropTypes.object
-	  },
-	
-	  getChildContext: function () {
-	    return {
-	      muiTheme: ThemeManager.getMuiTheme(MyRawTheme)
-	    };
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      SelectField,
-	      {
-	        value: this.state.searchParams.sort,
-	        onChange: this.dateSort,
-	        floatingLabelText: 'Sort By',
-	        style: Style.sortBy,
-	        primaryText: 'Newest'
-	      },
-	      [React.createElement(MenuItem, {
-	        className: 'leftMenuDropdown',
-	        key: 1,
-	        value: 'newest',
-	        primaryText: 'Newest',
-	        style: Style.dropdownItem
-	      }), React.createElement(MenuItem, {
-	        className: 'leftMenuDropdown',
-	        key: 2,
-	        value: 'oldest',
-	        primaryText: 'Oldest',
-	        style: Style.dropdownItem
-	      })]
-	    );
-	  }
-	
-	});
-	
-	module.exports = RightHeader;
 
 /***/ }
 /******/ ]);

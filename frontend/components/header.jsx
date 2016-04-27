@@ -97,7 +97,13 @@ var Header = React.createClass({
       <Paper style={Style.navBarContainer}>
         <Toolbar style={Style.navBar}>
           <ToolbarGroup firstChild={true}>
-            <FlatButton label='Optimyze' style={Style.logo} hoverColor='white' />
+            <FlatButton
+              label='Optimyze'
+              style={Style.logo}
+              hoverColor='white'
+              rippleColor='white'
+              onTouchTap={this.navigateToRoot}
+            />
           </ToolbarGroup>
 
           <ToolbarGroup>

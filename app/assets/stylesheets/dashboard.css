@@ -1,7 +1,7 @@
 .app {
   display: flex;
   flex: 1 100%;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .left-pane {
@@ -12,6 +12,7 @@
   min-height: 100vh;
   flex-wrap: wrap;
   text-align: center;
+  align-items: flex-start;
   padding-top: 56px;
 }
 
