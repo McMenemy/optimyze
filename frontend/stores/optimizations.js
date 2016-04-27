@@ -8,8 +8,6 @@ var _allOptimizations = {};
 var _searchParams = { title: '', category: 'all', sort: 'newest' };
 
 OptimizationStore.allSearchParams = function () {
-  _searchParams.isUserOnly = AuthStore.isSignedIn();
-
   return _searchParams;
 };
 

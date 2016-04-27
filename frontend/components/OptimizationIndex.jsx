@@ -15,15 +15,13 @@ var OptimizationsIndex = React.createClass({
   mixins: [History],
 
   getInitialState: function () {
-    if (AuthStore.isSignedIn()) {
-      return { optimizations: OptimizationStore.allForCurrentUser() };
-    } else {
-      return { optimizations: OptimizationStore.all() };
-    }
+    return { optimizations: OptimizationStore.all() };
   },
 
   _onChange: function () {
-    this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
+    this.setState(
+      { optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) }
+    );
   },
 
   componentDidMount: function () {
@@ -35,19 +33,11 @@ var OptimizationsIndex = React.createClass({
     this.optimizationToken.remove();
   },
 
-  clickNewOptimization: function () {
-    if (AuthStore.isSignedIn()) {
-      this.history.push('optimizations/form/new');
-    } else {
-      this.history.push('auth');
-    }
-  },
-
   createOptimizationList: function () {
     var _this = this;
     var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
       return (
-        <OptimizationIndexItem isUserOnly={AuthStore.isSignedIn()} key={idx} optimization={el} />
+        <OptimizationIndexItem key={idx} optimization={el} />
       );
     });
 

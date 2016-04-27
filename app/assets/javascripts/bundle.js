@@ -20256,8 +20256,6 @@
 	var _searchParams = { title: '', category: 'all', sort: 'newest' };
 	
 	OptimizationStore.allSearchParams = function () {
-	  _searchParams.isUserOnly = AuthStore.isSignedIn();
-	
 	  return _searchParams;
 	};
 	
@@ -32068,11 +32066,7 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    if (AuthStore.isSignedIn()) {
-	      return { optimizations: OptimizationStore.allForCurrentUser() };
-	    } else {
-	      return { optimizations: OptimizationStore.all() };
-	    }
+	    return { optimizations: OptimizationStore.all() };
 	  },
 	
 	  _onChange: function () {
@@ -32088,18 +32082,10 @@
 	    this.optimizationToken.remove();
 	  },
 	
-	  clickNewOptimization: function () {
-	    if (AuthStore.isSignedIn()) {
-	      this.history.push('optimizations/form/new');
-	    } else {
-	      this.history.push('auth');
-	    }
-	  },
-	
 	  createOptimizationList: function () {
 	    var _this = this;
 	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
-	      return React.createElement(OptimizationIndexItem, { isUserOnly: AuthStore.isSignedIn(), key: idx, optimization: el });
+	      return React.createElement(OptimizationIndexItem, { key: idx, optimization: el });
 	    });
 	
 	    return listOfOptimizations;
