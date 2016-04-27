@@ -82,7 +82,6 @@ var Header = React.createClass({
   },
 
   handleSignInUpClose: function () {
-    console.log('close modal');
     this.setState({ open: false });
   },
 
@@ -113,7 +112,7 @@ var Header = React.createClass({
               value={this.state.searchParams.title}
               style={Style.searchBar}
               underlineFocusStyle={{ borderColor: '#00BFA5' }}
-              />
+            />
           </ToolbarGroup>
 
           {this.makeHeaderList()}
@@ -123,8 +122,7 @@ var Header = React.createClass({
             modal={false}
             open={this.state.open}
             onRequestClose={this.handleSignInUpClose}
-            >
-          </Dialog>
+          />
         </Toolbar>
       </Paper>
     );

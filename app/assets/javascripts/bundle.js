@@ -32131,9 +32131,14 @@
 	var OptimizationActions = __webpack_require__(164);
 	
 	// Style
-	var MenuItem = __webpack_require__(246);
 	var Style = __webpack_require__(343);
+	var Dialog = __webpack_require__(373);
+	var MenuItem = __webpack_require__(246);
 	var Divider = __webpack_require__(366);
+	var Dialog = __webpack_require__(373);
+	
+	// components
+	var OptimizationDetail = __webpack_require__(381);
 	
 	var OptimizationIndexItem = React.createClass({
 	  displayName: 'OptimizationIndexItem',
@@ -32141,7 +32146,7 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    return { shouldCutoff: true };
+	    return { open: false, shouldCutoff: true };
 	  },
 	
 	  clickOptimization: function () {
@@ -32183,17 +32188,34 @@
 	    }
 	  },
 	
+	  handleDetailOpen: function () {
+	    this.setState({ open: true });
+	  },
+	
+	  handleDetailClose: function () {
+	    this.setState({ open: false });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { onClick: this.clickOptimization },
+	      { onClick: this.handleDetailOpen },
 	      React.createElement(
 	        'p',
 	        { style: Style.mainMenuTitle, className: 'mainMenuTitle' },
 	        this.props.optimization.title
 	      ),
 	      this.makeDescription(),
-	      React.createElement(Divider, null)
+	      React.createElement(Divider, null),
+	      React.createElement(Dialog, {
+	        actions: React.createElement(OptimizationDetail, {
+	          closeModal: this.handleDetailClose,
+	          optimization: this.props.optimization
+	        }),
+	        modal: false,
+	        open: this.state.open,
+	        onRequestClose: this.handleDetailClose
+	      })
 	    );
 	  }
 	});
@@ -47468,7 +47490,6 @@
 	  },
 	
 	  handleSignInUpClose: function () {
-	    console.log('close modal');
 	    this.setState({ open: false });
 	  },
 	
@@ -49740,7 +49761,7 @@
 	  },
 	
 	  getStateFromStore: function () {
-	    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+	    return { optimization: this.props.optimization };
 	  },
 	
 	  _onChange: function () {

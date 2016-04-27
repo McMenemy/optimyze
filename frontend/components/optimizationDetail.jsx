@@ -98,7 +98,7 @@ var OptimizationDetail = React.createClass({
   },
 
   getStateFromStore: function () {
-    return { optimization: OptimizationStore.find(this.props.params.optimizationId) };
+    return { optimization: this.props.optimization };
   },
 
   _onChange: function () {
