@@ -48532,9 +48532,12 @@
 	var React = __webpack_require__(1);
 	var AuthStore = __webpack_require__(184);
 	var AuthActions = __webpack_require__(374);
+	var OptimizationActions = __webpack_require__(389);
 	var History = __webpack_require__(186).History;
 	
-	// style
+	// MUI and style
+	var Style = __webpack_require__(246);
+	var Popover = __webpack_require__(333);
 	var Toolbar = __webpack_require__(375);
 	var ToolbarGroup = __webpack_require__(376);
 	var ToolbarTitle = __webpack_require__(377);
@@ -48542,7 +48545,9 @@
 	var Dialog = __webpack_require__(247);
 	var Paper = __webpack_require__(329);
 	var TextField = __webpack_require__(358);
-	var Style = __webpack_require__(246);
+	var RaisedButton = __webpack_require__(383);
+	var MenuItem = __webpack_require__(332);
+	var Menu = __webpack_require__(347);
 	
 	// components
 	var SignInUpForm = __webpack_require__(378);
@@ -48553,7 +48558,11 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    return { open: false, authPath: '', searchParams: OptimizationStore.allSearchParams() };
+	    return { openAuthForm: false,
+	      authPath: '',
+	      searchParams: OptimizationStore.allSearchParams(),
+	      openUserMenu: false
+	    };
 	  },
 	
 	  _onChange: function () {
@@ -48572,10 +48581,24 @@
 	
 	  signOut: function () {
 	    AuthActions.signOut();
+	    this.setState({ openUserMenu: false });
+	    OptimizationActions.receiveSearchParam('isUserOnly', false);
 	  },
 	
 	  navigateToRoot: function () {
 	    this.history.push('/');
+	  },
+	
+	  handleOpenUserMenu: function (e) {
+	    this.setState({ openUserMenu: true, userMenuAnchor: e.currentTarget });
+	  },
+	
+	  handleCloseUserMenu: function () {
+	    this.setState({ openUserMenu: false });
+	  },
+	
+	  clickMyOptimizations: function () {
+	    OptimizationActions.receiveSearchParam('isUserOnly', true);
 	  },
 	
 	  makeHeaderList: function () {
@@ -48583,17 +48606,32 @@
 	      return React.createElement(
 	        ToolbarGroup,
 	        { float: 'right' },
-	        React.createElement(ToolbarTitle, {
-	          text: 'Hi, ' + AuthStore.currentUser().username,
-	          style: Style.navBarText
-	        }),
 	        React.createElement(FlatButton, {
-	          label: 'Sign Out',
-	          onTouchTap: this.signOut,
+	          label: AuthStore.currentUser().username,
+	          onTouchTap: this.handleOpenUserMenu,
 	          style: Style.navBarButton,
 	          hoverColor: '#A7FFEB',
 	          rippleColor: '#1DE9B6'
-	        })
+	        }),
+	        React.createElement(
+	          Popover,
+	          {
+	            open: this.state.openUserMenu,
+	            anchorEl: this.state.userMenuAnchor,
+	            anchorOrigin: { horizontal: 'left', vertical: 'bottom' },
+	            targetOrigin: { horizontal: 'left', vertical: 'top' },
+	            onRequestClose: this.handleCloseUserMenu
+	          },
+	          React.createElement(
+	            Menu,
+	            null,
+	            React.createElement(MenuItem, { className: 'userMenuItem', primaryText: 'Sign Out', onTouchTap: this.signOut }),
+	            React.createElement(MenuItem, { className: 'userMenuItem',
+	              primaryText: 'My Optimizations',
+	              onTouchTap: this.clickMyOptimizations
+	            })
+	          )
+	        )
 	      );
 	    } else {
 	      return React.createElement(
@@ -48618,11 +48656,11 @@
 	  },
 	
 	  handleSignInUpOpen: function (path) {
-	    this.setState({ open: true, authPath: path });
+	    this.setState({ openAuthForm: true, authPath: path });
 	  },
 	
 	  handleSignInUpClose: function () {
-	    this.setState({ open: false, authPath: '' });
+	    this.setState({ openAuthForm: false, authPath: '' });
 	  },
 	
 	  handleInput: function (e) {
@@ -48667,7 +48705,7 @@
 	            authPath: this.state.authPath
 	          }),
 	          modal: false,
-	          open: this.state.open,
+	          open: this.state.openAuthForm,
 	          onRequestClose: this.handleSignInUpClose
 	        })
 	      )
@@ -50761,6 +50799,68 @@
 	});
 	
 	module.exports = About;
+
+/***/ },
+/* 389 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(159);
+	var OptimizationConstants = __webpack_require__(165);
+	var ApiUtil = __webpack_require__(163);
+	
+	var OptimizationActions = {
+	  receiveAllOptimizations: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
+	      allOptimizations: data
+	    });
+	  },
+	
+	  retrieveAllOptimizations: function () {
+	    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
+	  },
+	
+	  receiveOneOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
+	      optimization: data
+	    });
+	  },
+	
+	  retrieveOneOptimization: function (optimizationId) {
+	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
+	  },
+	
+	  retrieveNewOptimization: function (postParams, errorCallback, successCallback) {
+	    ApiUtil.createOptimization(postParams, this.receiveOneOptimization, errorCallback, successCallback);
+	  },
+	
+	  retrieveUpdatedOptimization: function (patchParams, errorCallback, successCallback) {
+	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization, errorCallback, successCallback);
+	  },
+	
+	  receiveDeletedOptimization: function (data) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
+	      optimization: data
+	    });
+	  },
+	
+	  retrieveDeletedOptimization: function (deleteParams) {
+	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
+	  },
+	
+	  receiveSearchParam: function (key, value) {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.SEARCH_PARAM_RECEIVED,
+	      key: key,
+	      value: value
+	    });
+	  }
+	
+	};
+	
+	module.exports = OptimizationActions;
 
 /***/ }
 /******/ ]);

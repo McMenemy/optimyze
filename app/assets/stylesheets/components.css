@@ -23,3 +23,8 @@
 .mainMenuTitle:hover {
   text-decoration: underline !important;
 }
+
+/* Header */
+.userMenuItem:hover {
+  background-color: #A7FFEB !important;
+}

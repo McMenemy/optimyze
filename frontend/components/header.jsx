@@ -1,9 +1,12 @@
 var React = require('react');
 var AuthStore = require('../stores/authStore');
 var AuthActions = require('../actions/authActions');
+var OptimizationActions = require('../actions/OptimizationActions');
 var History = require('react-router').History;
 
-// style
+// MUI and style
+var Style = require('../util/styleObj');
+var Popover = require('material-ui/lib/popover/popover');
 var Toolbar = require('material-ui/lib/toolbar/toolbar');
 var ToolbarGroup =  require('material-ui/lib/toolbar/toolbar-group');
 var ToolbarTitle = require('material-ui/lib/toolbar/toolbar-title');
@@ -11,7 +14,9 @@ var FlatButton = require('material-ui/lib/flat-button');
 var Dialog = require('material-ui/lib/dialog');
 var Paper = require('material-ui/lib/paper');
 var TextField = require('material-ui/lib/text-field');
-var Style = require('../util/styleObj');
+var RaisedButton = require('material-ui/lib/raised-button');
+var MenuItem = require('material-ui/lib/menus/menu-item');
+var Menu = require('material-ui/lib/menus/menu');
 
 // components
 var SignInUpForm = require('../components/signInUpForm');
@@ -20,7 +25,13 @@ var Header = React.createClass({
   mixins: [History],
 
   getInitialState: function () {
-    return { open: false, authPath: '', searchParams: OptimizationStore.allSearchParams() };
+    return (
+      { openAuthForm: false,
+        authPath: '',
+        searchParams: OptimizationStore.allSearchParams(),
+        openUserMenu: false,
+      }
+    );
   },
 
   _onChange: function () {
@@ -39,27 +50,53 @@ var Header = React.createClass({
 
   signOut: function () {
     AuthActions.signOut();
+    this.setState({ openUserMenu: false, });
+    OptimizationActions.receiveSearchParam('isUserOnly', false);
   },
 
   navigateToRoot: function () {
     this.history.push('/');
   },
 
+  handleOpenUserMenu: function (e) {
+    this.setState({ openUserMenu: true, userMenuAnchor: e.currentTarget, });
+  },
+
+  handleCloseUserMenu: function () {
+    this.setState({ openUserMenu: false, });
+  },
+
+  clickMyOptimizations: function () {
+    OptimizationActions.receiveSearchParam('isUserOnly', true);
+  },
+
   makeHeaderList: function () {
     if (AuthStore.isSignedIn()) {
       return (
         <ToolbarGroup float='right'>
-          <ToolbarTitle
-            text={'Hi, ' + AuthStore.currentUser().username}
-            style={Style.navBarText}
-          />
           <FlatButton
-            label='Sign Out'
-            onTouchTap={this.signOut}
+            label={AuthStore.currentUser().username}
+            onTouchTap={this.handleOpenUserMenu}
             style={Style.navBarButton}
             hoverColor='#A7FFEB'
             rippleColor='#1DE9B6'
           />
+
+          <Popover
+            open={this.state.openUserMenu}
+            anchorEl={this.state.userMenuAnchor}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            onRequestClose={this.handleCloseUserMenu}
+          >
+            <Menu>
+              <MenuItem className='userMenuItem' primaryText='Sign Out' onTouchTap={this.signOut} />
+              <MenuItem className='userMenuItem'
+                primaryText='My Optimizations'
+                onTouchTap={this.clickMyOptimizations}
+              />
+            </Menu>
+          </Popover>
         </ToolbarGroup>
     );
     } else {
@@ -85,11 +122,11 @@ var Header = React.createClass({
   },
 
   handleSignInUpOpen: function (path) {
-    this.setState({ open: true, authPath: path });
+    this.setState({ openAuthForm: true, authPath: path });
   },
 
   handleSignInUpClose: function () {
-    this.setState({ open: false, authPath: '' });
+    this.setState({ openAuthForm: false, authPath: '' });
   },
 
   handleInput: function (e) {
@@ -130,7 +167,7 @@ var Header = React.createClass({
                         authPath={this.state.authPath}
                     />}
             modal={false}
-            open={this.state.open}
+            open={this.state.openAuthForm}
             onRequestClose={this.handleSignInUpClose}
           />
         </Toolbar>
