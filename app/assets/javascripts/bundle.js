@@ -32092,10 +32092,10 @@
 	  },
 	
 	  render: function () {
-	    // <RightHeader />
 	    return React.createElement(
 	      'div',
 	      { style: { width: '100%' } },
+	      React.createElement(RightHeader, null),
 	      React.createElement(
 	        'div',
 	        { style: Style.mainMenu },

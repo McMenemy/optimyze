@@ -45,9 +45,9 @@ var OptimizationsIndex = React.createClass({
   },
 
   render: function () {
-    // <RightHeader />
     return (
       <div style={{ width:'100%' }}>
+        <RightHeader />
         <div style={Style.mainMenu}>
           {this.createOptimizationList()}
         </div>
