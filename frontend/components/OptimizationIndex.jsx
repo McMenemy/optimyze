@@ -45,12 +45,12 @@ var OptimizationsIndex = React.createClass({
   },
 
   render: function () {
+    // <RightHeader />
     return (
       <div style={{ width:'100%' }}>
-        <RightHeader />
-        <Paper style={Style.mainMenu} zDepth={0}>
+        <div style={Style.mainMenu}>
           {this.createOptimizationList()}
-        </Paper>
+        </div>
       </div>
     );
   },

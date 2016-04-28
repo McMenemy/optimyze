@@ -42,30 +42,32 @@ var RightHeader = React.createClass({
 
   render: function () {
     return (
-      <SelectField
-        value={this.state.searchParams.sort}
-        onChange={this.dateSort}
-        floatingLabelText='Sort By'
-        style={Style.sortBy}
-        primaryText='Newest'
-        >
-        {[
-          <MenuItem
-            className='leftMenuDropdown'
-            key={1}
-            value={'newest'}
-            primaryText='Newest'
-            style={Style.dropdownItem}
-            />,
-          <MenuItem
-            className='leftMenuDropdown'
-            key={2}
-            value={'oldest'}
-            primaryText='Oldest'
-            style={Style.dropdownItem}
-            />,
-        ]}
-      </SelectField>
+      <div style={{ width: '100%' }}>
+        <SelectField
+          value={this.state.searchParams.sort}
+          onChange={this.dateSort}
+          floatingLabelText='Sort By'
+          style={Style.sortBy}
+          primaryText='Newest'
+          >
+          {[
+            <MenuItem
+              className='leftMenuDropdown'
+              key={1}
+              value={'newest'}
+              primaryText='Newest'
+              style={Style.dropdownItem}
+              />,
+            <MenuItem
+              className='leftMenuDropdown'
+              key={2}
+              value={'oldest'}
+              primaryText='Oldest'
+              style={Style.dropdownItem}
+              />,
+          ]}
+        </SelectField>
+      </div>
     );
   },
 

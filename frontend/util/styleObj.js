@@ -53,6 +53,7 @@ module.exports = {
 
   mainMenu: {
     display: 'flex',
+    flexDirection: 'column',
     width: '90%',
   },
 
