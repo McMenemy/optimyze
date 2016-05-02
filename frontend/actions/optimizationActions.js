@@ -5,13 +5,17 @@ var ApiUtil = require('../util/apiUtil');
 var OptimizationActions = {
   receiveAllOptimizations: function (data) {
     Dispatcher.dispatch({
-      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
+      actionType: OptimizationConstants.OPTIMIZATIONS_RECEIVED,
       allOptimizations: data,
     });
   },
 
   retrieveAllOptimizations: function () {
     ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
+  },
+
+  retrieveFilteredOptimizations: function (searchParams) {
+    ApiUtil.fetchFilteredOptimizations(searchParams, this.receiveAllOptimizations);
   },
 
   receiveOneOptimization: function (data) {
@@ -49,6 +53,12 @@ var OptimizationActions = {
       actionType: OptimizationConstants.SEARCH_PARAM_RECEIVED,
       key: key,
       value: value,
+    });
+  },
+
+  resetSearchParams: function () {
+    Dispatcher.dispatch({
+      actionType: OptimizationConstants.RESET_SEARCH_PARAMS,
     });
   },
 

@@ -1,5 +1,5 @@
 var React = require('react');
-var OptimizationStore = require('../stores/optimizations');
+var OptimizationStore = require('../stores/optimizationStore');
 var OptimizationActions = require('../actions/optimizationActions');
 var ReactHighcharts = require('react-highcharts/bundle/ReactHighcharts');
 var TimeFormat = require('../util/timeFormat');

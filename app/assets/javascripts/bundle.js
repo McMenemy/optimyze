@@ -49,7 +49,7 @@
 	var Dispatcher = __webpack_require__(159);
 	var ApiUtil = __webpack_require__(163);
 	var OptimizationActions = __webpack_require__(164);
-	var OptimizationStore = __webpack_require__(166);
+	var OptimizationStore = __webpack_require__(389);
 	var AuthStore = __webpack_require__(184);
 	var Router = __webpack_require__(186).Router;
 	var Route = __webpack_require__(186).Route;
@@ -20044,6 +20044,24 @@
 	    });
 	  },
 	
+	  fetchFilteredOptimizations: function (searchParams, callback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/filtered',
+	      data: searchParams,
+	      dataType: 'json',
+	      success: function (respData) {
+	        callback(respData);
+	        console.log('ajax fetch filtered', respData);
+	        console.log('ajax fetch params', searchParams);
+	      },
+	
+	      error: function (respError) {
+	        console.log('ajax filtered error', respError.responseText);
+	      }
+	    });
+	  },
+	
 	  createOptimization: function (postParams, actionCallback, errorCallback, successCallback) {
 	    $.ajax({
 	      type: 'POST',
@@ -20178,13 +20196,17 @@
 	var OptimizationActions = {
 	  receiveAllOptimizations: function (data) {
 	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
+	      actionType: OptimizationConstants.OPTIMIZATIONS_RECEIVED,
 	      allOptimizations: data
 	    });
 	  },
 	
 	  retrieveAllOptimizations: function () {
 	    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
+	  },
+	
+	  retrieveFilteredOptimizations: function (searchParams) {
+	    ApiUtil.fetchFilteredOptimizations(searchParams, this.receiveAllOptimizations);
 	  },
 	
 	  receiveOneOptimization: function (data) {
@@ -20223,6 +20245,12 @@
 	      key: key,
 	      value: value
 	    });
+	  },
+	
+	  resetSearchParams: function () {
+	    Dispatcher.dispatch({
+	      actionType: OptimizationConstants.RESET_SEARCH_PARAMS
+	    });
 	  }
 	
 	};
@@ -20234,7 +20262,7 @@
 /***/ function(module, exports) {
 
 	var OptimizationConstants = {
-	  ALL_OPTIMIZATIONS_RECEIVED: 'ALL_OPTIMIZATIONS_RECEIVED',
+	  OPTIMIZATIONS_RECEIVED: 'OPTIMIZATIONS_RECEIVED',
 	  OPTIMIZATION_RECEIVED: 'OPTIMIZATION_RECEIVED',
 	  OPTIMIZATION_DELETED: 'OPTIMIZATION_DELETED',
 	  SEARCH_PARAM_RECEIVED: 'SEARCH_PARAM_RECEIVED'
@@ -20243,106 +20271,7 @@
 	module.exports = OptimizationConstants;
 
 /***/ },
-/* 166 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(159);
-	var Store = __webpack_require__(167).Store;
-	var OptimizationConstants = __webpack_require__(165);
-	var AuthStore = __webpack_require__(184);
-	
-	var OptimizationStore = new Store(Dispatcher);
-	var _allOptimizations = {};
-	var _searchParams = { title: '', category: 'all', sort: 'newest' };
-	
-	OptimizationStore.allSearchParams = function () {
-	  return _searchParams;
-	};
-	
-	OptimizationStore.resetOptimizations = function (optimizations) {
-	  _optimizations = {};
-	  optimizations.forEach(function (optimization) {
-	    _allOptimizations[optimization.id] = optimization;
-	  });
-	};
-	
-	OptimizationStore.find = function (id) {
-	  return _allOptimizations[id];
-	};
-	
-	OptimizationStore.all = function () {
-	  var allOptimizations = [];
-	  Object.keys(_allOptimizations).forEach(function (key) {
-	    allOptimizations.push(_allOptimizations[key]);
-	  });
-	
-	  return allOptimizations;
-	};
-	
-	OptimizationStore.allForCurrentUser = function () {
-	  var allUserOptimizations = [];
-	  Object.keys(_allOptimizations).forEach(function (key) {
-	    if (AuthStore.currentUser().id === _allOptimizations[key].user_id) {
-	      allUserOptimizations.push(_allOptimizations[key]);
-	    }
-	  });
-	
-	  return allUserOptimizations;
-	};
-	
-	OptimizationStore.allWithSearchParams = function () {
-	  var allFilteredOptimizations = [];
-	  var titleFilter = new RegExp('' + _searchParams.title.toLowerCase());
-	
-	  if (_searchParams.isUserOnly) {
-	    allFilteredOptimizations = this.allForCurrentUser();
-	  } else {
-	    allFilteredOptimizations = this.all();
-	  }
-	
-	  if (_searchParams.category !== 'all') {
-	    allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
-	      var categoryArray = currentOptimization.categories;
-	
-	      return categoryArray.includes(_searchParams.category);
-	    });
-	  }
-	
-	  allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
-	    var currentTitle = currentOptimization.title.toLowerCase();
-	
-	    return currentTitle.match(titleFilter);
-	  });
-	
-	  if (_searchParams.sort == 'oldest') {
-	    return allFilteredOptimizations.reverse();
-	  } else {
-	    return allFilteredOptimizations;
-	  }
-	}, OptimizationStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
-	      this.resetOptimizations(payload.allOptimizations);
-	      this.__emitChange();
-	      break;
-	    case OptimizationConstants.OPTIMIZATION_RECEIVED:
-	      _allOptimizations[payload.optimization.id] = payload.optimization;
-	      this.__emitChange();
-	      break;
-	    case OptimizationConstants.OPTIMIZATION_DELETED:
-	      delete _allOptimizations[payload.optimization.id];
-	      this.__emitChange();
-	      break;
-	    case OptimizationConstants.SEARCH_PARAM_RECEIVED:
-	      _searchParams[payload.key] = payload.value;
-	      this.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = OptimizationStore;
-
-/***/ },
+/* 166 */,
 /* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31950,7 +31879,7 @@
 	var History = __webpack_require__(186).History;
 	var OptimizationIndex = __webpack_require__(244);
 	var AuthStore = __webpack_require__(184);
-	var OptimizationStore = __webpack_require__(166);
+	var OptimizationStore = __webpack_require__(389);
 	var OptimizationActions = __webpack_require__(164);
 	
 	// style
@@ -32048,7 +31977,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var OptimizationStore = __webpack_require__(166);
+	var OptimizationStore = __webpack_require__(389);
 	var OptimizationActions = __webpack_require__(164);
 	var OptimizationIndexItem = __webpack_require__(245);
 	var RightHeader = __webpack_require__(354);
@@ -32070,12 +31999,12 @@
 	  },
 	
 	  _onChange: function () {
-	    this.setState({ optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) });
+	    this.setState({ optimizations: OptimizationStore.all() });
 	  },
 	
 	  componentDidMount: function () {
 	    this.optimizationToken = OptimizationStore.addListener(this._onChange);
-	    OptimizationActions.retrieveAllOptimizations();
+	    OptimizationActions.retrieveFilteredOptimizations(OptimizationStore.allSearchParams());
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32083,9 +32012,12 @@
 	  },
 	
 	  createOptimizationList: function () {
-	    var _this = this;
 	    var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
-	      return React.createElement(OptimizationIndexItem, { key: idx, optimization: el });
+	      return React.createElement(OptimizationIndexItem, {
+	        key: idx,
+	        optimization: el,
+	        isUserOnly: OptimizationStore.allSearchParams().isUserOnly
+	      });
 	    });
 	
 	    return listOfOptimizations;
@@ -45708,7 +45640,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var OptimizationStore = __webpack_require__(166);
+	var OptimizationStore = __webpack_require__(389);
 	var OptimizationActions = __webpack_require__(164);
 	var ReactHighcharts = __webpack_require__(352);
 	var TimeFormat = __webpack_require__(353);
@@ -48532,7 +48464,7 @@
 	var React = __webpack_require__(1);
 	var AuthStore = __webpack_require__(184);
 	var AuthActions = __webpack_require__(374);
-	var OptimizationActions = __webpack_require__(389);
+	var OptimizationActions = __webpack_require__(164);
 	var History = __webpack_require__(186).History;
 	
 	// MUI and style
@@ -48545,12 +48477,12 @@
 	var Dialog = __webpack_require__(247);
 	var Paper = __webpack_require__(329);
 	var TextField = __webpack_require__(358);
-	var RaisedButton = __webpack_require__(383);
+	var RaisedButton = __webpack_require__(378);
 	var MenuItem = __webpack_require__(332);
 	var Menu = __webpack_require__(347);
 	
 	// components
-	var SignInUpForm = __webpack_require__(378);
+	var SignInUpForm = __webpack_require__(379);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -48586,6 +48518,7 @@
 	  },
 	
 	  navigateToRoot: function () {
+	    OptimizationActions.resetSearchParams();
 	    this.history.push('/');
 	  },
 	
@@ -49247,386 +49180,6 @@
 /* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(379);
-	var AuthActions = __webpack_require__(374);
-	var History = __webpack_require__(186).History;
-	
-	// style
-	var Style = __webpack_require__(246);
-	var TextField = __webpack_require__(358);
-	var RaisedButton = __webpack_require__(383);
-	
-	var SignInUpForm = React.createClass({
-	  displayName: 'SignInUpForm',
-	
-	  mixins: [History, LinkedStateMixin],
-	
-	  getInitialState: function () {
-	    return { username: '', password: '', buttonClicked: '', errors: '', passwordConfirm: '' };
-	  },
-	
-	  demoSignIn: function () {
-	    this.state.buttonClicked = 'demoSignin';
-	  },
-	
-	  signIn: function () {
-	    this.state.buttonClicked = 'signin';
-	  },
-	
-	  signUp: function () {
-	    this.state.buttonClicked = 'signup';
-	  },
-	
-	  successCallback: function (user) {
-	    this.props.closeModal();
-	  },
-	
-	  errorCallback: function (errorArray) {
-	    this.state.errors = JSON.parse(errorArray);
-	    this.setState(this.state);
-	  },
-	
-	  handleSubmit: function (event) {
-	    event.preventDefault();
-	    this.setState({ buttonClicked: '', errors: '' });
-	
-	    if (this.state.buttonClicked === 'signin') {
-	      var signInParams = { user: this.state };
-	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
-	    } else if (this.state.buttonClicked === 'signup') {
-	      if (this.state.passwordConfirm != this.state.password) {
-	        this.setState({ errors: 'passwords do not match' });
-	      } else {
-	        var signUpParams = { user: this.state };
-	        AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
-	      }
-	    } else if (this.state.buttonClicked == 'demoSignin') {
-	      var signInParams = { user: { username: 'User42', password: 'password' } };
-	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
-	    }
-	  },
-	
-	  renderConfirmPassword: function () {
-	    if (this.props.authPath == 'signUp') {
-	      return React.createElement(TextField, {
-	        style: Style.authField,
-	        hintText: 'confirm password',
-	        type: 'password',
-	        errorText: '',
-	        floatingLabelText: 'Confirm Password',
-	        valueLink: this.linkState('passwordConfirm'),
-	        underlineFocusStyle: { borderColor: '#00BFA5' }
-	      });
-	    }
-	  },
-	
-	  renderCorrectButton: function () {
-	    if (this.props.authPath == 'signUp') {
-	      return React.createElement(RaisedButton, {
-	        style: Style.authButton,
-	        label: 'sign up',
-	        type: 'submit',
-	        onClick: this.signUp,
-	        style: Style.authButton,
-	        backgroundColor: '#00BFA5',
-	        labelStyle: Style.authButtonText
-	      });
-	    } else if (this.props.authPath == 'signIn') {
-	      return React.createElement(RaisedButton, {
-	        style: Style.authButton,
-	        label: 'sign in',
-	        type: 'submit',
-	        onClick: this.signIn,
-	        style: Style.authButton,
-	        backgroundColor: '#00BFA5',
-	        labelStyle: Style.authButtonText
-	      });
-	    }
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { style: Style.authContainer },
-	      React.createElement(
-	        'h1',
-	        null,
-	        this.state.errors.toString()
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit },
-	        React.createElement(TextField, {
-	          style: Style.authField,
-	          hintText: 'username',
-	          errorText: '',
-	          floatingLabelText: 'Username',
-	          valueLink: this.linkState('username'),
-	          underlineFocusStyle: { borderColor: '#00BFA5' }
-	        }),
-	        React.createElement(TextField, {
-	          style: Style.authField,
-	          hintText: 'password',
-	          type: 'password',
-	          errorText: '',
-	          floatingLabelText: 'Password',
-	          valueLink: this.linkState('password'),
-	          underlineFocusStyle: { borderColor: '#00BFA5' }
-	        }),
-	        this.renderConfirmPassword(),
-	        this.renderCorrectButton(),
-	        React.createElement(RaisedButton, {
-	          style: Style.authButton,
-	          label: 'demo account',
-	          type: 'submit',
-	          onClick: this.demoSignIn,
-	          style: Style.authButton,
-	          backgroundColor: '#00BFA5',
-	          labelStyle: Style.authButtonText
-	        })
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = SignInUpForm;
-
-/***/ },
-/* 379 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(380);
-
-/***/ },
-/* 380 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LinkedStateMixin
-	 * @typechecks static-only
-	 */
-	
-	'use strict';
-	
-	var ReactLink = __webpack_require__(381);
-	var ReactStateSetters = __webpack_require__(382);
-	
-	/**
-	 * A simple mixin around ReactLink.forState().
-	 */
-	var LinkedStateMixin = {
-	  /**
-	   * Create a ReactLink that's linked to part of this component's state. The
-	   * ReactLink will have the current value of this.state[key] and will call
-	   * setState() when a change is requested.
-	   *
-	   * @param {string} key state key to update. Note: you may want to use keyOf()
-	   * if you're using Google Closure Compiler advanced mode.
-	   * @return {ReactLink} ReactLink instance linking to the state.
-	   */
-	  linkState: function (key) {
-	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
-	  }
-	};
-	
-	module.exports = LinkedStateMixin;
-
-/***/ },
-/* 381 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLink
-	 * @typechecks static-only
-	 */
-	
-	'use strict';
-	
-	/**
-	 * ReactLink encapsulates a common pattern in which a component wants to modify
-	 * a prop received from its parent. ReactLink allows the parent to pass down a
-	 * value coupled with a callback that, when invoked, expresses an intent to
-	 * modify that value. For example:
-	 *
-	 * React.createClass({
-	 *   getInitialState: function() {
-	 *     return {value: ''};
-	 *   },
-	 *   render: function() {
-	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
-	 *     return <input valueLink={valueLink} />;
-	 *   },
-	 *   _handleValueChange: function(newValue) {
-	 *     this.setState({value: newValue});
-	 *   }
-	 * });
-	 *
-	 * We have provided some sugary mixins to make the creation and
-	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
-	 */
-	
-	var React = __webpack_require__(2);
-	
-	/**
-	 * @param {*} value current value of the link
-	 * @param {function} requestChange callback to request a change
-	 */
-	function ReactLink(value, requestChange) {
-	  this.value = value;
-	  this.requestChange = requestChange;
-	}
-	
-	/**
-	 * Creates a PropType that enforces the ReactLink API and optionally checks the
-	 * type of the value being passed inside the link. Example:
-	 *
-	 * MyComponent.propTypes = {
-	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
-	 * }
-	 */
-	function createLinkTypeChecker(linkType) {
-	  var shapes = {
-	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
-	    requestChange: React.PropTypes.func.isRequired
-	  };
-	  return React.PropTypes.shape(shapes);
-	}
-	
-	ReactLink.PropTypes = {
-	  link: createLinkTypeChecker
-	};
-	
-	module.exports = ReactLink;
-
-/***/ },
-/* 382 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactStateSetters
-	 */
-	
-	'use strict';
-	
-	var ReactStateSetters = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (component, funcReturningState) {
-	    return function (a, b, c, d, e, f) {
-	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
-	      if (partialState) {
-	        component.setState(partialState);
-	      }
-	    };
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (component, key) {
-	    // Memoize the setters.
-	    var cache = component.__keySetters || (component.__keySetters = {});
-	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
-	  }
-	};
-	
-	function createStateKeySetter(component, key) {
-	  // Partial state is allocated outside of the function closure so it can be
-	  // reused with every call, avoiding memory allocation when this function
-	  // is called.
-	  var partialState = {};
-	  return function stateKeySetter(value) {
-	    partialState[key] = value;
-	    component.setState(partialState);
-	  };
-	}
-	
-	ReactStateSetters.Mixin = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateSetter(function(xValue) {
-	   *     return {x: xValue};
-	   *   })(1);
-	   *
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (funcReturningState) {
-	    return ReactStateSetters.createStateSetter(this, funcReturningState);
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateKeySetter('x')(1);
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (key) {
-	    return ReactStateSetters.createStateKeySetter(this, key);
-	  }
-	};
-	
-	module.exports = ReactStateSetters;
-
-/***/ },
-/* 383 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -50072,12 +49625,392 @@
 	module.exports = exports['default'];
 
 /***/ },
+/* 379 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(380);
+	var AuthActions = __webpack_require__(374);
+	var History = __webpack_require__(186).History;
+	
+	// style
+	var Style = __webpack_require__(246);
+	var TextField = __webpack_require__(358);
+	var RaisedButton = __webpack_require__(378);
+	
+	var SignInUpForm = React.createClass({
+	  displayName: 'SignInUpForm',
+	
+	  mixins: [History, LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return { username: '', password: '', buttonClicked: '', errors: '', passwordConfirm: '' };
+	  },
+	
+	  demoSignIn: function () {
+	    this.state.buttonClicked = 'demoSignin';
+	  },
+	
+	  signIn: function () {
+	    this.state.buttonClicked = 'signin';
+	  },
+	
+	  signUp: function () {
+	    this.state.buttonClicked = 'signup';
+	  },
+	
+	  successCallback: function (user) {
+	    this.props.closeModal();
+	  },
+	
+	  errorCallback: function (errorArray) {
+	    this.state.errors = JSON.parse(errorArray);
+	    this.setState(this.state);
+	  },
+	
+	  handleSubmit: function (event) {
+	    event.preventDefault();
+	    this.setState({ buttonClicked: '', errors: '' });
+	
+	    if (this.state.buttonClicked === 'signin') {
+	      var signInParams = { user: this.state };
+	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
+	    } else if (this.state.buttonClicked === 'signup') {
+	      if (this.state.passwordConfirm != this.state.password) {
+	        this.setState({ errors: 'passwords do not match' });
+	      } else {
+	        var signUpParams = { user: this.state };
+	        AuthActions.signUp(signUpParams, this.successCallback, this.errorCallback);
+	      }
+	    } else if (this.state.buttonClicked == 'demoSignin') {
+	      var signInParams = { user: { username: 'User42', password: 'password' } };
+	      AuthActions.signIn(signInParams, this.successCallback, this.errorCallback);
+	    }
+	  },
+	
+	  renderConfirmPassword: function () {
+	    if (this.props.authPath == 'signUp') {
+	      return React.createElement(TextField, {
+	        style: Style.authField,
+	        hintText: 'confirm password',
+	        type: 'password',
+	        errorText: '',
+	        floatingLabelText: 'Confirm Password',
+	        valueLink: this.linkState('passwordConfirm'),
+	        underlineFocusStyle: { borderColor: '#00BFA5' }
+	      });
+	    }
+	  },
+	
+	  renderCorrectButton: function () {
+	    if (this.props.authPath == 'signUp') {
+	      return React.createElement(RaisedButton, {
+	        style: Style.authButton,
+	        label: 'sign up',
+	        type: 'submit',
+	        onClick: this.signUp,
+	        style: Style.authButton,
+	        backgroundColor: '#00BFA5',
+	        labelStyle: Style.authButtonText
+	      });
+	    } else if (this.props.authPath == 'signIn') {
+	      return React.createElement(RaisedButton, {
+	        style: Style.authButton,
+	        label: 'sign in',
+	        type: 'submit',
+	        onClick: this.signIn,
+	        style: Style.authButton,
+	        backgroundColor: '#00BFA5',
+	        labelStyle: Style.authButtonText
+	      });
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { style: Style.authContainer },
+	      React.createElement(
+	        'h1',
+	        null,
+	        this.state.errors.toString()
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        React.createElement(TextField, {
+	          style: Style.authField,
+	          hintText: 'username',
+	          errorText: '',
+	          floatingLabelText: 'Username',
+	          valueLink: this.linkState('username'),
+	          underlineFocusStyle: { borderColor: '#00BFA5' }
+	        }),
+	        React.createElement(TextField, {
+	          style: Style.authField,
+	          hintText: 'password',
+	          type: 'password',
+	          errorText: '',
+	          floatingLabelText: 'Password',
+	          valueLink: this.linkState('password'),
+	          underlineFocusStyle: { borderColor: '#00BFA5' }
+	        }),
+	        this.renderConfirmPassword(),
+	        this.renderCorrectButton(),
+	        React.createElement(RaisedButton, {
+	          style: Style.authButton,
+	          label: 'demo account',
+	          type: 'submit',
+	          onClick: this.demoSignIn,
+	          style: Style.authButton,
+	          backgroundColor: '#00BFA5',
+	          labelStyle: Style.authButtonText
+	        })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = SignInUpForm;
+
+/***/ },
+/* 380 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(381);
+
+/***/ },
+/* 381 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	var ReactLink = __webpack_require__(382);
+	var ReactStateSetters = __webpack_require__(383);
+	
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+	
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 382 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+	
+	var React = __webpack_require__(2);
+	
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+	
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+	
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+	
+	module.exports = ReactLink;
+
+/***/ },
+/* 383 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+	
+	'use strict';
+	
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+	
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+	
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+	
+	module.exports = ReactStateSetters;
+
+/***/ },
 /* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(379);
+	var LinkedStateMixin = __webpack_require__(380);
 	var AuthStore = __webpack_require__(184);
 	var History = __webpack_require__(186).History;
 	var TimeFormat = __webpack_require__(353);
@@ -50357,7 +50290,7 @@
 
 	var React = __webpack_require__(1);
 	var OptimizationActions = __webpack_require__(164);
-	var LinkedStateMixin = __webpack_require__(379);
+	var LinkedStateMixin = __webpack_require__(380);
 	var History = __webpack_require__(186).History;
 	var TimeFormat = __webpack_require__(353);
 	
@@ -50625,7 +50558,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SignInUpForm = __webpack_require__(378);
+	var SignInUpForm = __webpack_require__(379);
 	
 	var Auth = React.createClass({
 	  displayName: 'Auth',
@@ -50805,62 +50738,77 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(159);
+	var Store = __webpack_require__(167).Store;
 	var OptimizationConstants = __webpack_require__(165);
-	var ApiUtil = __webpack_require__(163);
+	var AuthStore = __webpack_require__(184);
 	
-	var OptimizationActions = {
-	  receiveAllOptimizations: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED,
-	      allOptimizations: data
-	    });
-	  },
+	var OptimizationStore = new Store(Dispatcher);
+	var _allOptimizations = {};
+	var _searchParams = { title: '', category: 'all', sort: 'newest', isUserOnly: 'false' };
 	
-	  retrieveAllOptimizations: function () {
-	    ApiUtil.fetchAllOptimizations(this.receiveAllOptimizations);
-	  },
-	
-	  receiveOneOptimization: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.OPTIMIZATION_RECEIVED,
-	      optimization: data
-	    });
-	  },
-	
-	  retrieveOneOptimization: function (optimizationId) {
-	    ApiUtil.fetchOneOptimization(optimizationId, this.receiveOneOptimization);
-	  },
-	
-	  retrieveNewOptimization: function (postParams, errorCallback, successCallback) {
-	    ApiUtil.createOptimization(postParams, this.receiveOneOptimization, errorCallback, successCallback);
-	  },
-	
-	  retrieveUpdatedOptimization: function (patchParams, errorCallback, successCallback) {
-	    ApiUtil.updateOptimization(patchParams, this.receiveOneOptimization, errorCallback, successCallback);
-	  },
-	
-	  receiveDeletedOptimization: function (data) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.OPTIMIZATION_DELETED,
-	      optimization: data
-	    });
-	  },
-	
-	  retrieveDeletedOptimization: function (deleteParams) {
-	    ApiUtil.deleteOptimization(deleteParams, this.receiveDeletedOptimization);
-	  },
-	
-	  receiveSearchParam: function (key, value) {
-	    Dispatcher.dispatch({
-	      actionType: OptimizationConstants.SEARCH_PARAM_RECEIVED,
-	      key: key,
-	      value: value
-	    });
-	  }
-	
+	OptimizationStore.allSearchParams = function () {
+	  return _searchParams;
 	};
 	
-	module.exports = OptimizationActions;
+	OptimizationStore.resetOptimizations = function (optimizations) {
+	  _optimizations = {};
+	  optimizations.forEach(function (optimization) {
+	    _allOptimizations[optimization.id] = optimization;
+	  });
+	};
+	
+	OptimizationStore.find = function (id) {
+	  return _allOptimizations[id];
+	};
+	
+	OptimizationStore.all = function () {
+	  var allOptimizations = [];
+	  Object.keys(_allOptimizations).forEach(function (key) {
+	    allOptimizations.push(_allOptimizations[key]);
+	  });
+	
+	  return allOptimizations;
+	};
+	
+	OptimizationStore.allForCurrentUser = function () {
+	  var allUserOptimizations = [];
+	  Object.keys(_allOptimizations).forEach(function (key) {
+	    if (AuthStore.currentUser().id === _allOptimizations[key].user_id) {
+	      allUserOptimizations.push(_allOptimizations[key]);
+	    }
+	  });
+	
+	  return allUserOptimizations;
+	};
+	
+	OptimizationStore.resetSearchParams = function () {
+	  _searchParams = { title: '', category: 'all', sort: 'newest', isUserOnly: 'false' };
+	}, OptimizationStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case OptimizationConstants.OPTIMIZATIONS_RECEIVED:
+	      this.resetOptimizations(payload.allOptimizations);
+	      this.__emitChange();
+	      break;
+	    case OptimizationConstants.OPTIMIZATION_RECEIVED:
+	      _allOptimizations[payload.optimization.id] = payload.optimization;
+	      this.__emitChange();
+	      break;
+	    case OptimizationConstants.OPTIMIZATION_DELETED:
+	      delete _allOptimizations[payload.optimization.id];
+	      this.__emitChange();
+	      break;
+	    case OptimizationConstants.SEARCH_PARAM_RECEIVED:
+	      _searchParams[payload.key] = payload.value;
+	      this.__emitChange();
+	      break;
+	    case OptimizationConstants.RESET_SEARCH_PARAMS:
+	      this.resetSearchParams();
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = OptimizationStore;
 
 /***/ }
 /******/ ]);

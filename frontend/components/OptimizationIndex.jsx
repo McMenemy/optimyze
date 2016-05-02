@@ -1,5 +1,5 @@
 var React = require('react');
-var OptimizationStore = require('../stores/optimizations');
+var OptimizationStore = require('../stores/optimizationStore');
 var OptimizationActions = require('../actions/optimizationActions');
 var OptimizationIndexItem = require('./optimizationIndexItem');
 var RightHeader = require('./rightHeader');
@@ -20,13 +20,13 @@ var OptimizationsIndex = React.createClass({
 
   _onChange: function () {
     this.setState(
-      { optimizations: OptimizationStore.allWithSearchParams(this.props.searchParams) }
+      { optimizations: OptimizationStore.all() }
     );
   },
 
   componentDidMount: function () {
     this.optimizationToken = OptimizationStore.addListener(this._onChange);
-    OptimizationActions.retrieveAllOptimizations();
+    OptimizationActions.retrieveFilteredOptimizations(OptimizationStore.allSearchParams());
   },
 
   componentWillUnmount: function () {
@@ -34,10 +34,13 @@ var OptimizationsIndex = React.createClass({
   },
 
   createOptimizationList: function () {
-    var _this = this;
     var listOfOptimizations = this.state.optimizations.reverse().map(function (el, idx) {
       return (
-        <OptimizationIndexItem key={idx} optimization={el} />
+        <OptimizationIndexItem
+          key={idx}
+          optimization={el}
+          isUserOnly={OptimizationStore.allSearchParams().isUserOnly}
+        />
       );
     });
 

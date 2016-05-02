@@ -1,7 +1,7 @@
 var React = require('react');
 var AuthStore = require('../stores/authStore');
 var AuthActions = require('../actions/authActions');
-var OptimizationActions = require('../actions/OptimizationActions');
+var OptimizationActions = require('../actions/optimizationActions');
 var History = require('react-router').History;
 
 // MUI and style
@@ -55,6 +55,7 @@ var Header = React.createClass({
   },
 
   navigateToRoot: function () {
+    OptimizationActions.resetSearchParams();
     this.history.push('/');
   },
 

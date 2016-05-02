@@ -5,7 +5,7 @@ var AuthStore = require('../stores/authStore');
 
 var OptimizationStore = new Store(Dispatcher);
 var _allOptimizations = {};
-var _searchParams = { title: '', category: 'all', sort: 'newest' };
+var _searchParams = { title: '', category: 'all', sort: 'newest', isUserOnly: 'false', };
 
 OptimizationStore.allSearchParams = function () {
   return _searchParams;
@@ -42,40 +42,13 @@ OptimizationStore.allForCurrentUser = function () {
   return allUserOptimizations;
 };
 
-OptimizationStore.allWithSearchParams = function () {
-  var allFilteredOptimizations = [];
-  var titleFilter = new RegExp('' + _searchParams.title.toLowerCase());
-
-  if (_searchParams.isUserOnly) {
-    allFilteredOptimizations = this.allForCurrentUser();
-  } else {
-    allFilteredOptimizations = this.all();
-  }
-
-  if (_searchParams.category !== 'all') {
-    allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
-      var categoryArray = currentOptimization.categories;
-
-      return categoryArray.includes(_searchParams.category);
-    });
-  }
-
-  allFilteredOptimizations = allFilteredOptimizations.filter(function (currentOptimization) {
-    var currentTitle = currentOptimization.title.toLowerCase();
-
-    return currentTitle.match(titleFilter);
-  });
-
-  if (_searchParams.sort == 'oldest') {
-    return allFilteredOptimizations.reverse();
-  } else {
-    return allFilteredOptimizations;
-  }
+OptimizationStore.resetSearchParams = function () {
+  _searchParams = { title: '', category: 'all', sort: 'newest', isUserOnly: 'false', };
 },
 
 OptimizationStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
-    case OptimizationConstants.ALL_OPTIMIZATIONS_RECEIVED:
+    case OptimizationConstants.OPTIMIZATIONS_RECEIVED:
       this.resetOptimizations(payload.allOptimizations);
       this.__emitChange();
       break;
@@ -89,6 +62,10 @@ OptimizationStore.__onDispatch = function (payload) {
       break;
     case OptimizationConstants.SEARCH_PARAM_RECEIVED:
       _searchParams[payload.key] = payload.value;
+      this.__emitChange();
+      break;
+    case OptimizationConstants.RESET_SEARCH_PARAMS:
+      this.resetSearchParams();
       this.__emitChange();
       break;
   }

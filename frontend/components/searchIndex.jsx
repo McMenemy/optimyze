@@ -2,7 +2,7 @@ var React = require('react');
 var History = require('react-router').History;
 var OptimizationIndex = require('./optimizationIndex');
 var AuthStore = require('../stores/authStore');
-var OptimizationStore = require('../stores/optimizations');
+var OptimizationStore = require('../stores/optimizationStore');
 var OptimizationActions = require('../actions/optimizationActions');
 
 // style

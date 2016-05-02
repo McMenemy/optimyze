@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     resources :optimizations, only: [:create, :destroy, :index, :show, :update]
     resources :users, only: [:show]
+    # filter api
+    post 'filtered', to: 'optimizations#filtered_params'
+
     # front end auth
     post 'auth/signin', to: 'auth#signin'
     post 'auth/signup', to: 'auth#signup'

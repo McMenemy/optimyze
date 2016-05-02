@@ -23,6 +23,26 @@ var ApiUtil = {
     });
   },
 
+  fetchFilteredOptimizations: function (searchParams, callback) {
+    $.ajax({
+      type: 'POST',
+      url: 'api/filtered',
+      data: searchParams,
+      dataType: 'json',
+      success:
+        function (respData) {
+          callback(respData);
+          console.log('ajax fetch filtered', respData);
+          console.log('ajax fetch params', searchParams);
+        },
+
+      error:
+        function (respError) {
+          console.log('ajax filtered error', respError.responseText);
+        },
+    });
+  },
+
   createOptimization: function (postParams, actionCallback, errorCallback, successCallback) {
     $.ajax({
       type: 'POST',
